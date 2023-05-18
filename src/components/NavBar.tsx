@@ -119,9 +119,10 @@ const NavBar = () => {
       </List>
     </Box>
   );
-  let navTitle = navItems.find(
-    (item) => item.route === window.location.pathname
-  )?.label;
+  let navTitle =
+    typeof window !== "undefined"
+      ? navItems.find((item) => item.route === window.location.pathname)?.label
+      : "";
   return (
     <Box sx={{ flexGrow: 1, position: "sticky", top: 2 }}>
       <AppBar position="static">
