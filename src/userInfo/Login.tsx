@@ -9,13 +9,14 @@ import {
   Snackbar,
 } from "@mui/material";
 import React, { FormEvent, useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import { AppContext } from "../contexts/AppContext";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Login() {
   const { token, fetchData, updateData, ...data } = useContext(AppContext);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const [error, setError] = useState(false);
   const [userData, setUserData] = useState({
@@ -24,7 +25,7 @@ export default function Login() {
   });
   useEffect(() => {
     if (token) {
-      navigate("/");
+      router.push("/");
     }
   }, [token]);
   async function loginHandler(e: FormEvent) {
@@ -119,7 +120,7 @@ export default function Login() {
         <Button variant="contained" sx={{ width: "150px" }} type="submit">
           Login
         </Button>
-        <Link to={`/signup`}>
+        <Link href={`/signup`}>
           <Button
             variant="outlined"
             sx={{ width: "150px", fontSize: "10px" }}
