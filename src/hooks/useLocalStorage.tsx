@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 export function useLocalStorage<T>(key: string, initialvalve?: T | (() => T)) {
   const [value, setValue] = useState<T>(() => {
-    let json;
+    let json: string | null = "";
     if (typeof window !== "undefined") {
       json = localStorage.getItem(key);
     } else {

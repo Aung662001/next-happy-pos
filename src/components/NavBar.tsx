@@ -26,6 +26,7 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useRouter } from "next/router";
 import Link from "next/link";
 const NavBar = () => {
+  const [accState, setAccState] = useState({ name: "Logout" });
   const { Locations } = useContext(AppContext);
   const [token, setToken] = useLocalStorage("accessToken");
   const [locationId, setLocationId] = useLocalStorage("locationId");
@@ -33,6 +34,11 @@ const NavBar = () => {
   function loginHandler() {
     router.push(`/login`);
   }
+  useEffect(() => {
+    if (token) {
+      setAccState({ name: "Logout" });
+    }
+  }, [token]);
   const navItems = [
     { id: 1, label: "Orders", icon: <DinnerDiningIcon />, route: "/orders" },
 
@@ -155,7 +161,7 @@ const NavBar = () => {
             color="inherit"
             onClick={token ? logoutHandler : loginHandler}
           >
-            {token ? "Log Out" : " Log In"}
+            {accState.name}
           </Button>
         </Toolbar>
       </AppBar>
