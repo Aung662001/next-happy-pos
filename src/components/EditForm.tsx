@@ -1,10 +1,11 @@
 import { Box, TextField, Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Menu } from "../typings/types";
-import { Link, useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function EditForm({ id, name, price }: Menu) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [menu, setMenu] = useState({});
   const query = new URLSearchParams(window.location.search);
   let locationId = query.get("locationId");
@@ -16,7 +17,7 @@ export default function EditForm({ id, name, price }: Menu) {
       body: JSON.stringify(menu),
     });
 
-    navigate(`/menus?locationId=${locationId}`, { replace: true });
+    router.push(`/menus?locationId=${locationId}`);
   }
   useEffect(() => {
     setMenu({ ...menu, name: name, price: price });
@@ -53,7 +54,7 @@ export default function EditForm({ id, name, price }: Menu) {
           <Button variant="contained" onClick={updateHandle}>
             Update
           </Button>
-          <Link to="../">
+          <Link href="../">
             <Button variant="outlined">Cancel</Button>
           </Link>
         </Box>

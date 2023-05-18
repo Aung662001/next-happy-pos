@@ -21,16 +21,17 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../contexts/AppContext";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useRouter } from "next/router";
+import Link from "next/link";
 const NavBar = () => {
   const { Locations } = useContext(AppContext);
-  const lId = localStorage.getItem("locationId");
   const [token, setToken] = useLocalStorage("accessToken");
-  const navigate = useNavigate();
+  const [locationId, setLocationId] = useLocalStorage("locationId");
+  const router = useRouter();
   function loginHandler() {
-    navigate(`/login`, { replace: true });
+    router.push(`/login`);
   }
   const navItems = [
     { id: 1, label: "Orders", icon: <DinnerDiningIcon />, route: "/orders" },
@@ -86,7 +87,7 @@ const NavBar = () => {
       <List>
         {navItems.slice(0, navItems.length - 1).map((item) => (
           <Link
-            to={item.route}
+            href={item.route}
             key={item.id}
             style={{ textDecoration: "none", color: "#000" }}
           >
@@ -103,7 +104,7 @@ const NavBar = () => {
       <List>
         {navItems.slice(-1).map((item) => (
           <Link
-            to={item.route}
+            href={item.route}
             style={{ textDecoration: "none", color: "#000" }}
             key={item.id}
           >
@@ -140,7 +141,7 @@ const NavBar = () => {
             <Typography variant="h6" component="div">
               {
                 Locations.find(
-                  (location) => location.id === parseInt(lId as string)
+                  (location) => location.id === parseInt(locationId as string)
                 )?.name
               }
             </Typography>

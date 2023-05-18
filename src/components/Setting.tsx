@@ -11,10 +11,12 @@ import {
 } from "@mui/material";
 import { AppContext } from "../contexts/AppContext";
 import { Location } from "../typings/types";
-import { useNavigate } from "react-router-dom";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useRouter } from "next/router";
 
 export default function Setting() {
-  const navigate = useNavigate();
+  const [locationId, setLocationId] = useLocalStorage("locationId");
+  const router = useRouter();
   const { Locations, fetchData, companies } = useContext(AppContext);
   const [selectedLocation, setSelectedLocation] = useState<
     Location | undefined
@@ -24,25 +26,24 @@ export default function Setting() {
   }, []);
   useEffect(() => {
     if (Locations.length) {
-      const selectedLocationId = localStorage.getItem("locationId");
-      if (!selectedLocationId) {
-        localStorage.setItem("locationId", String(Locations[0].id));
+      if (!locationId) {
+        setLocationId(String(Locations[0].id));
         setSelectedLocation(Locations[0]);
       } else {
         const selectedLocation = Locations.find(
-          (location) => String(location.id) === selectedLocationId
+          (location) => String(location.id) === locationId
         );
         setSelectedLocation(selectedLocation);
       }
     }
   }, [Locations]);
   function handleChange(e: SelectChangeEvent<number>) {
-    localStorage.setItem("locationId", String(e.target.value));
+    setLocationId(String(e.target.value));
     const selectedLocation = Locations.find(
       (location) => location.id === e.target.value
     );
     setSelectedLocation(selectedLocation);
-    navigate(`/menus`);
+    router.push(`/menus`);
   }
   return (
     <Layout>

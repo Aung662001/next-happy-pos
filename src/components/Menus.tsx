@@ -15,15 +15,17 @@ import Layout from "./Layout";
 import { useContext, useEffect, useState } from "react";
 import { Menu } from "../typings/types";
 import { AppContext } from "../contexts/AppContext";
-import { Link, Navigate, useNavigate } from "react-router-dom";
 import EditForm from "./EditForm";
 import EditModel from "./editMenuModel/CreateMenuModel";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 const Menus = () => {
+  const [locationId, setLocationId] = useLocalStorage("locationId");
   const [openModel, setOpenModel] = useState(false);
   const open = () => setOpenModel(true);
   const close = () => setOpenModel(false);
-  const locationId = localStorage.getItem("locationId");
   const {
     menus: menusData,
     fetchData,
@@ -41,9 +43,9 @@ const Menus = () => {
   //   });
   //   fetchData();
   // };
-  const navigate = useNavigate();
+  const router = useRouter();
   const editHandle = (data: Menu) => {
-    navigate(`/menus/${data.id}?locationId=${locationId}`);
+    router.push(`/menus/${data.id}?locationId=${locationId}`);
   };
   if (!token) return <h1>sorry</h1>;
   const menuIdWithLocationId = menusLocations
@@ -142,7 +144,7 @@ const Menus = () => {
               })}
             </Grid>
           </Stack>
-          <Link to="/">
+          <Link href="/">
             <Button
               variant="outlined"
               style={{ marginLeft: "2rem" }}
