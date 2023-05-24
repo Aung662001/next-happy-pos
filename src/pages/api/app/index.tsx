@@ -36,10 +36,47 @@ export default async function handler(
       },
     },
   });
-  console.log(menus);
-  const addon = await prisma.addons.findMany();
-  const addonCategories = await prisma.addon_categories.findMany();
-  const menuCategories = await prisma.menu_categories.findMany();
+  const menuAddonCategoriesIds = await prisma.menus_addon_categories.findMany({
+    where: {
+      menus_id: {
+        in: menuIds,
+      },
+    },
+  });
+  const addonCategoriesIds = menuAddonCategoriesIds.map(
+    (ma) => ma.addon_categories_id
+  ) as number[];
+  const addonCategories = await prisma.addon_categories.findMany({
+    where: {
+      id: {
+        in: addonCategoriesIds,
+      },
+    },
+  }); //
+  const addon = await prisma.addons.findMany({
+    where: {
+      addon_categories_id: {
+        in: addonCategoriesIds,
+      },
+    },
+  });
+  const menuMenuCategories = await prisma.menus_menu_categories.findMany({
+    where: {
+      menus_id: {
+        in: menuIds,
+      },
+    },
+  });
+  const menuCategoriesIds = menuMenuCategories.map(
+    (mc) => mc.menu_categories_id
+  ) as number[];
+  const menuCategories = await prisma.menu_categories.findMany({
+    where: {
+      id: {
+        in: menuCategoriesIds,
+      },
+    },
+  });
   const company = await prisma.companies.findMany({
     where: {
       id: company_id,
