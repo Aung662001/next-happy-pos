@@ -1,14 +1,8 @@
-import { config } from "../../../config/config";
-import React, { useEffect } from "react";
+import React from "react";
+import Menus from "@/components/Menus";
 
-function Menu() {
-  const fetchMenu = async () => {
-    await fetch(`${config.apiUrl}/api/menus`);
-  };
-  useEffect(() => {
-    fetchMenu();
-  }, []);
-  return <div>Menu</div>;
+function App() {
+  return <Menus />;
 }
 
-export default Menu;
+export default App;

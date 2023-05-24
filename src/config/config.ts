@@ -8,6 +8,8 @@ interface Config {
   databaseUserName: string;
   databasePassword: string;
   databaseName: string;
+  clientId: string;
+  clientSecret: string;
 }
 export const config: Config = {
   jwtSecret: process.env.JWT_SECRET || "",
@@ -19,4 +21,6 @@ export const config: Config = {
   databasePassword: process.env.DATABASE_PASSWORD || "",
   databaseUrl: process.env.DATABASE_URL || "",
   apiUrl: process.env.NEXT_PUBLIC_SERVER_BASEURL || "",
+  clientId: process.env.GOOGLE_CLIENT_ID || "",
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
 };

@@ -13,12 +13,12 @@ export default async function handler(
   });
   const company_id = user?.companies_id as number;
   //location
-  const location = await prisma.locations.findMany({
+  const Locations = await prisma.locations.findMany({
     where: {
       companies_id: company_id,
     },
   });
-  const locationIds = location.map((location) => location.id as number);
+  const locationIds = Locations.map((location) => location.id as number);
   //menuLocations
   const menusLocations = await prisma.menus_locations.findMany({
     where: {
@@ -77,18 +77,18 @@ export default async function handler(
       },
     },
   });
-  const company = await prisma.companies.findMany({
+  const companies = await prisma.companies.findMany({
     where: {
       id: company_id,
     },
   });
   res.send({
     menus,
-    location,
+    Locations,
     addon,
     addonCategories,
     menuCategories,
     menusLocations,
-    company,
+    companies,
   });
 }

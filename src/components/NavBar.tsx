@@ -26,7 +26,16 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useRouter } from "next/router";
 import Link from "next/link";
 const NavBar = () => {
-  const [accState, setAccState] = useState({ name: "Logout" });
+  const [accState, setAccState] = useState({
+    LoginLogout: "Logout",
+    Orders: "",
+    Locations: "",
+    Menu: "",
+    MenuCategories: " ",
+    Addon: "",
+    AddonCategories: " ",
+    Setting: "",
+  });
   const { Locations } = useContext(AppContext);
   const [token, setToken] = useLocalStorage("accessToken");
   const [locationId, setLocationId] = useLocalStorage("locationId");
@@ -36,33 +45,62 @@ const NavBar = () => {
   }
   useEffect(() => {
     if (token) {
-      setAccState({ name: "Logout" });
+      setAccState({
+        LoginLogout: "Login",
+        Orders: "Orders",
+        Locations: "Locations",
+        Menu: "Menu",
+        MenuCategories: "Menu Categories",
+        Addon: "Addon",
+        AddonCategories: "Addon Categories",
+        Setting: "Setting",
+      });
     }
   }, [token]);
   const navItems = [
-    { id: 1, label: "Orders", icon: <DinnerDiningIcon />, route: "/orders" },
+    {
+      id: 1,
+      label: accState.Orders,
+      icon: <DinnerDiningIcon />,
+      route: "/backoffice/orders",
+    },
 
-    { id: 2, label: "Menu", icon: <DinnerDiningIcon />, route: "/menus" },
+    {
+      id: 2,
+      label: accState.Menu,
+      icon: <DinnerDiningIcon />,
+      route: "/backoffice/menus",
+    },
     {
       id: 3,
-      label: "Menu Categories",
+      label: accState.MenuCategories,
       icon: <SetMealIcon />,
-      route: "/menu-categories",
+      route: "/backoffice/menu-categories",
     },
-    { id: 4, label: "Addon", icon: <FastfoodIcon />, route: "/addons" },
+    {
+      id: 4,
+      label: accState.Addon,
+      icon: <FastfoodIcon />,
+      route: "/backoffice/addons",
+    },
     {
       id: 5,
-      label: "Addon Categories",
+      label: accState.AddonCategories,
       icon: <EggIcon />,
-      route: "/addon-categories",
+      route: "/backoffice/addon-categories",
     },
     {
       id: 6,
-      label: "Locations",
+      label: accState.Locations,
       icon: <EditLocationAltIcon />,
-      route: "/locations",
+      route: "/backoffice/locations",
     },
-    { id: 7, label: "Setting", icon: <SettingsIcon />, route: "/setting" },
+    {
+      id: 7,
+      label: accState.Setting,
+      icon: <SettingsIcon />,
+      route: "/backoffice/setting",
+    },
   ];
 
   const [open, setOpen] = useState<boolean>(false);
@@ -161,7 +199,7 @@ const NavBar = () => {
             color="inherit"
             onClick={token ? logoutHandler : loginHandler}
           >
-            {accState.name}
+            {accState.LoginLogout}
           </Button>
         </Toolbar>
       </AppBar>

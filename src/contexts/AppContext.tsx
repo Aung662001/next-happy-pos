@@ -12,6 +12,7 @@ import {
 import { useState } from "react";
 import { config } from "../config/config";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useSession } from "next-auth/react";
 export interface AppContextType {
   menus: Menu[];
   menuCategories: MenuCategory[];
@@ -39,11 +40,11 @@ const defaultContext: AppContextType = {
   accessToken: "",
   token: "",
 };
-
 export const AppContext = createContext<AppContextType>(defaultContext);
+console.log(defaultContext.Locations, defaultContext.companies, "inside ");
 
 const AppProvider = (props: any) => {
-  const [token, setToken] = useLocalStorage("accessToken", "");
+  const { data: session } = useSession();
   // token &&
   //   setTimeout(() => {
   //     console.log("expired");
@@ -53,41 +54,38 @@ const AppProvider = (props: any) => {
 
   const [data, updateData] = useState(defaultContext);
   useEffect(() => {
-    if (data.accessToken) {
-      setToken(data.accessToken);
+    if (session) {
+      // setToken(sessionn);
       fetchData();
     }
-  }, [data.accessToken]);
+  }, [session]);
   const fetchData = async () => {
-    const response = await fetch(`${config.apiUrl}/data`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(`${config.apiUrl}/api`, {});
     if (!response.ok) return null;
     const responseJson = await response.json();
-    const {
-      menus,
-      menuCategories,
-      addons,
-      addonCategories,
-      menusLocations,
-      Locations,
-      companies,
-    } = responseJson;
-    updateData({
-      ...data,
-      menus,
-      menuCategories,
-      addons,
-      addonCategories,
-      menusLocations,
-      Locations,
-      companies,
-    });
+    console.log(responseJson);
+    // const {
+    //   menus,
+    //   menuCategories,
+    //   addons,
+    //   addonCategories,
+    //   menusLocations,
+    //   Locations,
+    //   companies,
+    // } = responseJson;
+    // updateData({
+    //   ...data,
+    //   menus,
+    //   menuCategories,
+    //   addons,
+    //   addonCategories,
+    //   menusLocations,
+    //   Locations,
+    //   companies,
+    // });
   };
   return (
-    <AppContext.Provider value={{ ...data, updateData, fetchData, token }}>
+    <AppContext.Provider value={{ ...data, updateData, fetchData }}>
       {props.children}
     </AppContext.Provider>
   );

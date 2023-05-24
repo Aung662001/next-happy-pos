@@ -37,10 +37,10 @@ const Locations = () => {
   useEffect(() => {
     fetchData();
   }, []);
+  console.log(Locations, companies);
 
   //update Handler function
   const updateHandler = async (location: Location) => {
-    console.log(location.id);
     const oldLocaValue = Locations.find((Loca) => Loca.id === location.id);
     const newLocaValue = updatedActualValue.find(
       (upt) => upt.id === location.id

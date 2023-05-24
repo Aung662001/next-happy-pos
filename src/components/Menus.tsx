@@ -37,17 +37,12 @@ const Menus = () => {
   useEffect(() => {
     fetchData();
   }, []);
-  // const handleDelete = async (id: number | undefined) => {
-  //   await fetch(`${process.env.REACT_APP_SERVER_BASEURL}/menus/delete/${id}`, {
-  //     method: "DELETE",
-  //   });
-  //   fetchData();
-  // };
+
   const router = useRouter();
   const editHandle = (data: Menu) => {
     router.push(`/menus/${data.id}?locationId=${locationId}`);
   };
-  if (!token) return <h1>sorry</h1>;
+  // if (!token) return <h1>sorry</h1>;
   const menuIdWithLocationId = menusLocations
     .filter(
       (menusLocation) => String(menusLocation.locations_id) === locationId

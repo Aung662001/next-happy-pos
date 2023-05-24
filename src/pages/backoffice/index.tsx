@@ -1,12 +1,21 @@
 import React from "react";
-import Orders from "../../components/Orders";
-import Layout from "@/components/Layout";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 function App() {
+  const { data: session } = useSession();
+  if (session && session.user) {
+    return (
+      <>
+        Signed in as {session.user.email} <br />
+        <button onClick={() => signOut()}>Sign out</button>
+      </>
+    );
+  }
   return (
-    <div className="App">
-      <Orders />
-    </div>
+    <>
+      Not signed in <br />
+      <button onClick={() => signIn()}>Sign in</button>
+    </>
   );
 }
 
