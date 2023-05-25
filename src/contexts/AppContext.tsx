@@ -46,6 +46,7 @@ export const AppContext = createContext<AppContextType>(defaultContext);
 const AppProvider = (props: any) => {
   const router = useRouter();
   const { data: session } = useSession();
+  console.log(session);
   // token &&
   //   setTimeout(() => {
   //     console.log("expired");

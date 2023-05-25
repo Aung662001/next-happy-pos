@@ -8,5 +8,6 @@ export const authOptions = {
       clientSecret: config.clientSecret,
     }),
   ],
+  secret: "password",
 };
 export default NextAuth(authOptions);
