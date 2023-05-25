@@ -1,5 +1,6 @@
 interface Config {
   apiUrl: string;
+  authUrl: string;
   jwtSecret: string;
   spaceAccessKeyId: string;
   spaceSecrectKey: string;
@@ -13,6 +14,7 @@ interface Config {
 }
 export const config: Config = {
   jwtSecret: process.env.JWT_SECRET || "",
+  authUrl: process.env.NEXTAUTH_URL || "",
   spaceAccessKeyId: process.env.SPACE_ACCESS_KEY || "",
   spaceSecrectKey: process.env.SPACE_SECRECT_KEY || "",
   spaceEndPoint: process.env.SPACE_ENDPOINT || "",

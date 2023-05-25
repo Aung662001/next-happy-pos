@@ -13,6 +13,7 @@ import { useState } from "react";
 import { config } from "../config/config";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 export interface AppContextType {
   menus: Menu[];
   menuCategories: MenuCategory[];
@@ -41,9 +42,9 @@ const defaultContext: AppContextType = {
   token: "",
 };
 export const AppContext = createContext<AppContextType>(defaultContext);
-console.log(defaultContext.Locations, defaultContext.companies, "inside ");
 
 const AppProvider = (props: any) => {
+  const router = useRouter();
   const { data: session } = useSession();
   // token &&
   //   setTimeout(() => {
@@ -60,7 +61,7 @@ const AppProvider = (props: any) => {
     }
   }, [session]);
   const fetchData = async () => {
-    const response = await fetch(`${config.apiUrl}/api`, {});
+    const response = await fetch(`${config.apiUrl}`, {});
     if (!response.ok) return null;
     const responseJson = await response.json();
     console.log(responseJson);
