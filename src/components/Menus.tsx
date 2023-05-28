@@ -32,11 +32,11 @@ const Menus = () => {
     menusLocations,
     token,
   } = useContext(AppContext);
-
+  console.log(menusLocations);
   useEffect(() => {}, [token]);
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   const router = useRouter();
   const editHandle = (data: Menu) => {
@@ -45,7 +45,8 @@ const Menus = () => {
   // if (!token) return <h1>sorry</h1>;
   const menuIdWithLocationId = menusLocations
     .filter(
-      (menusLocation) => String(menusLocation.locations_id) === locationId
+      (menusLocation) =>
+        String(menusLocation.locations_id) === String(locationId)
     )
     .map((menuLocation) => menuLocation.menus_id);
   const filteredMenus = menusData.filter((menu) =>

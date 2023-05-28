@@ -2,11 +2,7 @@ import React from "react";
 import AddonCategories from "@/components/AddonCategories";
 
 function App() {
-  return (
-    <div className="App">
-      <AddonCategories />
-    </div>
-  );
+  return <AddonCategories />;
 }
 
 export default App;

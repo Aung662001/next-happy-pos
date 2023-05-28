@@ -9,5 +9,8 @@ export const authOptions = {
     }),
   ],
   secret: config.nextAuthSecret,
+  pages: {
+    signIn: "/auth/signin",
+  },
 };
 export default NextAuth(authOptions);

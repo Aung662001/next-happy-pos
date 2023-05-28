@@ -46,13 +46,7 @@ export const AppContext = createContext<AppContextType>(defaultContext);
 const AppProvider = (props: any) => {
   const router = useRouter();
   const { data: session } = useSession();
-  console.log(session);
-  // token &&
-  //   setTimeout(() => {
-  //     console.log("expired");
-  //     localStorage.setItem("accessToken", "");
-  //     window.location.href = "/login";
-  //   }, 6000 * 60);
+  const [location, setLocation] = useLocalStorage("locationId");
 
   const [data, updateData] = useState(defaultContext);
   useEffect(() => {
@@ -62,29 +56,29 @@ const AppProvider = (props: any) => {
     }
   }, [session]);
   const fetchData = async () => {
-    const response = await fetch(`${config.apiUrl}`, {});
+    const response = await fetch(`${config.apiUrl}/appData`, {});
     if (!response.ok) return null;
     const responseJson = await response.json();
-    console.log(responseJson);
-    // const {
-    //   menus,
-    //   menuCategories,
-    //   addons,
-    //   addonCategories,
-    //   menusLocations,
-    //   Locations,
-    //   companies,
-    // } = responseJson;
-    // updateData({
-    //   ...data,
-    //   menus,
-    //   menuCategories,
-    //   addons,
-    //   addonCategories,
-    //   menusLocations,
-    //   Locations,
-    //   companies,
-    // });
+    const {
+      menus,
+      menuCategories,
+      addons,
+      addonCategories,
+      menusLocations,
+      Locations,
+      companies,
+    } = responseJson;
+    updateData({
+      ...data,
+      menus,
+      menuCategories,
+      addons,
+      addonCategories,
+      menusLocations,
+      Locations,
+      companies,
+    });
+    setLocation(Locations[0].id);
   };
   return (
     <AppContext.Provider value={{ ...data, updateData, fetchData }}>

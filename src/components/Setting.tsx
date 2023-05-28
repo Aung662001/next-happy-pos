@@ -17,13 +17,13 @@ import { useRouter } from "next/router";
 export default function Setting() {
   const [locationId, setLocationId] = useLocalStorage("locationId");
   const router = useRouter();
-  const { Locations, fetchData, companies } = useContext(AppContext);
+  const { Locations, fetchData, companies, token } = useContext(AppContext);
+  console.log(Locations, "jdlkfjdsfkjdsflkdjo");
+
   const [selectedLocation, setSelectedLocation] = useState<
     Location | undefined
   >();
-  useEffect(() => {
-    fetchData();
-  }, []);
+  console.log(companies);
   useEffect(() => {
     if (Locations.length) {
       if (!locationId) {
@@ -36,7 +36,7 @@ export default function Setting() {
         setSelectedLocation(selectedLocation);
       }
     }
-  }, [Locations]);
+  }, [Locations, companies]);
   function handleChange(e: SelectChangeEvent<number>) {
     setLocationId(String(e.target.value));
     const selectedLocation = Locations.find(
@@ -53,7 +53,7 @@ export default function Setting() {
           label="Company"
           fullWidth
           sx={{ my: 2 }}
-          value={companies[0].name}
+          value={companies.length && companies[0].name}
           disabled
         />
         <TextField
@@ -61,7 +61,7 @@ export default function Setting() {
           label="Company"
           fullWidth
           sx={{ my: 2 }}
-          value={companies[0].address}
+          value={companies.length && companies[0].address}
           disabled
         />
         <FormControl fullWidth>

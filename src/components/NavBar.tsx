@@ -12,6 +12,8 @@ import EggIcon from "@mui/icons-material/Egg";
 import SettingsIcon from "@mui/icons-material/Settings";
 import EditLocationAltIcon from "@mui/icons-material/EditLocationAlt";
 import { useState, useEffect, useContext } from "react";
+import { signOut, signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import {
   Divider,
   Drawer,
@@ -25,9 +27,12 @@ import { AppContext } from "../contexts/AppContext";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useRouter } from "next/router";
 import Link from "next/link";
-const NavBar = () => {
+interface NavProps {
+  title?: string;
+}
+const NavBar = (props: NavProps) => {
   const [accState, setAccState] = useState({
-    LoginLogout: "Logout",
+    LoginLogout: "Sign In",
     Orders: "",
     Locations: "",
     Menu: "",
@@ -37,16 +42,16 @@ const NavBar = () => {
     Setting: "",
   });
   const { Locations } = useContext(AppContext);
-  const [token, setToken] = useLocalStorage("accessToken");
+  const { data: session } = useSession();
   const [locationId, setLocationId] = useLocalStorage("locationId");
   const router = useRouter();
   function loginHandler() {
-    router.push(`/login`);
+    signIn("google", { callbackUrl: "/backoffice/orders" });
   }
   useEffect(() => {
-    if (token) {
+    if (session) {
       setAccState({
-        LoginLogout: "Login",
+        LoginLogout: "Sign Out",
         Orders: "Orders",
         Locations: "Locations",
         Menu: "Menu",
@@ -56,7 +61,7 @@ const NavBar = () => {
         Setting: "Setting",
       });
     }
-  }, [token]);
+  }, [session]);
   const navItems = [
     {
       id: 1,
@@ -117,8 +122,8 @@ const NavBar = () => {
       setOpen(open);
     };
   function logoutHandler() {
-    setToken("");
-    window.location.reload();
+    // setToken("");
+    signOut();
   }
 
   const list = () => (
@@ -138,6 +143,7 @@ const NavBar = () => {
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>{item.icon}</ListItemIcon>
+
                 <ListItemText primary={item.label} />
               </ListItemButton>
             </ListItem>
@@ -193,11 +199,11 @@ const NavBar = () => {
           </Box>
           <Typography variant="h6" component="div">
             {navTitle}
+            <ListItemText primary={props.title ? props.title : ""} />
           </Typography>
-
           <Button
             color="inherit"
-            onClick={token ? logoutHandler : loginHandler}
+            onClick={session ? logoutHandler : loginHandler}
           >
             {accState.LoginLogout}
           </Button>

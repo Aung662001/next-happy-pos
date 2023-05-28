@@ -8,7 +8,8 @@ export function useLocalStorage<T>(key: string, initialvalve?: T | (() => T)) {
     } else {
       return "";
     }
-    if (json) return JSON.parse(json);
+    console.log(json);
+    if (json && json !== "undefined") return JSON.parse(json);
     if (typeof initialvalve === "function") {
       return (initialvalve as () => T)();
     } else {
