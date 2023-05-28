@@ -4,6 +4,7 @@ import { AppContext } from "../contexts/AppContext";
 import { Box, Button, Chip, TextField } from "@mui/material";
 import { config } from "@/config/config";
 import { prisma } from "@/utils/db";
+import { apiBaseUrl } from "next-auth/client/_utils";
 interface Categories {
   menu: "string";
   categories: "string";
@@ -73,11 +74,12 @@ const MenuCategories = () => {
     fetchData();
   }
   async function createNewMenuCategories() {
-    const response = await prisma.menu_categories.create({
-      data: {
-        name: newMenuCategories,
-      },
+    const response = await fetch(`${config.apiUrl}/menuCategories`, {
+      method: "POST",
+      body: newMenuCategories,
     });
+    setNewMenuCategories("");
+    fetchData();
   }
 };
 

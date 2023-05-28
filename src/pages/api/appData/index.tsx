@@ -10,7 +10,6 @@ export default async function handler(
   const user = session?.user;
   const email = user?.email as string;
   const name = user?.name as string;
-  console.log(email, name);
   const allTables = [
     "users",
     "companies",
@@ -133,7 +132,7 @@ export default async function handler(
       )
     );
 
-    //create menus_menu_ategories
+    //create menus_menu_categories
     const menu_menuCategoriesDatas = [
       { menus_id: newMenus[0].id, menu_categories_id: newMenuCategories[0].id },
       { menus_id: newMenus[1].id, menu_categories_id: newMenuCategories[1].id },
@@ -223,7 +222,7 @@ export default async function handler(
         },
       },
     }); //
-    const addon = await prisma.addons.findMany({
+    const addons = await prisma.addons.findMany({
       where: {
         addon_categories_id: {
           in: addonCategoriesIds,
@@ -240,13 +239,7 @@ export default async function handler(
     const menuCategoriesIds = menuMenuCategories.map(
       (mc) => mc.menu_categories_id
     ) as number[];
-    const menuCategories = await prisma.menu_categories.findMany({
-      where: {
-        id: {
-          in: menuCategoriesIds,
-        },
-      },
-    });
+    const menuCategories = await prisma.menu_categories.findMany();
     const companies = await prisma.companies.findMany({
       where: {
         id: company_id,
@@ -256,7 +249,7 @@ export default async function handler(
     res.send({
       menus,
       Locations,
-      addon,
+      addons,
       addonCategories,
       menuCategories,
       menusLocations,

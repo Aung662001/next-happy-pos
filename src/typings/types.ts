@@ -14,8 +14,8 @@ export interface MenuCategory extends BaseType {}
 
 export interface Addon extends BaseType {
   price: number;
-  isAvailable: boolean;
-  addonCategoriesIds: string[];
+  is_avaiable: boolean;
+  addon_categories_id: string;
 }
 
 export interface AddonCategory extends BaseType {

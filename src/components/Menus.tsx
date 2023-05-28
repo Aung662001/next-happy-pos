@@ -98,7 +98,6 @@ const Menus = () => {
                 return (
                   <Grid item xs={2} sm={4} md={4} key={index}>
                     <div>
-                      {/* ///////////////////////////// */}
                       <Card
                         sx={{
                           maxWidth: 300,
