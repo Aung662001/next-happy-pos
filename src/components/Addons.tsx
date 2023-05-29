@@ -23,6 +23,7 @@ import { useState, useContext } from "react";
 import { AppContext } from "@/contexts/AppContext";
 import { config } from "@/config/config";
 import { AddonCategory } from "@/typings/types";
+import { prisma } from "@/utils/db";
 interface row {
   id: number;
   name: string;
@@ -31,6 +32,8 @@ interface row {
   AddonCategorie: AddonCategory[];
 }
 const Addons = () => {
+  const [update, setUpdate] = useState(false);
+  const [updateId, setUpdateId] = useState<number>();
   const [check, setCheck] = useState<boolean | string>(false);
   let defaultAddon = {
     name: "",
@@ -39,8 +42,11 @@ const Addons = () => {
     addonCategories: "",
   };
   const [addonData, setAddonData] = useState(defaultAddon);
-  console.log(addonData);
-  const { addonCategories: ACdatas, addons } = useContext(AppContext);
+  const {
+    addonCategories: ACdatas,
+    addons,
+    fetchData,
+  } = useContext(AppContext);
   //table related setting
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -75,7 +81,6 @@ const Addons = () => {
     const AddonCategorie = ACdatas.filter(
       (data) => data.id!.toString() == addon.addon_categories_id
     );
-    console.log(addon);
     const is_avaiable = addon.is_avaiable.toString().toUpperCase();
     if (!addon.id) return;
     const data = createData(
@@ -115,8 +120,9 @@ const Addons = () => {
         <TextField
           label="Price"
           variant="outlined"
+          type="number"
           sx={{ mx: 3, width: "300px" }}
-          value={addonData.price}
+          value={addonData.price ? addonData.price : ""}
           onChange={(e) =>
             setAddonData({ ...addonData, price: parseInt(e.target.value) })
           }
@@ -159,9 +165,16 @@ const Addons = () => {
           }
           label="IsAvaiable"
         />
-        <Button variant="contained" onClick={() => createNewAddon()}>
-          Submit
-        </Button>
+        <Box>
+          <Button
+            variant="contained"
+            onClick={() => (update ? updateHandler() : createNewAddon())}
+            sx={{ margin: "2rem" }}
+          >
+            {update ? "Update" : "Submit"}
+          </Button>
+          {update ? <Button variant="outlined">Cancel</Button> : ""}
+        </Box>
       </Box>
       <Box>
         <TableContainer component={Paper}>
@@ -194,18 +207,15 @@ const Addons = () => {
                   <StyledTableCell sx={{ display: "flex", gap: 2 }}>
                     <Button
                       variant="contained"
-                      onClick={() =>
-                        setAddonData({
-                          ...addonData,
-                          name: row.name,
-                          price: row.price,
-                          is_avaiable: row.IsAvaiable,
-                        })
-                      }
+                      onClick={() => editHandler(row)}
                     >
                       Edit
                     </Button>
-                    <Button variant="outlined" color="error">
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={() => deleteHandler(row.id)}
+                    >
                       Delete
                     </Button>
                   </StyledTableCell>
@@ -217,12 +227,46 @@ const Addons = () => {
       </Box>
     </Layout>
   );
+  async function deleteHandler(id: number) {
+    const response = await fetch(`${config.apiUrl}/addons/${id}`, {
+      method: "DELETE",
+    });
+    if (response.ok) {
+      fetchData();
+      alert("Deleted");
+    }
+  }
+  async function updateHandler() {
+    setUpdate(false);
+    const response = await fetch(`${config.apiUrl}/addons/${updateId}`, {
+      method: "PUT",
+      body: JSON.stringify(addonData),
+    });
+    if (response.ok) {
+      fetchData();
+      alert("Updated Addon success!");
+      setAddonData(defaultAddon);
+    }
+  }
+  function editHandler(row: row) {
+    window.scrollTo(0, 0);
+    setUpdate(true);
+    setUpdateId(row.id);
+    setCheck(row.IsAvaiable === "TRUE" ? true : false);
+    setAddonData({
+      ...addonData,
+      name: row.name,
+      price: row.price,
+      addonCategories: row.AddonCategorie[0].id?.toString() as string,
+    });
+  }
   async function createNewAddon() {
     const response = await fetch(`${config.apiUrl}/addons`, {
       method: "POST",
       body: JSON.stringify(addonData),
     });
     if (response.ok) {
+      fetchData();
       alert("created Addon success!");
       setAddonData(defaultAddon);
     }
