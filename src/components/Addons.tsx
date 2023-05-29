@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import Layout from "./Layout";
 import { useState, useContext } from "react";
-import { AppContext } from "@/contexts/AppContext";
+import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { config } from "@/config/config";
 import { AddonCategory } from "@/typings/types";
 import { prisma } from "@/utils/db";
@@ -46,7 +46,7 @@ const Addons = () => {
     addonCategories: ACdatas,
     addons,
     fetchData,
-  } = useContext(AppContext);
+  } = useContext(BackofficeContext);
   //table related setting
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -228,7 +228,7 @@ const Addons = () => {
     </Layout>
   );
   async function deleteHandler(id: number) {
-    const response = await fetch(`${config.apiUrl}/addons/${id}`, {
+    const response = await fetch(`${config.backofficeUrl}/addons/${id}`, {
       method: "DELETE",
     });
     if (response.ok) {
@@ -238,7 +238,7 @@ const Addons = () => {
   }
   async function updateHandler() {
     setUpdate(false);
-    const response = await fetch(`${config.apiUrl}/addons/${updateId}`, {
+    const response = await fetch(`${config.backofficeUrl}/addons/${updateId}`, {
       method: "PUT",
       body: JSON.stringify(addonData),
     });
@@ -261,7 +261,7 @@ const Addons = () => {
     });
   }
   async function createNewAddon() {
-    const response = await fetch(`${config.apiUrl}/addons`, {
+    const response = await fetch(`${config.backofficeUrl}/addons`, {
       method: "POST",
       body: JSON.stringify(addonData),
     });

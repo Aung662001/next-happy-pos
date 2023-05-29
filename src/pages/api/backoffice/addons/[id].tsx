@@ -11,7 +11,6 @@ export default async function handler(
     if (!data.name || data.price < 0 || !data.hasOwnProperty("is_avaiable")) {
       return res.status(400).json({ error: "dataFromUi incomplete" });
     }
-    console.log(data.name, data.price, data.is_avaiable, data.addonCategories);
     try {
       const response = await prisma.addons.update({
         where: {

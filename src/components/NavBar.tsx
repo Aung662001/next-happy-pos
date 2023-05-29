@@ -23,7 +23,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import { AppContext } from "../contexts/AppContext";
+import { BackofficeContext } from "../contexts/BackofficeContext";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -41,7 +41,7 @@ const NavBar = (props: NavProps) => {
     AddonCategories: " ",
     Setting: "",
   });
-  const { Locations } = useContext(AppContext);
+  const { Locations } = useContext(BackofficeContext);
   const { data: session } = useSession();
   const [locationId, setLocationId] = useLocalStorage("locationId");
   const router = useRouter();

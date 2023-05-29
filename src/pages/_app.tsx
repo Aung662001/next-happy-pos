@@ -1,14 +1,17 @@
 import "@/styles/globals.css";
-import AppProvider from "@/contexts/AppContext";
+import BackofficeProvider from "@/contexts/BackofficeContext";
 import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
+import OrderProvider from "@/contexts/OrderContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider session={pageProps.session}>
-      <AppProvider>
-        <Component {...pageProps} />
-      </AppProvider>
+      <BackofficeProvider>
+        <OrderProvider>
+          <Component {...pageProps} />
+        </OrderProvider>
+      </BackofficeProvider>
     </SessionProvider>
   );
 }

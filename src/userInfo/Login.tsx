@@ -10,12 +10,13 @@ import {
 } from "@mui/material";
 import React, { FormEvent, useContext, useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { AppContext } from "../contexts/AppContext";
+import { BackofficeContext } from "../contexts/BackofficeContext";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
 export default function Login() {
-  const { token, fetchData, updateData, ...data } = useContext(AppContext);
+  const { token, fetchData, updateData, ...data } =
+    useContext(BackofficeContext);
   const router = useRouter();
 
   const [error, setError] = useState(false);

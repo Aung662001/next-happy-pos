@@ -14,7 +14,7 @@ import {
   TextField,
   useStepContext,
 } from "@mui/material";
-import { AppContext } from "../contexts/AppContext";
+import { BackofficeContext } from "../contexts/BackofficeContext";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { Location } from "../typings/types";
 import { config } from "../config/config";
@@ -23,21 +23,20 @@ interface UpdateHandle {
 }
 const Locations = () => {
   const [token, setToken] = useLocalStorage("accessToken");
-  const { Locations, companies, fetchData } = useContext(AppContext);
+  const { Locations, companies, fetchData } = useContext(BackofficeContext);
   const [updatedActualValue, setUpdatedActualValue] =
     useState<Location[]>(Locations);
   const [newLocation, setNewLocation] = useState<Partial<Location>>({
     name: "",
     address: "",
   });
-  useMemo(() => {
+  useEffect(() => {
     setUpdatedActualValue(Locations);
     // fetchData();
   }, [Locations]);
   useEffect(() => {
     fetchData();
   }, []);
-  console.log(Locations, companies);
 
   //update Handler function
   const updateHandler = async (location: Location) => {
@@ -54,12 +53,12 @@ const Locations = () => {
     }
 
     try {
-      await fetch(`${config.apiUrl}/locations/${location!.id}`, {
+      await fetch(`${config.backofficeUrl}/location`, {
         method: "PUT",
-        headers: {
-          Autorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+        // headers: {
+        //   Autorization: `Bearer ${token}`,
+        //   "Content-Type": "application/json",
+        // },
         body: JSON.stringify(location),
       });
       fetchData();
@@ -70,24 +69,28 @@ const Locations = () => {
   };
   const deleteHandler = async (locationId: number) => {
     console.log(locationId);
-    const response = await fetch(`${config.apiUrl}/locations/${locationId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(
+      `${config.backofficeUrl}/location?locationId=${locationId}`,
+      {
+        method: "DELETE",
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      }
+    );
     if (response.ok) {
-      window.location.reload();
-      // fetchData();
+      // window.location.reload();
+      fetchData();
     }
   };
   const createLocation = async () => {
     if (!newLocation.name || !newLocation.address) return;
     newLocation.companies_id = parseInt(companies[0].id!);
-    const response = await fetch(`${config.apiUrl}/locations`, {
+    console.log(newLocation);
+    const response = await fetch(`${config.backofficeUrl}/location`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        // Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(newLocation),

@@ -14,7 +14,7 @@ import { config } from "../config/config";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-export interface AppContextType {
+export interface BackofficeContextType {
   menus: Menu[];
   menuCategories: MenuCategory[];
   addons: Addon[];
@@ -28,7 +28,7 @@ export interface AppContextType {
   token: string;
 }
 
-const defaultContext: AppContextType = {
+const defaultContext: BackofficeContextType = {
   menus: [],
   menuCategories: [],
   addons: [],
@@ -41,9 +41,10 @@ const defaultContext: AppContextType = {
   accessToken: "",
   token: "",
 };
-export const AppContext = createContext<AppContextType>(defaultContext);
+export const BackofficeContext =
+  createContext<BackofficeContextType>(defaultContext);
 
-const AppProvider = (props: any) => {
+const BackofficeProvider = (props: any) => {
   const router = useRouter();
   const { data: session } = useSession();
   const [location, setLocation] = useLocalStorage("locationId");
@@ -56,7 +57,7 @@ const AppProvider = (props: any) => {
     }
   }, [session]);
   const fetchData = async () => {
-    const response = await fetch(`${config.apiUrl}/appData`, {});
+    const response = await fetch(`${config.backofficeUrl}/appData`, {});
     if (!response.ok) return null;
     const responseJson = await response.json();
     const {
@@ -81,10 +82,10 @@ const AppProvider = (props: any) => {
     setLocation(Locations[0].id);
   };
   return (
-    <AppContext.Provider value={{ ...data, updateData, fetchData }}>
+    <BackofficeContext.Provider value={{ ...data, updateData, fetchData }}>
       {props.children}
-    </AppContext.Provider>
+    </BackofficeContext.Provider>
   );
 };
 
-export default AppProvider;
+export default BackofficeProvider;

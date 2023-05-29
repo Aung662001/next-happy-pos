@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Menu, Location } from "../../typings/types";
-import { AppContext } from "../../contexts/AppContext";
+import { BackofficeContext } from "../../contexts/BackofficeContext";
 import FileDropZone from "./FileDropZone";
 import { config } from "../../config/config";
 import { LoadingButton } from "@mui/lab";
@@ -42,14 +42,14 @@ export default function EditModel({ open, close, openModel }: Props) {
     setMenuImage(files[0]);
   };
 
-  const { fetchData, Locations } = useContext(AppContext);
+  const { fetchData, Locations } = useContext(BackofficeContext);
   const createMenu = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!menus?.name || menus?.price < 0) return;
     if (menuImage) {
       const formData = new FormData();
       formData.append("files", menuImage as Blob);
-      const response = await fetch(`${config.apiUrl}/assets`, {
+      const response = await fetch(`${config.backofficeUrl}/assets`, {
         method: "POST",
         body: formData,
       });

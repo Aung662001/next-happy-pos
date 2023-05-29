@@ -1,5 +1,6 @@
 interface Config {
-  apiUrl: string;
+  backofficeUrl: string;
+  orderUrl: string;
   authUrl: string;
   jwtSecret: string;
   spaceAccessKeyId: string;
@@ -23,7 +24,8 @@ export const config: Config = {
   databaseUserName: process.env.DATABASE_USERNAME || "",
   databasePassword: process.env.DATABASE_PASSWORD || "",
   databaseUrl: process.env.DATABASE_URL || "",
-  apiUrl: process.env.NEXT_PUBLIC_SERVER_BASEURL || "",
+  backofficeUrl: process.env.NEXT_PUBLIC_BACKOFFICE_BASEURL || "",
+  orderUrl: process.env.NEXT_PUBLIC_ORDER_BASEURL || "",
   clientId: process.env.GOOGLE_CLIENT_ID || "",
   clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
   nextAuthSecret: process.env.NEXTAUTH_SECRET || "",

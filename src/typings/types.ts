@@ -36,3 +36,6 @@ export interface Location extends BaseType {
   address: string;
   companies_id: number;
 }
+export interface Order {
+  order: [{ menuIds: number[]; addonIds: number }];
+}

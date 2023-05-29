@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Layout from "./Layout";
-import { AppContext } from "../contexts/AppContext";
+import { BackofficeContext } from "../contexts/BackofficeContext";
 import { Box, Button, Chip, TextField } from "@mui/material";
 import { config } from "@/config/config";
 import { prisma } from "@/utils/db";
@@ -12,7 +12,7 @@ interface Categories {
 const MenuCategories = () => {
   const [newMenuCategories, setNewMenuCategories] = useState("");
   const [categories, setCategories] = useState<Categories[]>();
-  const { menuCategories, fetchData } = useContext(AppContext);
+  const { menuCategories, fetchData } = useContext(BackofficeContext);
   const getData = async () => {
     const response = await fetch(
       `${process.env.REACT_APP_SERVER_BASEURL}/menu_categories`,
@@ -65,16 +65,19 @@ const MenuCategories = () => {
     </Layout>
   );
   async function deleteMenuCategories(id: number) {
-    const response = await fetch(`${config.apiUrl}/menuCategories/${id}`, {
-      method: "DELETE",
-    });
+    const response = await fetch(
+      `${config.backofficeUrl}/menuCategories/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
     if (!response.ok) {
       alert("Please delete relation menus");
     }
     fetchData();
   }
   async function createNewMenuCategories() {
-    const response = await fetch(`${config.apiUrl}/menuCategories`, {
+    const response = await fetch(`${config.backofficeUrl}/menuCategories`, {
       method: "POST",
       body: newMenuCategories,
     });

@@ -9,7 +9,7 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import { AppContext } from "../contexts/AppContext";
+import { BackofficeContext } from "../contexts/BackofficeContext";
 import { Location } from "../typings/types";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useRouter } from "next/router";
@@ -17,7 +17,8 @@ import { useRouter } from "next/router";
 export default function Setting() {
   const [locationId, setLocationId] = useLocalStorage("locationId");
   const router = useRouter();
-  const { Locations, fetchData, companies, token } = useContext(AppContext);
+  const { Locations, fetchData, companies, token } =
+    useContext(BackofficeContext);
   console.log(Locations, "jdlkfjdsfkjdsflkdjo");
 
   const [selectedLocation, setSelectedLocation] = useState<
