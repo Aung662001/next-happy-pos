@@ -28,10 +28,13 @@ const MenuCategories = () => {
     fetchData();
   }
   async function createNewMenuCategories() {
-    const response = await fetch(`${config.backofficeUrl}/menuCategories`, {
-      method: "POST",
-      body: newMenuCategories,
-    });
+    const response = await fetch(
+      `${config.backofficeUrl}/menuCategories?locationId=${locationId}`,
+      {
+        method: "POST",
+        body: newMenuCategories,
+      }
+    );
     setNewMenuCategories("");
     fetchData();
   }

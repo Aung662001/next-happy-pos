@@ -196,8 +196,11 @@ export default async function handler(
     const menuCategoriesIds = menusMenuCategoriesLocations.map(
       (MCL) => MCL.menu_categories_id
     );
-    const menuIds = menusMenuCategoriesLocations.map((MCL) => MCL.menus_id);
+    const menuIds = menusMenuCategoriesLocations
+      .map((MCL) => MCL.menus_id)
+      .filter((mcl) => mcl !== null) as number[];
     //menus
+
     const menus = await prisma.menus.findMany({
       where: {
         id: {

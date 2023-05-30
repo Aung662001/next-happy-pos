@@ -7,6 +7,11 @@ export default async function handler(
   let menusCategoriesId = req.query.id as string;
   let id = parseInt(menusCategoriesId);
   try {
+    await prisma.menus_menu_categories_locations.deleteMany({
+      where: {
+        menu_categories_id: id,
+      },
+    });
     const result = await prisma.menu_categories.delete({
       where: {
         id: id,
