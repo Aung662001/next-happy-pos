@@ -5,9 +5,9 @@ import {
   AddonCategory,
   Menu,
   MenuCategory,
-  MenusLocation,
   Location,
   Company,
+  MenusMenuCategoriesLocation,
   Order,
 } from "../typings/types";
 import { useState } from "react";
@@ -20,14 +20,13 @@ export interface OrderContextType {
   menuCategories: MenuCategory[];
   addons: Addon[];
   addonCategories: AddonCategory[];
-  menusLocations: MenusLocation[];
   Locations: Location[];
-  companies: Company[];
-  updateData: (data: any) => void;
-  fetchData: () => void;
   accessToken: string;
   token: string;
-  cart: Order[];
+  cart: Order[] | null;
+  menusMenuCategoriesLocations: MenusMenuCategoriesLocation[];
+  updateData: (data: any) => void;
+  fetchData: () => void;
 }
 
 const defaultContext: OrderContextType = {
@@ -35,14 +34,13 @@ const defaultContext: OrderContextType = {
   menuCategories: [],
   addons: [],
   addonCategories: [],
-  menusLocations: [],
+  menusMenuCategoriesLocations: [],
   Locations: [],
-  companies: [],
-  updateData: () => {},
-  fetchData: () => {},
   accessToken: "",
   token: "",
   cart: [],
+  updateData: () => {},
+  fetchData: () => {},
 };
 export const OrderContext = createContext<OrderContextType>(defaultContext);
 
@@ -59,7 +57,10 @@ const OrderProvider = (props: any) => {
     }
   }, [session]);
   const fetchData = async () => {
-    const response = await fetch(`${config.orderUrl}`, {});
+    const response = await fetch(
+      `${config.orderUrl}?locationId=${location}`,
+      {}
+    );
     if (!response.ok) return null;
     const responseJson = await response.json();
     const {
@@ -67,19 +68,17 @@ const OrderProvider = (props: any) => {
       menuCategories,
       addons,
       addonCategories,
-      menusLocations,
       Locations,
-      companies,
+      menusMenuCategoriesLocations,
     } = responseJson;
     updateData({
       ...data,
       menus,
       menuCategories,
+      menusMenuCategoriesLocations,
       addons,
       addonCategories,
-      menusLocations,
       Locations,
-      companies,
     });
     Locations && setLocation(Locations[0].id);
   };

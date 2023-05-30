@@ -6,24 +6,27 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  //   const locationIds = Locations.map((location) => location.id as number);
-  //   //menuLocations
-  //   const menusLocations = await prisma.menus_locations.findMany({
-  //     where: {
-  //       locations_id: {
-  //         in: locationIds,
-  //       },
-  //     },
-  //   });
-  //   const menuIds = menusLocations.map((ml) => ml.menus_id);
-  //   //menus
-  //   const menus = await prisma.menus.findMany({
-  //     where: {
-  //       id: {
-  //         in: menuIds,
-  //       },
-  //     },
-  //   });
+  const query = req.query;
+  const locationid = query.locationId as string;
+  const locationId = parseInt(locationid);
+  if (!locationId) return res.send(400);
+  // const locationIds = Locations.map((location) => location.id as number);
+  //menuLocations
+  const menusMenuCategoriesLocations =
+    await prisma.menus_menu_categories_locations.findMany({
+      where: {
+        locations_id: locationId,
+      },
+    });
+  const menuIds = menusMenuCategoriesLocations.map((ml) => ml.menus_id);
+  //menus
+  const menus = await prisma.menus.findMany({
+    where: {
+      id: {
+        in: menuIds,
+      },
+    },
+  });
   //   const menuAddonCategoriesIds = await prisma.menus_addon_categories.findMany({
   //     where: {
   //       menus_id: {
@@ -48,17 +51,21 @@ export default async function handler(
   //       },
   //     },
   //   });
-  //   const menuMenuCategories = await prisma.menus_menu_categories.findMany({
-  //     where: {
-  //       menus_id: {
-  //         in: menuIds,
-  //       },
-  //     },
-  //   });
-  //   const menuCategoriesIds = menuMenuCategories.map(
-  //     (mc) => mc.menu_categories_id
-  //   ) as number[];
-  //   const menuCategories = await prisma.menu_categories.findMany();
+  const location = await prisma.locations.findFirst({
+    where: {
+      id: locationId,
+    },
+  });
+  const menuCategoriesIds = menusMenuCategoriesLocations.map(
+    (MCL) => MCL.menu_categories_id
+  );
+  const menuCategories = await prisma.menu_categories.findMany({
+    where: {
+      id: {
+        in: menuCategoriesIds,
+      },
+    },
+  });
   //   const companies = await prisma.companies.findMany({
   //     where: {
   //       id: company_id,
@@ -74,5 +81,10 @@ export default async function handler(
   //     menusLocations,
   //     companies,
   //   });
-  res.send(200);
+  res.send({
+    location,
+    menuCategories,
+    menus,
+    menusMenuCategoriesLocations,
+  });
 }

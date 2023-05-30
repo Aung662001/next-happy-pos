@@ -19,7 +19,6 @@ export default function Setting() {
   const router = useRouter();
   const { Locations, fetchData, companies, token } =
     useContext(BackofficeContext);
-  console.log(Locations, "jdlkfjdsfkjdsflkdjo");
 
   const [selectedLocation, setSelectedLocation] = useState<
     Location | undefined
@@ -28,7 +27,7 @@ export default function Setting() {
   useEffect(() => {
     if (Locations.length) {
       if (!locationId) {
-        setLocationId(String(Locations[0].id));
+        setLocationId(Locations[0].id as number);
         setSelectedLocation(Locations[0]);
       } else {
         const selectedLocation = Locations.find(
@@ -39,12 +38,12 @@ export default function Setting() {
     }
   }, [Locations, companies]);
   function handleChange(e: SelectChangeEvent<number>) {
-    setLocationId(String(e.target.value));
+    setLocationId(e.target.value as number);
     const selectedLocation = Locations.find(
       (location) => location.id === e.target.value
     );
     setSelectedLocation(selectedLocation);
-    router.push(`/menus`);
+    // router.push(`/menus`);
   }
   return (
     <Layout>

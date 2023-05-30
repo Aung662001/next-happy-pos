@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import NavBar from "./NavBar";
 
 interface Props {
@@ -7,10 +8,10 @@ interface Props {
 
 const Layout = (props: Props) => {
   return (
-    <div>
+    <Box>
       <NavBar title={props.title} />
       {props.children}
-    </div>
+    </Box>
   );
 };
 

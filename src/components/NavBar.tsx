@@ -36,9 +36,9 @@ const NavBar = (props: NavProps) => {
     Orders: "",
     Locations: "",
     Menu: "",
-    MenuCategories: " ",
+    MenuCategories: "",
     Addon: "",
-    AddonCategories: " ",
+    AddonCategories: "",
     Setting: "",
   });
   const { Locations } = useContext(BackofficeContext);

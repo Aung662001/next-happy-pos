@@ -5,7 +5,7 @@ import {
   AddonCategory,
   Menu,
   MenuCategory,
-  MenusLocation,
+  MenusMenuCategoriesLocation,
   Location,
   Company,
 } from "../typings/types";
@@ -19,7 +19,7 @@ export interface BackofficeContextType {
   menuCategories: MenuCategory[];
   addons: Addon[];
   addonCategories: AddonCategory[];
-  menusLocations: MenusLocation[];
+  menusMenuCategoriesLocations: MenusMenuCategoriesLocation[];
   Locations: Location[];
   companies: Company[];
   updateData: (data: any) => void;
@@ -33,7 +33,7 @@ const defaultContext: BackofficeContextType = {
   menuCategories: [],
   addons: [],
   addonCategories: [],
-  menusLocations: [],
+  menusMenuCategoriesLocations: [],
   Locations: [],
   companies: [],
   updateData: () => {},
@@ -65,7 +65,7 @@ const BackofficeProvider = (props: any) => {
       menuCategories,
       addons,
       addonCategories,
-      menusLocations,
+      menusMenuCategoriesLocations,
       Locations,
       companies,
     } = responseJson;
@@ -75,7 +75,7 @@ const BackofficeProvider = (props: any) => {
       menuCategories,
       addons,
       addonCategories,
-      menusLocations,
+      menusMenuCategoriesLocations,
       Locations,
       companies,
     });

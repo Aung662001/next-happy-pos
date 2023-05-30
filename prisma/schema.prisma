@@ -33,29 +33,29 @@ model companies {
 }
 
 model locations {
-  id              Int               @id @default(autoincrement())
-  name            String
-  address         String?
-  companies_id    Int?
-  companies       companies?        @relation(fields: [companies_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  menus_locations menus_locations[]
+  id                              Int                               @id @default(autoincrement())
+  name                            String
+  address                         String?
+  companies_id                    Int?
+  companies                       companies?                        @relation(fields: [companies_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  menus_menu_categories_locations menus_menu_categories_locations[]
+  tables                          tables[]
 }
 
 model menu_categories {
-  id                    Int                     @id @default(autoincrement())
-  name                  String
-  menus_menu_categories menus_menu_categories[]
+  id                              Int                               @id @default(autoincrement())
+  name                            String
+  menus_menu_categories_locations menus_menu_categories_locations[]
 }
 
 model menus {
-  id                     Int                      @id @default(autoincrement())
-  name                   String
-  price                  Int
-  asseturl               String?
-  description            String?
-  menus_addon_categories menus_addon_categories[]
-  menus_locations        menus_locations[]
-  menus_menu_categories  menus_menu_categories[]
+  id                              Int                               @id @default(autoincrement())
+  name                            String
+  price                           Int
+  asseturl                        String?
+  description                     String?
+  menus_addon_categories          menus_addon_categories[]
+  menus_menu_categories_locations menus_menu_categories_locations[]
 }
 
 model menus_addon_categories {
@@ -66,21 +66,15 @@ model menus_addon_categories {
   menus               menus?            @relation(fields: [menus_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model menus_locations {
-  id           Int       @id @default(autoincrement())
-  menus_id     Int
-  locations_id Int
-  is_avaiable  Boolean   @default(true)
-  locations    locations @relation(fields: [locations_id], references: [id], onUpdate: NoAction)
-  menus        menus     @relation(fields: [menus_id], references: [id], onUpdate: NoAction)
-}
-
-model menus_menu_categories {
-  id                 Int              @id @default(autoincrement())
+model menus_menu_categories_locations {
+  id                 Int             @id @default(autoincrement())
   menus_id           Int?
-  menu_categories_id Int?
-  menu_categories    menu_categories? @relation(fields: [menu_categories_id], references: [id], onUpdate: NoAction)
-  menus              menus?           @relation(fields: [menus_id], references: [id], onUpdate: NoAction)
+  locations_id       Int
+  menu_categories_id Int
+  is_avaiable        Boolean         @default(true)
+  locations          locations       @relation(fields: [locations_id], references: [id], onUpdate: NoAction)
+  menus              menus?          @relation(fields: [menus_id], references: [id], onUpdate: NoAction)
+  menu_categories    menu_categories @relation(fields: [menu_categories_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model users {
@@ -88,6 +82,29 @@ model users {
   name         String
   email        String     @unique
   password     String     @unique
+  role         Role       @default(USER)
   companies_id Int?
   companies    companies? @relation(fields: [companies_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model tables {
+  id          Int       @id @default(autoincrement())
+  name        String
+  location_id Int
+  locations   locations @relation(fields: [location_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+enum Role {
+  USER
+  ADMIN
+  MANAGER
+  EDITOR
+}
+
+model discount {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  startDate   DateTime
+  endDate     DateTime
 }
