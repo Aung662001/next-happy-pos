@@ -1,22 +1,18 @@
-import React from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 function App() {
   const { data: session } = useSession();
-  if (session && session.user) {
-    return (
-      <>
-        Signed in as {session.user.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
-      </>
-    );
-  }
-  return (
-    <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
-    </>
-  );
+  const router = useRouter();
+  useEffect(() => {
+    if (session) {
+      router.push("/backoffice/orders");
+    } else {
+      router.push("/auth/signin");
+    }
+  }, [session]);
+  return null;
 }
 
 export default App;

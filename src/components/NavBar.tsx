@@ -30,17 +30,52 @@ import Link from "next/link";
 interface NavProps {
   title?: string;
 }
+export const sidebarMenuItems = [
+  {
+    id: 1,
+    label: "Orders",
+    icon: <DinnerDiningIcon />,
+    route: "/backoffice/orders",
+  },
+
+  {
+    id: 2,
+    label: "Menu",
+    icon: <DinnerDiningIcon />,
+    route: "/backoffice/menus",
+  },
+  {
+    id: 3,
+    label: "MenuCategories",
+    icon: <SetMealIcon />,
+    route: "/backoffice/menu-categories",
+  },
+  {
+    id: 4,
+    label: "Addon",
+    icon: <FastfoodIcon />,
+    route: "/backoffice/addons",
+  },
+  {
+    id: 5,
+    label: "AddonCategories",
+    icon: <EggIcon />,
+    route: "/backoffice/addon-categories",
+  },
+  {
+    id: 6,
+    label: "Locations",
+    icon: <EditLocationAltIcon />,
+    route: "/backoffice/locations",
+  },
+  {
+    id: 7,
+    label: "Setting",
+    icon: <SettingsIcon />,
+    route: "/backoffice/setting",
+  },
+];
 const NavBar = (props: NavProps) => {
-  const [accState, setAccState] = useState({
-    LoginLogout: "Sign In",
-    Orders: "",
-    Locations: "",
-    Menu: "",
-    MenuCategories: "",
-    Addon: "",
-    AddonCategories: "",
-    Setting: "",
-  });
   const { Locations } = useContext(BackofficeContext);
   const { data: session } = useSession();
   const [locationId, setLocationId] = useLocalStorage("locationId");
@@ -48,65 +83,6 @@ const NavBar = (props: NavProps) => {
   function loginHandler() {
     signIn("google", { callbackUrl: "/backoffice/orders" });
   }
-  useEffect(() => {
-    if (session) {
-      setAccState({
-        LoginLogout: "Sign Out",
-        Orders: "Orders",
-        Locations: "Locations",
-        Menu: "Menu",
-        MenuCategories: "Menu Categories",
-        Addon: "Addon",
-        AddonCategories: "Addon Categories",
-        Setting: "Setting",
-      });
-    }
-  }, [session]);
-  const navItems = [
-    {
-      id: 1,
-      label: accState.Orders,
-      icon: <DinnerDiningIcon />,
-      route: "/backoffice/orders",
-    },
-
-    {
-      id: 2,
-      label: accState.Menu,
-      icon: <DinnerDiningIcon />,
-      route: "/backoffice/menus",
-    },
-    {
-      id: 3,
-      label: accState.MenuCategories,
-      icon: <SetMealIcon />,
-      route: "/backoffice/menu-categories",
-    },
-    {
-      id: 4,
-      label: accState.Addon,
-      icon: <FastfoodIcon />,
-      route: "/backoffice/addons",
-    },
-    {
-      id: 5,
-      label: accState.AddonCategories,
-      icon: <EggIcon />,
-      route: "/backoffice/addon-categories",
-    },
-    {
-      id: 6,
-      label: accState.Locations,
-      icon: <EditLocationAltIcon />,
-      route: "/backoffice/locations",
-    },
-    {
-      id: 7,
-      label: accState.Setting,
-      icon: <SettingsIcon />,
-      route: "/backoffice/setting",
-    },
-  ];
 
   const [open, setOpen] = useState<boolean>(false);
   const toggleDrawer =
@@ -126,94 +102,26 @@ const NavBar = (props: NavProps) => {
     signOut();
   }
 
-  const list = () => (
-    <Box
-      role="presentation"
-      onClick={toggleDrawer(false)}
-      onKeyDown={toggleDrawer(false)}
-      position="sticky"
-    >
-      <List>
-        {navItems.slice(0, navItems.length - 1).map((item) => (
-          <Link
-            href={item.route}
-            key={item.id}
-            style={{ textDecoration: "none", color: "#000" }}
-          >
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-
-                <ListItemText primary={item.label} />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {navItems.slice(-1).map((item) => (
-          <Link
-            href={item.route}
-            style={{ textDecoration: "none", color: "#000" }}
-            key={item.id}
-          >
-            <ListItem key={item.id} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.label} />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-        ))}
-      </List>
-    </Box>
-  );
-  let navTitle =
-    typeof window !== "undefined"
-      ? navItems.find((item) => item.route === window.location.pathname)?.label
-      : "";
   return (
-    <Box sx={{ flexGrow: 1, position: "sticky", top: 2 }}>
+    <Box>
       <AppBar position="static">
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            {" "}
-            <IconButton
-              onClick={() => setOpen((prev) => !prev)}
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" component="div">
-              {
-                Locations.find(
-                  (location) => location.id === parseInt(locationId as string)
-                )?.name
-              }
-            </Typography>
-          </Box>
-          <Typography variant="h6" component="div">
-            {navTitle}
-            <ListItemText primary={props.title ? props.title : ""} />
-          </Typography>
+        <Toolbar
+          sx={{
+            backgroundColor: "#1B9C85",
+            // display: "flex",
+            // justifyContent: "space-between",
+            // flexDirection: "row",
+          }}
+        >
           <Button
             color="inherit"
             onClick={session ? logoutHandler : loginHandler}
+            sx={{ width: "100%" }}
           >
-            {accState.LoginLogout}
+            {session ? "LogOut" : "LogIn"}
           </Button>
         </Toolbar>
       </AppBar>
-      <div>
-        <Drawer anchor="left" open={open} onClose={toggleDrawer(false)}>
-          {list()}
-        </Drawer>
-      </div>
     </Box>
   );
 };

@@ -18,6 +18,7 @@ import { BackofficeContext } from "../contexts/BackofficeContext";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { Location } from "../typings/types";
 import { config } from "../config/config";
+import Layout from "./Layout";
 interface UpdateHandle {
   updateHandler: () => void;
 }
@@ -101,129 +102,133 @@ const Locations = () => {
     }
   };
   return (
-    <>
-      <NavBar />
-      <FormControl
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          width: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: 3,
-          gap: 3,
-        }}
-      >
-        <TextField
-          label="City"
-          variant="outlined"
-          type="text"
-          value={newLocation.name}
-          onChange={(event) => {
-            setNewLocation({
-              ...newLocation,
-              address: newLocation.address,
-              name: event?.target.value,
-            });
+    <Layout>
+      <>
+        <FormControl
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 3,
+            gap: 3,
           }}
-        />
-        <TextField
-          label="Address"
-          variant="outlined"
-          type="text"
-          value={newLocation.address}
-          onChange={(eve) => {
-            setNewLocation({
-              ...newLocation,
-              name: newLocation.name,
-              address: eve?.target.value,
-            });
-          }}
-        />
-        <Button variant="contained" onClick={() => createLocation()}>
-          Create
-        </Button>
-      </FormControl>
-      <Box
-        sx={{
-          width: "90%",
-          height: "3px",
-          backgroundColor: "black",
-          margin: "0 auto",
-          marginTop: 3,
-        }}
-      ></Box>
-      {updatedActualValue.map((location, index) => {
-        return (
-          <FormControl
-            key={index}
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              width: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: 3,
-              gap: 3,
+        >
+          <TextField
+            label="City"
+            variant="outlined"
+            type="text"
+            value={newLocation.name}
+            onChange={(event) => {
+              setNewLocation({
+                ...newLocation,
+                address: newLocation.address,
+                name: event?.target.value,
+              });
             }}
-          >
-            <Box
+          />
+          <TextField
+            label="Address"
+            variant="outlined"
+            type="text"
+            value={newLocation.address}
+            onChange={(eve) => {
+              setNewLocation({
+                ...newLocation,
+                name: newLocation.name,
+                address: eve?.target.value,
+              });
+            }}
+          />
+          <Button variant="contained" onClick={() => createLocation()}>
+            Create
+          </Button>
+        </FormControl>
+        <Box
+          sx={{
+            width: "90%",
+            height: "3px",
+            backgroundColor: "black",
+            margin: "0 auto",
+            marginTop: 3,
+          }}
+        ></Box>
+        {updatedActualValue.map((location, index) => {
+          return (
+            <FormControl
+              key={index}
               sx={{
-                fontSize: "1.3rem",
-                height: "100%",
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: 3,
+                gap: 3,
               }}
             >
-              {index + 1}.
-            </Box>
-            <TextField
-              label="City"
-              variant="outlined"
-              type="text"
-              defaultValue={location.name}
-              onChange={(event) => {
-                const newLocation = updatedActualValue.map((curloca) => {
-                  if (curloca.id === location.id) {
-                    return { ...curloca, name: event.target.value };
-                  }
-                  return curloca;
-                });
-                setUpdatedActualValue(newLocation);
-              }}
-            />
-            <TextField
-              label="Address"
-              variant="outlined"
-              type="text"
-              defaultValue={location.address}
-              onChange={(event) => {
-                const newLocation = updatedActualValue.map((curloca) => {
-                  if (curloca.id === location.id) {
-                    return {
-                      ...curloca,
-                      address: event.target.value,
-                    };
-                  } else {
+              <Box
+                sx={{
+                  fontSize: "1.3rem",
+                  height: "100%",
+                }}
+              >
+                {index + 1}.
+              </Box>
+              <TextField
+                label="City"
+                variant="outlined"
+                type="text"
+                defaultValue={location.name}
+                onChange={(event) => {
+                  const newLocation = updatedActualValue.map((curloca) => {
+                    if (curloca.id === location.id) {
+                      return { ...curloca, name: event.target.value };
+                    }
                     return curloca;
-                  }
-                });
-                setUpdatedActualValue(newLocation);
-              }}
-            />
+                  });
+                  setUpdatedActualValue(newLocation);
+                }}
+              />
+              <TextField
+                label="Address"
+                variant="outlined"
+                type="text"
+                defaultValue={location.address}
+                onChange={(event) => {
+                  const newLocation = updatedActualValue.map((curloca) => {
+                    if (curloca.id === location.id) {
+                      return {
+                        ...curloca,
+                        address: event.target.value,
+                      };
+                    } else {
+                      return curloca;
+                    }
+                  });
+                  setUpdatedActualValue(newLocation);
+                }}
+              />
 
-            <Button variant="contained" onClick={() => updateHandler(location)}>
-              Update
-            </Button>
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => deleteHandler(location.id!)}
-            >
-              Delete
-            </Button>
-          </FormControl>
-        );
-      })}
-    </>
+              <Button
+                variant="contained"
+                onClick={() => updateHandler(location)}
+              >
+                Update
+              </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={() => deleteHandler(location.id!)}
+              >
+                Delete
+              </Button>
+            </FormControl>
+          );
+        })}
+      </>
+    </Layout>
   );
 };
 export default Locations;

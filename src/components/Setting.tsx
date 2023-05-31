@@ -13,6 +13,7 @@ import { BackofficeContext } from "../contexts/BackofficeContext";
 import { Location } from "../typings/types";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useRouter } from "next/router";
+import NavBar from "./NavBar";
 
 export default function Setting() {
   const [locationId, setLocationId] = useLocalStorage("locationId");

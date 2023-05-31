@@ -53,7 +53,6 @@ const Menus = () => {
   const menuIds = menusMenuCategoriesLocations
     .filter((mcl) => mcl.locations_id === locationId)
     .map((mcl) => mcl.menus_id);
-  console.log(menuIds);
 
   const filteredMenus = menusData.filter((menu) =>
     menuIds.includes(menu.id as number)
@@ -77,6 +76,7 @@ const Menus = () => {
             container
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
+            gap={3}
           >
             <Box
               onClick={() => setOpenModel(true)}
@@ -100,13 +100,14 @@ const Menus = () => {
             </Box>
             {filteredMenus?.map((data, index) => {
               return (
-                <Grid item xs={2} sm={4} md={4} key={index}>
+                <>
                   <Box>
                     <Card
                       sx={{
-                        maxWidth: 300,
+                        width: 300,
                         backgroundColor: "#E7EBF0",
-                        maxHeight: 300,
+                        height: 300,
+                        marginTop: 3,
                       }}
                       onClick={() => editHandle(data)}
                     >
@@ -123,35 +124,13 @@ const Menus = () => {
                           <span style={{ fontSize: "18px" }}>Ks</span>
                         </Typography>
                       </CardContent>
-                      <CardActions>
-                        {/* <Link
-                            to={`/menus/${data.id}?locationId=${locationId}`}
-                          >
-                            <Button size="small">Edit</Button>
-                          </Link> */}
-                        {/* <Button
-                            size="small"
-                            onClick={() => handleDelete(data?.id)}
-                          >
-                            Delete
-                          </Button> */}
-                      </CardActions>
                     </Card>
                   </Box>
-                </Grid>
+                </>
               );
             })}
           </Grid>
         </Stack>
-        <Link href="/">
-          <Button
-            variant="outlined"
-            style={{ marginLeft: "2rem" }}
-            sx={{ "&:hover": { backgroundColor: "skyblue" } }}
-          >
-            Back
-          </Button>
-        </Link>
       </>
     </Layout>
   );

@@ -27,45 +27,49 @@ interface Props {
 export default function EditModel({ open, close, openModel }: Props) {
   const [menus, setMenus] = useState<Menu>({
     name: "",
-    price: 0,
-    locationIds: [],
+    price: undefined,
+    menuCategoriesIds: [],
     asseturl: "",
     description: "",
   });
   const [price, setPrice] = useState<string | number>(0);
   const [name, setName] = useState<string>("");
   const [menuImage, setMenuImage] = useState<File>();
-  const [selectedLocationIds, setSelectedLocationIds] = useState<number[]>([]);
+  const [selectedCategoriesIds, setSelectedCategoriesIds] = useState<number[]>(
+    []
+  );
   const [visible, setVisible] = useState(false);
 
   const onFileSelected = (files: File[]) => {
     setMenuImage(files[0]);
   };
 
-  const { fetchData, Locations } = useContext(BackofficeContext);
+  const { fetchData, menuCategories } = useContext(BackofficeContext);
   const createMenu = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (menus.price === undefined) return;
     if (!menus?.name || menus?.price < 0) return;
-    if (menuImage) {
-      const formData = new FormData();
-      formData.append("files", menuImage as Blob);
-      const response = await fetch(`${config.backofficeUrl}/assets`, {
-        method: "POST",
-        body: formData,
-      });
-      const responseJson = await response.json();
-      const asseturl = responseJson.asseturl;
-      menus.asseturl = asseturl;
-    }
+    console.log(menus);
+    // if (menuImage) {
+    //   const formData = new FormData();
+    //   formData.append("files", menuImage as Blob);
+    //   const response = await fetch(`${config.backofficeUrl}/assets`, {
+    //     method: "POST",
+    //     body: formData,
+    //   });
+    //   const responseJson = await response.json();
+    //   const asseturl = responseJson.asseturl;
+    //   menus.asseturl = asseturl;
+    // }
 
     // menus.locationIds?.push(locationId!);
     // const locationId = localStorage.getItem("locationId")!;
 
-    await fetch(`${process.env.REACT_APP_SERVER_BASEURL}/menus/`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(menus),
-    });
+    // await fetch(`${process.env.REACT_APP_SERVER_BASEURL}/menus/`, {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify(menus),
+    // });
     fetchData();
   };
   const style = {
@@ -79,9 +83,9 @@ export default function EditModel({ open, close, openModel }: Props) {
     p: 4,
   };
   const handleChange = (e: SelectChangeEvent<number[] | []>) => {
-    const curLoca = e.target.value as number[];
-    setSelectedLocationIds(curLoca);
-    setMenus({ ...menus, locationIds: curLoca });
+    const currentCategory = e.target.value as number[];
+    setSelectedCategoriesIds(currentCategory);
+    setMenus({ ...menus, menuCategoriesIds: currentCategory });
     if (menus.name && menus.price) setVisible(true);
   };
   const buttonVisible = () => {
@@ -117,7 +121,7 @@ export default function EditModel({ open, close, openModel }: Props) {
                 setMenus({
                   name: event.target.value,
                   price: menus?.price ? menus.price : 0,
-                  locationIds: [],
+                  menuCategoriesIds: selectedCategoriesIds,
                 });
                 buttonVisible();
               }}
@@ -127,13 +131,13 @@ export default function EditModel({ open, close, openModel }: Props) {
               variant="outlined"
               type="number"
               sx={{ mb: 2 }}
-              value={price}
+              value={price ? price : ""}
               onChange={(event) => {
                 setPrice(event.target.value);
                 setMenus({
                   price: parseInt(event.target.value),
                   name: menus?.name ? menus.name : "",
-                  locationIds: [],
+                  menuCategoriesIds: selectedCategoriesIds,
                 });
                 buttonVisible();
               }}
@@ -148,7 +152,7 @@ export default function EditModel({ open, close, openModel }: Props) {
                 setMenus({
                   price: menus.price ? menus.price : 0,
                   name: menus?.name ? menus.name : "",
-                  locationIds: menus.locationIds,
+                  menuCategoriesIds: menus.menuCategoriesIds,
                   description: event.target.value,
                 });
               }}
@@ -158,38 +162,39 @@ export default function EditModel({ open, close, openModel }: Props) {
                 id="demo-multiple-checkbox-label"
                 sx={{ backgroundColor: "white", px: 2 }}
               >
-                Locations
+                Menu Categoriey
               </InputLabel>
               <Select
                 labelId="demo-multiple-checkbox-label"
                 id="demo-multiple-checkbox"
                 multiple
-                value={selectedLocationIds}
+                value={selectedCategoriesIds}
                 onChange={handleChange}
                 input={<OutlinedInput label="Tag" />}
                 renderValue={(value) => {
-                  const selectedLocations = selectedLocationIds.map(
-                    (selectedLocationId) => {
-                      return Locations.find(
-                        (location) => location.id === selectedLocationId
+                  const selectedCategory = selectedCategoriesIds.map(
+                    (selectedCategoryId) => {
+                      return menuCategories.find(
+                        (menuCategory) => menuCategory.id === selectedCategoryId
                       );
                     }
                   );
-                  return selectedLocations
-                    .map((selectedLocation) => selectedLocation?.name)
+                  return selectedCategory
+                    .map((category) => category?.name)
                     .join(",");
                 }}
               >
-                {Locations.map((location) => (
-                  <MenuItem key={location.id} value={location.id}>
+                {menuCategories.map((menuCategory) => (
+                  <MenuItem key={menuCategory.id} value={menuCategory.id}>
                     <Checkbox
                       checked={
-                        location.id && selectedLocationIds.includes(location.id)
+                        menuCategory.id &&
+                        selectedCategoriesIds.includes(menuCategory.id)
                           ? true
                           : false
                       }
                     />
-                    <ListItemText primary={location.name} />
+                    <ListItemText primary={menuCategory.name} />
                   </MenuItem>
                 ))}
               </Select>
