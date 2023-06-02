@@ -22,7 +22,7 @@ import Layout from "./Layout";
 import { useState, useContext } from "react";
 import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { config } from "@/config/config";
-import { AddonCategory } from "@/typings/types";
+import { addon_categories as AddonCategory } from "@prisma/client";
 import { prisma } from "@/utils/db";
 interface row {
   id: number;
@@ -79,9 +79,9 @@ const Addons = () => {
   const rows: row[] = [];
   addons.map((addon) => {
     const AddonCategorie = ACdatas.filter(
-      (data) => data.id!.toString() == addon.addon_categories_id
+      (data) => data.id! == addon.addon_categories_id
     );
-    const is_avaiable = addon.is_avaiable.toString().toUpperCase();
+    const is_avaiable = addon.is_avaiable!.toString().toUpperCase();
     if (!addon.id) return;
     const data = createData(
       addon.id,
