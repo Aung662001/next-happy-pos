@@ -1,14 +1,14 @@
 import { createContext, useEffect } from "react";
 
 import {
-  Addon,
-  AddonCategory,
-  Menu,
-  MenuCategory,
-  MenusMenuCategoriesLocation,
-  Location,
-  Company,
-} from "../typings/types";
+  addons as Addon,
+  addon_categories as AddonCategory,
+  menus as Menu,
+  menu_categories as MenuCategory,
+  menus_menu_categories_locations as MenusMenuCategoriesLocation,
+  locations as Location,
+  companies as Company,
+} from "@prisma/client";
 import { useState } from "react";
 import { config } from "../config/config";
 import { useLocalStorage } from "../hooks/useLocalStorage";

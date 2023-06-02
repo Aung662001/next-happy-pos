@@ -50,26 +50,24 @@ export default function EditModel({ open, close, openModel }: Props) {
     if (menus.price === undefined) return;
     if (!menus?.name || menus?.price < 0) return;
     console.log(menus);
-    // if (menuImage) {
-    //   const formData = new FormData();
-    //   formData.append("files", menuImage as Blob);
-    //   const response = await fetch(`${config.backofficeUrl}/assets`, {
-    //     method: "POST",
-    //     body: formData,
-    //   });
-    //   const responseJson = await response.json();
-    //   const asseturl = responseJson.asseturl;
-    //   menus.asseturl = asseturl;
-    // }
+    if (menuImage) {
+      const formData = new FormData();
+      formData.append("files", menuImage as Blob);
+      const response = await fetch(`${config.backofficeUrl}/assets`, {
+        method: "POST",
+        body: formData,
+      });
+      const responseJson = await response.json();
+      const asseturl = responseJson.assetUrl;
+      menus.asseturl = asseturl;
+    }
+    const locationId = localStorage.getItem("locationId")!;
 
-    // menus.locationIds?.push(locationId!);
-    // const locationId = localStorage.getItem("locationId")!;
-
-    // await fetch(`${process.env.REACT_APP_SERVER_BASEURL}/menus/`, {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(menus),
-    // });
+    await fetch(`${config.backofficeUrl}/menus?locationId=${locationId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(menus),
+    });
     fetchData();
   };
   const style = {
