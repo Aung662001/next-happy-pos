@@ -13,7 +13,7 @@ import {
 import Grid from "@mui/material/Grid";
 import Layout from "./Layout";
 import { useContext, useEffect, useState } from "react";
-import { Menu } from "../typings/types";
+import { menus as Menu } from "@prisma/client";
 import { BackofficeContext } from "../contexts/BackofficeContext";
 import EditForm from "./EditForm";
 import EditModel from "./editMenuModel/CreateMenuModel";
@@ -115,7 +115,7 @@ const Menus = () => {
                         <CardMedia
                           component="img"
                           height="194"
-                          image={data.asseturl}
+                          image={data.asseturl ? data.asseturl : ""}
                           alt="Paella dish"
                         />
                         <Typography gutterBottom variant="h5">

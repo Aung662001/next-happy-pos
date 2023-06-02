@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { BackofficeContext } from "../contexts/BackofficeContext";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import { Location } from "../typings/types";
+import { locations as Location } from "@prisma/client";
 import { config } from "../config/config";
 import Layout from "./Layout";
 interface UpdateHandle {
@@ -86,7 +86,7 @@ const Locations = () => {
   };
   const createLocation = async () => {
     if (!newLocation.name || !newLocation.address) return;
-    newLocation.companies_id = parseInt(companies[0].id!);
+    newLocation.companies_id = companies[0].id!;
     console.log(newLocation);
     const response = await fetch(`${config.backofficeUrl}/location`, {
       method: "POST",

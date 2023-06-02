@@ -10,7 +10,7 @@ import {
   TextField,
 } from "@mui/material";
 import { BackofficeContext } from "../contexts/BackofficeContext";
-import { Location } from "../typings/types";
+import { locations as Location } from "@prisma/client";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useRouter } from "next/router";
 import NavBar from "./NavBar";
