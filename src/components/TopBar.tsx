@@ -28,7 +28,7 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useRouter } from "next/router";
 import Link from "next/link";
 interface NavProps {
-  title?: string;
+  label?: string;
 }
 export const sidebarMenuItems = [
   {
@@ -108,15 +108,17 @@ const NavBar = (props: NavProps) => {
         <Toolbar
           sx={{
             backgroundColor: "#1B9C85",
-            // display: "flex",
-            // justifyContent: "space-between",
-            // flexDirection: "row",
+            display: "flex",
+            justifyContent: "space-between",
+            flexDirection: "row",
           }}
         >
+          <h1>Logo</h1>
+          <h2>{props.label}</h2>
           <Button
             color="inherit"
             onClick={session ? logoutHandler : loginHandler}
-            sx={{ width: "100%" }}
+            // sx={{ width: "100%" }}
           >
             {session ? "LogOut" : "LogIn"}
           </Button>

@@ -10,7 +10,7 @@ import Layout from "./Layout";
 
 const AddonCategories = () => {
   return (
-    <Layout>
+    <Layout title="AddonCategories">
       <Box
         sx={{
           display: "flex",

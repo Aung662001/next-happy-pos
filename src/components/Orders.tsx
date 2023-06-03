@@ -28,7 +28,7 @@ const rows = [
 
 export default function Orders() {
   return (
-    <Layout>
+    <Layout title="Orders">
       <TableContainer component={Paper} sx={{ marginTop: "20px" }}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>

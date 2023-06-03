@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import NavBar from "./NavBar";
+import NavBar from "./TopBar";
 import {
   Box,
   Button,
@@ -102,7 +102,7 @@ const Locations = () => {
     }
   };
   return (
-    <Layout>
+    <Layout title="Locations">
       <>
         <FormControl
           sx={{

@@ -13,7 +13,7 @@ import { BackofficeContext } from "../contexts/BackofficeContext";
 import { locations as Location } from "@prisma/client";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useRouter } from "next/router";
-import NavBar from "./NavBar";
+import NavBar from "./TopBar";
 
 export default function Setting() {
   const [locationId, setLocationId] = useLocalStorage("locationId");
@@ -47,7 +47,7 @@ export default function Setting() {
     // router.push(`/menus`);
   }
   return (
-    <Layout>
+    <Layout title="Setting">
       <Box sx={{ maxWidth: 500, margin: "0 auto", marginTop: "25%" }}>
         <TextField
           id="outline-basic"

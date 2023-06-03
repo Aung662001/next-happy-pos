@@ -45,7 +45,7 @@ const MenuCategories = () => {
     (mc) => mc.id && validMenuCategoriesIds.includes(mc.id)
   );
   return (
-    <Layout>
+    <Layout title="MenuCategories">
       <Box>
         <Box sx={{ mb: 2, display: "flex", justifyContent: "center", mt: 4 }}>
           <TextField

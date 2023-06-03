@@ -58,7 +58,14 @@ const Menus = () => {
     menuIds.includes(menu.id as number)
   );
   return (
-    <Layout>
+    <Layout title="Menus">
+      <Button
+        variant="outlined"
+        onClick={() => setOpenModel(true)}
+        sx={{ position: "absolute", right: "2rem" }}
+      >
+        Add new Item +
+      </Button>
       <>
         <Stack
           direction="column"
@@ -78,29 +85,9 @@ const Menus = () => {
             columns={{ xs: 4, sm: 8, md: 12 }}
             gap={3}
           >
-            <Box
-              onClick={() => setOpenModel(true)}
-              sx={{ minWidth: 280, minHeight: 280, marginTop: 3 }}
-              style={{
-                border: "2px solid black",
-                borderStyle: "dashed",
-                borderRadius: "10px",
-                marginLeft: "20px",
-                fontSize: "20px",
-                fontWeight: "bold",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                cursor: "pointer",
-              }}
-            >
-              Add new Item
-              <span style={{ fontSize: "50px" }}>+</span>
-            </Box>
             {filteredMenus?.map((data, index) => {
               return (
-                <>
+                <section key={index}>
                   <Box>
                     <Card
                       sx={{
@@ -126,7 +113,7 @@ const Menus = () => {
                       </CardContent>
                     </Card>
                   </Box>
-                </>
+                </section>
               );
             })}
           </Grid>

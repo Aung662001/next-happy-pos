@@ -94,7 +94,7 @@ const Addons = () => {
   });
   //end table setting
   return (
-    <Layout>
+    <Layout title="Addons">
       <Box
         sx={{
           display: "flex",
