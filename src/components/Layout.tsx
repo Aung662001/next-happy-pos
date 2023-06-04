@@ -12,7 +12,14 @@ const Layout = (props: Props) => {
       <NavBar label={props.title} />
       <Box sx={{ display: "flex" }}>
         <SideBar />
-        <Box sx={{ p: 3, flexGrow: 1, maxHeight: "100vh", overflow: "scroll" }}>
+        <Box
+          sx={{
+            p: 3,
+            flexGrow: 1,
+            maxHeight: "100vh",
+            overflow: "scroll",
+          }}
+        >
           {props.children}
         </Box>
       </Box>
