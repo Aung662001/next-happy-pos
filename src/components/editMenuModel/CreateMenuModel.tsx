@@ -19,6 +19,7 @@ import FileDropZone from "./FileDropZone";
 import { config } from "../../config/config";
 import { LoadingButton } from "@mui/lab";
 import { create } from "domain";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 interface Props {
   open: () => void;
   close: () => void;
@@ -44,7 +45,9 @@ export default function EditModel({ open, close, openModel }: Props) {
     setMenuImage(files[0]);
   };
 
-  const { fetchData, menuCategories } = useContext(BackofficeContext);
+  const { fetchData, menuCategories, menusMenuCategoriesLocations } =
+    useContext(BackofficeContext);
+  const [locationId, setLocationId] = useLocalStorage("locationId")!;
   const createMenu = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (menus.price === undefined) return;
@@ -61,7 +64,6 @@ export default function EditModel({ open, close, openModel }: Props) {
       const asseturl = responseJson.assetUrl;
       menus.asseturl = asseturl;
     }
-    const locationId = localStorage.getItem("locationId")!;
 
     await fetch(`${config.backofficeUrl}/menus?locationId=${locationId}`, {
       method: "POST",
@@ -91,6 +93,13 @@ export default function EditModel({ open, close, openModel }: Props) {
       setVisible(true);
     }
   };
+  const CategoriesIds = menusMenuCategoriesLocations.filter(
+    (mcl) => mcl.locations_id === locationId
+  );
+
+  const menuCategoriesAtCurrentLocation = menuCategories.filter((item1) => {
+    return CategoriesIds.some((item2) => item1.id === item2.menu_categories_id);
+  });
   return (
     <Modal
       open={openModel}
@@ -182,7 +191,7 @@ export default function EditModel({ open, close, openModel }: Props) {
                     .join(",");
                 }}
               >
-                {menuCategories.map((menuCategory) => (
+                {menuCategoriesAtCurrentLocation.map((menuCategory) => (
                   <MenuItem key={menuCategory.id} value={menuCategory.id}>
                     <Checkbox
                       checked={

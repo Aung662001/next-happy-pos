@@ -9,15 +9,17 @@ interface Props {
 const Layout = (props: Props) => {
   return (
     <Box>
-      <NavBar label={props.title} />
-      <Box sx={{ display: "flex" }}>
-        <SideBar />
+      <Box sx={{ position: "sticky", top: 0 }}>
+        <NavBar label={props.title} />
+      </Box>
+      <Box sx={{ display: "flex", flexDirection: "row" }}>
+        <Box sx={{ position: "fixed" }}>
+          <SideBar />
+        </Box>
         <Box
           sx={{
             p: 3,
-            flexGrow: 1,
-            maxHeight: "100vh",
-            overflow: "scroll",
+            marginLeft: "250px",
           }}
         >
           {props.children}

@@ -62,7 +62,7 @@ const Menus = () => {
       <Button
         variant="outlined"
         onClick={() => setOpenModel(true)}
-        sx={{ position: "absolute", right: "2rem" }}
+        sx={{ position: "relative" }}
       >
         Add new Item +
       </Button>

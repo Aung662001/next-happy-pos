@@ -81,6 +81,7 @@ const BackofficeProvider = (props: any) => {
     });
     setLocation(Locations[0].id);
   };
+
   return (
     <BackofficeContext.Provider value={{ ...data, updateData, fetchData }}>
       {props.children}
