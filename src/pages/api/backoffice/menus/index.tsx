@@ -43,6 +43,7 @@ export default async function handler(
         },
       });
     }
+    await prisma.$disconnect();
     res.send(200);
   }
 }

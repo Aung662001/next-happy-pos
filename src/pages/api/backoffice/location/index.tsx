@@ -39,6 +39,8 @@ export default async function handler(
       res.send(resDb);
     } catch (err: any) {
       res.send(err.message);
+    } finally {
+      prisma.$disconnect();
     }
   } else if (req.method === "DELETE") {
     const query = req.query;
@@ -55,6 +57,8 @@ export default async function handler(
       res.send(202);
     } catch (err: any) {
       res.send(err.message);
+    } finally {
+      prisma.$disconnect();
     }
   }
   res.status(400).send({ error: "Bad Request" });

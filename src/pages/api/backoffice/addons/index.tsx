@@ -26,6 +26,8 @@ export default async function handler(
       res.json(dbRes);
     } catch (err: any) {
       res.status(500).json({ error: err.message });
+    } finally {
+      prisma.$disconnect();
     }
   }
 }

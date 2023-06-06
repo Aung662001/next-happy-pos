@@ -90,6 +90,7 @@ export default async function handler(
         )
       );
     }
+    await prisma.$disconnect();
     res.send(200);
     ///////////////////////////////////////////
   } else if (req.method === "DELETE") {
@@ -109,6 +110,8 @@ export default async function handler(
       res.send(204);
     } catch (error: any) {
       res.send({ error: error.message });
+    } finally {
+      prisma.$disconnect();
     }
   }
 }

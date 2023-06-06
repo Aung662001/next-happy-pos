@@ -26,6 +26,8 @@ export default async function handler(
       res.send(200);
     } catch (err: any) {
       res.send(500);
+    } finally {
+      prisma.$disconnect();
     }
   } else if (req.method === "DELETE") {
     const id = parseInt(req.query.id as string);
