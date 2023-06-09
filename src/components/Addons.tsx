@@ -1,20 +1,13 @@
 import {
   Box,
   Button,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  MenuItem,
   Paper,
-  Select,
-  Switch,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   styled,
   tableCellClasses,
 } from "@mui/material";
@@ -23,7 +16,7 @@ import { useState, useContext } from "react";
 import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { config } from "@/config/config";
 import { addon_categories as AddonCategory } from "@prisma/client";
-import { prisma } from "@/utils/db";
+import EditAddon from "./editAddon/EditAddon";
 interface row {
   id: number;
   name: string;
@@ -32,21 +25,23 @@ interface row {
   AddonCategorie: AddonCategory[];
 }
 const Addons = () => {
+  const {
+    addonCategories: ACdatas,
+    addons,
+    fetchData,
+  } = useContext(BackofficeContext);
   const [update, setUpdate] = useState(false);
+  const [open, setOpen] = useState(false);
   const [updateId, setUpdateId] = useState<number>();
   const [check, setCheck] = useState<boolean | string>(false);
-  let defaultAddon = {
+  const defaultAddon = {
     name: "",
     price: 0,
     is_avaiable: check,
     addonCategories: "",
   };
   const [addonData, setAddonData] = useState(defaultAddon);
-  const {
-    addonCategories: ACdatas,
-    addons,
-    fetchData,
-  } = useContext(BackofficeContext);
+
   //table related setting
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -95,87 +90,26 @@ const Addons = () => {
   //end table setting
   return (
     <Layout title="Addons">
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 4,
-          marginY: "2rem",
-          justifyContent: "center",
-          alignItems: "center",
-          borderBottom: "2px solid lightgray",
-          paddingBottom: "2rem",
-        }}
+      <Button
+        variant="contained"
+        onClick={() => setOpen(true)}
+        sx={{ position: "absolute", right: 0 }}
       >
-        <TextField
-          label="New Addon"
-          variant="outlined"
-          autoComplete="off"
-          sx={{ mx: 3, width: "300px" }}
-          value={addonData.name}
-          onChange={(event) =>
-            setAddonData({ ...addonData, name: event.target.value })
-          }
-        />
-        <TextField
-          label="Price"
-          variant="outlined"
-          type="number"
-          sx={{ mx: 3, width: "300px" }}
-          value={addonData.price ? addonData.price : ""}
-          onChange={(e) =>
-            setAddonData({ ...addonData, price: parseInt(e.target.value) })
-          }
-        />
+        Add New Addon +
+      </Button>
+      <EditAddon
+        addonData={addonData}
+        setAddonData={setAddonData}
+        check={check}
+        setCheck={setCheck}
+        update={update}
+        setUpdate={setUpdate}
+        updateHandler={updateHandler}
+        createNewAddon={createNewAddon}
+        open={open}
+        setOpen={setOpen}
+      />
 
-        <FormControl sx={{ width: "300px" }}>
-          <InputLabel id="demo-simple-select-label">
-            AddOn Categories
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={addonData.addonCategories}
-            label="Age"
-            onChange={(e) =>
-              setAddonData({
-                ...addonData,
-                addonCategories: e.target.value as string,
-              })
-            }
-          >
-            {ACdatas.map((addOnCat) => {
-              return (
-                <MenuItem value={addOnCat.id} key={addOnCat.id}>
-                  {addOnCat.name}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={check as boolean}
-              onClick={() => {
-                setAddonData({ ...addonData, is_avaiable: !check });
-                setCheck((prev) => !prev);
-              }}
-            />
-          }
-          label="IsAvaiable"
-        />
-        <Box>
-          <Button
-            variant="contained"
-            onClick={() => (update ? updateHandler() : createNewAddon())}
-            sx={{ margin: "2rem" }}
-          >
-            {update ? "Update" : "Submit"}
-          </Button>
-          {update ? <Button variant="outlined">Cancel</Button> : ""}
-        </Box>
-      </Box>
       <Box>
         <TableContainer component={Paper}>
           <Table
@@ -246,10 +180,11 @@ const Addons = () => {
       fetchData();
       alert("Updated Addon success!");
       setAddonData(defaultAddon);
+      setUpdate(false);
     }
   }
   function editHandler(row: row) {
-    window.scrollTo(0, 0);
+    setOpen(true);
     setUpdate(true);
     setUpdateId(row.id);
     setCheck(row.IsAvaiable === "TRUE" ? true : false);

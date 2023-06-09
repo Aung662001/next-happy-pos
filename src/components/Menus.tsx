@@ -60,9 +60,9 @@ const Menus = () => {
   return (
     <Layout title="Menus">
       <Button
-        variant="outlined"
+        variant="contained"
         onClick={() => setOpenModel(true)}
-        sx={{ position: "relative" }}
+        sx={{ position: "absolute", right: 0 }}
       >
         Add new Item +
       </Button>

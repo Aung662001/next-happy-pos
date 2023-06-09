@@ -60,7 +60,7 @@ export default async function handler(
       },
     });
     const toDeleteId = uniqueIds.filter(
-      (uniq) => !selectedLocationIds.includes(uniq)
+      (uniq) => !selectedLocationIds.includes(uniq as number)
     );
     const toAddId = selectedLocationIds.filter(
       (sele) => !uniqueIds.includes(sele)
@@ -68,15 +68,47 @@ export default async function handler(
     console.log(toDeleteId, "this is to delete");
     console.log(toAddId, "this is to add");
     if (toDeleteId.length) {
-      const data = await prisma.$transaction(
-        toDeleteId.map((data: any) =>
-          prisma.menus_menu_categories_locations.deleteMany({
+      toDeleteId.map(async (todeleteId) => {
+        const checkMenu =
+          await prisma.menus_menu_categories_locations.findFirst({
             where: {
-              locations_id: data,
+              locations_id: todeleteId,
+              menu_categories_id: catId,
             },
-          })
-        )
-      );
+          });
+        if (checkMenu) {
+          if (checkMenu?.menus_id === null) {
+            //menus_id does not exit and you can delete this
+            await prisma.menus_menu_categories_locations.deleteMany({
+              where: {
+                id: checkMenu.id,
+              },
+            });
+          } else {
+            //menus_id is exit and you cannot delete this
+            await prisma.menus_menu_categories_locations.updateMany({
+              where: {
+                id: checkMenu.id,
+              },
+              data: {
+                locations_id: null,
+              },
+            });
+          }
+        }
+      });
+      // const data = await prisma.$transaction(
+      //   toDeleteId.map((data: any) =>
+      //     prisma.menus_menu_categories_locations.updateMany({
+      //       where: {
+      //         locations_id: data,
+      //       },
+      //       data: {
+      //         locations_id: null,
+      //       },
+      //     })
+      //   )
+      // );
     }
     if (toAddId.length) {
       const newLocation = toAddId.map((toAdd: number) => {

@@ -221,18 +221,18 @@ export default async function handler(
       (ma) => ma.addon_categories_id
     ) as number[];
     const addonCategories = await prisma.addon_categories.findMany({
-      where: {
-        id: {
-          in: addonCategoriesIds,
-        },
-      },
+      // where: {
+      //   id: {
+      //     in: addonCategoriesIds,
+      //   },
+      // },
     }); //
     const addons = await prisma.addons.findMany({
-      where: {
-        addon_categories_id: {
-          in: addonCategoriesIds,
-        },
-      },
+      // where: {
+      //   addon_categories_id: {
+      //     in: addonCategoriesIds,
+      //   },
+      // },
     });
 
     const menuCategories = await prisma.menu_categories.findMany();
