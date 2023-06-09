@@ -1,3 +1,4 @@
+import uniqueArray from "@/utils/uniqueArr";
 import { prisma } from "../../../../utils/db";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
@@ -196,11 +197,12 @@ export default async function handler(
     const menuCategoriesIds = menusMenuCategoriesLocations.map(
       (MCL) => MCL.menu_categories_id
     );
-    const menuIds = menusMenuCategoriesLocations
+    let menuIds = menusMenuCategoriesLocations
       .map((MCL) => MCL.menus_id)
       .filter((mcl) => mcl !== null) as number[];
     //menus
-
+    //to remove duplicate ids
+    menuIds = uniqueArray(menuIds);
     const menus = await prisma.menus.findMany({
       where: {
         id: {
@@ -221,18 +223,18 @@ export default async function handler(
       (ma) => ma.addon_categories_id
     ) as number[];
     const addonCategories = await prisma.addon_categories.findMany({
-      // where: {
-      //   id: {
-      //     in: addonCategoriesIds,
-      //   },
-      // },
-    }); //
+      where: {
+        id: {
+          in: addonCategoriesIds,
+        },
+      },
+    });
     const addons = await prisma.addons.findMany({
-      // where: {
-      //   addon_categories_id: {
-      //     in: addonCategoriesIds,
-      //   },
-      // },
+      where: {
+        addon_categories_id: {
+          in: addonCategoriesIds,
+        },
+      },
     });
 
     const menuCategories = await prisma.menu_categories.findMany();

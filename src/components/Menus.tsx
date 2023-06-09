@@ -15,17 +15,25 @@ import Layout from "./Layout";
 import { useContext, useEffect, useState } from "react";
 import { menus as Menu } from "@prisma/client";
 import { BackofficeContext } from "../contexts/BackofficeContext";
-import EditForm from "./EditForm";
 import EditModel from "./editMenuModel/CreateMenuModel";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useRouter } from "next/router";
-import Link from "next/link";
+import UpdateMenu from "./editMenuModel/UpdateMenu";
+import { Menu as menuUpdateType } from "../typings/types";
 
 const Menus = () => {
   const [locationId, setLocationId] = useLocalStorage<number>("locationId");
+  const [UpdateOpen, setUpdateOpen] = useState(false);
   const [openModel, setOpenModel] = useState(false);
   const open = () => setOpenModel(true);
   const close = () => setOpenModel(false);
+  const [menus, setMenus] = useState<menuUpdateType>({
+    name: "",
+    price: undefined,
+    menuCategoriesIds: [],
+    asseturl: "",
+    description: "",
+  });
   const {
     menus: menusData,
     fetchData,
@@ -33,23 +41,23 @@ const Menus = () => {
     token,
   } = useContext(BackofficeContext);
   useEffect(() => {}, [token]);
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
 
   const router = useRouter();
   const editHandle = (data: Menu) => {
-    router.push(`/menus/${data.id}?locationId=${locationId}`);
+    const { id, name, price, description } = data;
+    const menuCategoriesIds = menusMenuCategoriesLocations
+      .filter((mcl) => mcl.menus_id === id)
+      .map((mc) => mc.menu_categories_id);
+    setMenus({
+      id: id,
+      name,
+      price,
+      description: description as string,
+      menuCategoriesIds,
+    });
+    setUpdateOpen(true);
   };
-  // const menuIdWithLocationId = menusLocations
-  //   .filter(
-  //     (menusLocation) =>
-  //       String(menusLocation.locations_id) === String(locationId)
-  //   )
-  //   .map((menuLocation) => menuLocation.menus_id);
-  // const filteredMenus = menusData.filter((menu) =>
-  //   menuIdWithLocationId.includes(menu.id as number)
-  // );
+
   const menuIds = menusMenuCategoriesLocations
     .filter((mcl) => mcl.locations_id === locationId)
     .map((mcl) => mcl.menus_id);
@@ -79,6 +87,12 @@ const Menus = () => {
           }}
         >
           <EditModel open={open} close={close} openModel={openModel} />
+          <UpdateMenu
+            open={UpdateOpen}
+            setOpen={setUpdateOpen}
+            menus={menus}
+            setMenus={setMenus}
+          />
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}
