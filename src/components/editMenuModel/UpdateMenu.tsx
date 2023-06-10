@@ -1,29 +1,13 @@
 import {
   Box,
   Button,
-  Checkbox,
-  FormControl,
-  InputLabel,
-  ListItemText,
-  MenuItem,
   Modal,
-  OutlinedInput,
-  Select,
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { Dispatch, SetStateAction, useContext, useState } from "react";
 import { Menu } from "../../typings/types";
 import { BackofficeContext } from "../../contexts/BackofficeContext";
-import { LoadingButton } from "@mui/lab";
-import { create } from "domain";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 interface Props {
   open: boolean;
@@ -32,18 +16,9 @@ interface Props {
   setMenus: Dispatch<SetStateAction<Menu>>;
 }
 export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
-  ///##################################
-  console.log(menus);
-  const [price, setPrice] = useState<string | number>(0);
-  const [menuImage, setMenuImage] = useState<File>();
   const [selectedCategoriesIds, setSelectedCategoriesIds] = useState<number[]>(
     []
   );
-  const [visible, setVisible] = useState(false);
-
-  const onFileSelected = (files: File[]) => {
-    setMenuImage(files[0]);
-  };
 
   const { fetchData, menuCategories, menusMenuCategoriesLocations } =
     useContext(BackofficeContext);
@@ -86,13 +61,8 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
     const currentCategory = e.target.value as number[];
     setSelectedCategoriesIds(currentCategory);
     setMenus({ ...menus, menuCategoriesIds: currentCategory });
-    if (menus.name && menus.price) setVisible(true);
   };
-  const buttonVisible = () => {
-    if (menus.name && menus.price) {
-      setVisible(true);
-    }
-  };
+
   const CategoriesIds = menusMenuCategoriesLocations.filter(
     (mcl) => mcl.locations_id === locationId
   );
@@ -120,7 +90,7 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
               m: "0 auto",
             }}
           >
-            <h1 style={{ textAlign: "center" }}>Create a new menu</h1>
+            <h1 style={{ textAlign: "center" }}>Update menu</h1>
             <TextField
               label="Name*"
               variant="outlined"
@@ -132,7 +102,6 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
                   price: menus?.price ? menus.price : 0,
                   menuCategoriesIds: selectedCategoriesIds,
                 });
-                buttonVisible();
               }}
             />
             <TextField
@@ -147,7 +116,6 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
                   name: menus?.name ? menus.name : "",
                   menuCategoriesIds: selectedCategoriesIds,
                 });
-                buttonVisible();
               }}
             />
             <TextField
@@ -165,7 +133,7 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
                 });
               }}
             />
-            <FormControl sx={{ mb: 1, width: 300 }} required>
+            {/* <FormControl sx={{ mb: 1, width: 300 }} required>
               <InputLabel
                 id="demo-multiple-checkbox-label"
                 sx={{ backgroundColor: "white", px: 2 }}
@@ -206,24 +174,11 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
                   </MenuItem>
                 ))}
               </Select>
-            </FormControl>
+            </FormControl> */}
 
-            {visible && (
-              <Button variant="contained" type="submit" sx={{ marginTop: 3 }}>
-                Create
-              </Button>
-            )}
-
-            {!visible && (
-              <LoadingButton
-                loading
-                loadingIndicator="Create"
-                variant="contained"
-                sx={{ marginTop: 3 }}
-              >
-                Create
-              </LoadingButton>
-            )}
+            <Button variant="contained" type="submit" sx={{ marginTop: 3 }}>
+              Create
+            </Button>
           </Box>
         </Box>
       </form>

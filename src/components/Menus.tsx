@@ -22,7 +22,7 @@ import UpdateMenu from "./editMenuModel/UpdateMenu";
 import { Menu as menuUpdateType } from "../typings/types";
 
 const Menus = () => {
-  const [locationId, setLocationId] = useLocalStorage<number>("locationId");
+  const [locationId] = useLocalStorage<number>("locationId");
   const [UpdateOpen, setUpdateOpen] = useState(false);
   const [openModel, setOpenModel] = useState(false);
   const open = () => setOpenModel(true);
@@ -45,15 +45,15 @@ const Menus = () => {
   const router = useRouter();
   const editHandle = (data: Menu) => {
     const { id, name, price, description } = data;
-    const menuCategoriesIds = menusMenuCategoriesLocations
-      .filter((mcl) => mcl.menus_id === id)
-      .map((mc) => mc.menu_categories_id);
+    // const menuCategoriesIds = menusMenuCategoriesLocations
+    //   .filter((mcl) => mcl.menus_id === id)
+    //   .map((mc) => mc.menu_categories_id);
     setMenus({
       id: id,
       name,
       price,
       description: description as string,
-      menuCategoriesIds,
+      // menuCategoriesIds,
     });
     setUpdateOpen(true);
   };
@@ -124,6 +124,7 @@ const Menus = () => {
                           <span style={{ color: "red" }}>{data.price}</span>
                           <span style={{ fontSize: "18px" }}>Ks</span>
                         </Typography>
+                        <Typography>{data.description}</Typography>
                       </CardContent>
                     </Card>
                   </Box>

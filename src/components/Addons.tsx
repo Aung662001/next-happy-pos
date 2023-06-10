@@ -43,7 +43,7 @@ const Addons = () => {
   const [addonData, setAddonData] = useState(defaultAddon);
 
   //table related setting
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  const StyledTableCell: any = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.black,
       color: theme.palette.common.white,
@@ -110,7 +110,7 @@ const Addons = () => {
         setOpen={setOpen}
       />
 
-      <Box>
+      <Box sx={{ marginTop: "3rem" }}>
         <TableContainer component={Paper}>
           <Table
             sx={{ maxWidth: 700, margin: "0 auto" }}

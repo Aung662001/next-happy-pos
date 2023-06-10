@@ -4,12 +4,14 @@ import { BackofficeContext } from "../contexts/BackofficeContext";
 import { Box, Button } from "@mui/material";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { menu_categories } from "@prisma/client";
-import EditMenuCategories from "./editMenuCategories/EditMenuCategories";
+import CreateMenuCategories from "./editMenuCategories/CreateMenuCategories";
+import { useRouter } from "next/router";
 export interface newMenuCategories {
   name: string;
   selectedLocationIds: number[] | null;
 }
 const MenuCategories = () => {
+  const router = useRouter();
   const [newMenuCategories, setNewMenuCategories] = useState<newMenuCategories>(
     {
       name: "",
@@ -44,22 +46,23 @@ const MenuCategories = () => {
     return count;
   };
   const selectedHandler = async (cat: menu_categories) => {
-    setOpen(true);
-    let menusMenucategoriesLocation = menusMenuCategoriesLocations.filter(
-      (mcl) => mcl.menu_categories_id === cat.id
-    );
-    let locationIds = menusMenucategoriesLocation.map((l) => l.locations_id);
-    locationIds = locationIds.filter(
-      (value, index, array) => array.indexOf(value) === index
-    );
-    locationIds = locationIds.filter((locationId) => locationId !== null);
-    setIsUpdate(true);
-    setupdatingId(cat.id);
-    setNewMenuCategories({
-      name: cat.name,
-      selectedLocationIds: locationIds as number[],
-    });
-    setSelectedLocationIds(locationIds as number[]);
+    router.push(`menu-categories/${cat.id}`);
+    // setOpen(true);
+    // let menusMenucategoriesLocation = menusMenuCategoriesLocations.filter(
+    //   (mcl) => mcl.menu_categories_id === cat.id
+    // );
+    // let locationIds = menusMenucategoriesLocation.map((l) => l.locations_id);
+    // locationIds = locationIds.filter(
+    //   (value, index, array) => array.indexOf(value) === index
+    // );
+    // locationIds = locationIds.filter((locationId) => locationId !== null);
+    // setIsUpdate(true);
+    // setupdatingId(cat.id);
+    // setNewMenuCategories({
+    //   name: cat.name,
+    //   selectedLocationIds: locationIds as number[],
+    // });
+    // setSelectedLocationIds(locationIds as number[]);
   };
   return (
     <Layout title="MenuCategories">
@@ -71,7 +74,7 @@ const MenuCategories = () => {
         >
           Add New MenuCategories +
         </Button>
-        <EditMenuCategories
+        <CreateMenuCategories
           open={open}
           setOpen={setOpen}
           isUpdate={isUpdate}
@@ -108,7 +111,15 @@ const MenuCategories = () => {
                   marginTop: "4rem",
                 }}
               >
-                <p style={{ fontSize: "2rem" }}> {cat.name}</p>
+                <p
+                  style={{
+                    fontSize: "1.5rem",
+                    flexWrap: "wrap",
+                    lineBreak: "anywhere",
+                  }}
+                >
+                  {cat.name}
+                </p>
                 {getConnectedMenus(cat.id)} Menus
               </Box>
               // </Box>

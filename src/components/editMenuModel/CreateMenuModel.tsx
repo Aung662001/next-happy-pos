@@ -65,12 +65,24 @@ export default function EditModel({ open, close, openModel }: Props) {
       menus.asseturl = asseturl;
     }
 
-    await fetch(`${config.backofficeUrl}/menus?locationId=${locationId}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(menus),
-    });
-    fetchData();
+    const response = await fetch(
+      `${config.backofficeUrl}/menus?locationId=${locationId}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(menus),
+      }
+    );
+    if (response.ok) {
+      setMenus({
+        name: "",
+        price: undefined,
+        menuCategoriesIds: [],
+        asseturl: "",
+        description: "",
+      });
+      fetchData();
+    }
   };
   const style = {
     position: "absolute" as "absolute",

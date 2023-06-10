@@ -12,7 +12,13 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import React, { Dispatch, SetStateAction, useContext, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import Locations from "../Locations";
 import { config } from "@/config/config";
 import { BackofficeContext } from "@/contexts/BackofficeContext";
@@ -33,11 +39,9 @@ interface newMenuCategories {
   selectedLocationIds: number[] | null;
 }
 
-export default function EditMenuCategories({
+export default function CreateMenuCategories({
   open,
   setOpen,
-  isUpdate,
-  setIsUpdate,
   updatingId,
   setUpdationgId,
   newMenuCategories,
@@ -45,9 +49,19 @@ export default function EditMenuCategories({
   selectedLocationIds,
   setSelectedLocationIds,
 }: Props) {
-  const { menuCategories, fetchData, menusMenuCategoriesLocations, Locations } =
-    useContext(BackofficeContext);
-
+  const {
+    menuCategories,
+    menus,
+    fetchData,
+    menusMenuCategoriesLocations,
+    Locations,
+  } = useContext(BackofficeContext);
+  const [connectedMenuIds, setConnectedMenuIds] = useState<number[]>([]);
+  const menuIds = menusMenuCategoriesLocations
+    .filter(
+      (mcl) => mcl.menu_categories_id === updatingId && mcl.menus_id !== null
+    )
+    .map((m) => m.menus_id);
   async function createNewMenuCategories() {
     if (newMenuCategories.selectedLocationIds === null) return;
     if (
@@ -71,33 +85,7 @@ export default function EditMenuCategories({
       selectedLocationIds: currentLocation,
     });
   };
-  async function updateHandler(id: number) {
-    await fetch(`${config.backofficeUrl}/menuCategories?id=${id}`, {
-      method: "PATCH",
-      body: JSON.stringify(newMenuCategories),
-    });
-  }
-  async function deleteHandler(id: number) {
-    const response = await fetch(
-      `${config.backofficeUrl}/menuCategories?id=${id}`,
-      {
-        method: "DELETE",
-      }
-    );
-    if (response.ok) {
-      setNewMenuCategories({
-        name: "",
-        selectedLocationIds: [],
-      });
-      setSelectedLocationIds([]);
-      setIsUpdate(false);
-      fetchData();
-      alert("Deleted");
-    } else {
-      setIsUpdate(false);
-      alert("Error");
-    }
-  }
+
   const closeDialog = () => {
     setOpen(false);
     setNewMenuCategories({
@@ -105,7 +93,6 @@ export default function EditMenuCategories({
       selectedLocationIds: [],
     });
     setSelectedLocationIds([]);
-    setIsUpdate(false);
   };
   return (
     <Dialog open={open} onClose={closeDialog}>
@@ -176,30 +163,15 @@ export default function EditMenuCategories({
           </Select>
         </FormControl>
         {/* drop down end */}
+
         <Box sx={{ display: "flex", gap: 2 }}>
           <Button
             variant="contained"
-            onClick={() =>
-              isUpdate
-                ? updateHandler(updatingId as number)
-                : createNewMenuCategories()
-            }
+            onClick={() => createNewMenuCategories()}
             sx={{ height: "3rem", width: "150px" }}
           >
-            {isUpdate ? "UPDATE" : "ADD"}
+            ADD
           </Button>
-          {isUpdate && (
-            <Button
-              variant="outlined"
-              color="error"
-              sx={{ height: "3rem", width: "150px" }}
-              onClick={() =>
-                updatingId ? deleteHandler(updatingId) : alert("cannot delete")
-              }
-            >
-              Delete
-            </Button>
-          )}
         </Box>
       </Box>
     </Dialog>

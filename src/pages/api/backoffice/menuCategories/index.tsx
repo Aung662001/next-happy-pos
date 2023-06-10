@@ -44,6 +44,7 @@ export default async function handler(
       selectedLocationIds,
     }: { name: string; selectedLocationIds: number[] } = JSON.parse(req.body);
     const catId = parseInt(req.query.id as string);
+    console.log("##############", catId, name);
     const allIds = await prisma.menus_menu_categories_locations.findMany({
       where: {
         menu_categories_id: catId,
