@@ -1,4 +1,5 @@
 import { prisma } from "@/utils/db";
+import { METHODS } from "http";
 import type { NextApiRequest, NextApiResponse } from "next";
 export default async function handler(
   req: NextApiRequest,
@@ -45,5 +46,26 @@ export default async function handler(
     }
     await prisma.$disconnect();
     res.send(200);
+  } else if (req.method === "PUT") {
+    console.log("updataging....");
+    const menuId = req.query.id as string;
+    if (!req.body || !menuId)
+      return res.status(400).json({ message: "Invalid Input" });
+    const { name, price, description } = JSON.parse(req.body);
+    try {
+      await prisma.menus.update({
+        where: {
+          id: parseInt(menuId),
+        },
+        data: {
+          name,
+          price,
+          description,
+        },
+      });
+      res.send(200);
+    } catch (err) {
+      res.send(500);
+    }
   }
 }

@@ -5,10 +5,18 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import React, { Dispatch, SetStateAction, useContext, useState } from "react";
+import React, {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useContext,
+  useState,
+} from "react";
 import { Menu } from "../../typings/types";
 import { BackofficeContext } from "../../contexts/BackofficeContext";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { config } from "@/config/config";
+import { json } from "stream/consumers";
 interface Props {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -71,7 +79,33 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
     return CategoriesIds.some((item2) => item1.id === item2.menu_categories_id);
   });
   function closeHandler() {
+    setMenus({
+      ...menus,
+      name: "",
+      price: undefined,
+      menuCategoriesIds: [],
+      asseturl: "",
+      description: "",
+    });
     setOpen(false);
+  }
+
+  async function UpdateMenu(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!menus.name || !menus.price) {
+      return;
+    }
+    const response = await fetch(
+      `${config.backofficeUrl}/menus?id=${menus.id}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(menus),
+      }
+    );
+    if (response.ok) {
+      closeHandler();
+      fetchData();
+    }
   }
   return (
     <Modal
@@ -80,7 +114,7 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <form onSubmit={(e) => null}>
+      <form onSubmit={(e) => UpdateMenu(e)}>
         <Box sx={style}>
           <Box
             sx={{
@@ -98,6 +132,7 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
               value={menus.name}
               onChange={(event) => {
                 setMenus({
+                  ...menus,
                   name: event.target.value,
                   price: menus?.price ? menus.price : 0,
                   menuCategoriesIds: selectedCategoriesIds,
@@ -112,6 +147,7 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
               value={menus.price ? menus.price : ""}
               onChange={(event) => {
                 setMenus({
+                  ...menus,
                   price: parseInt(event.target.value),
                   name: menus?.name ? menus.name : "",
                   menuCategoriesIds: selectedCategoriesIds,
@@ -126,6 +162,7 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
               value={menus.description}
               onChange={(event) => {
                 setMenus({
+                  ...menus,
                   price: menus.price ? menus.price : 0,
                   name: menus?.name ? menus.name : "",
                   menuCategoriesIds: menus.menuCategoriesIds,
@@ -177,7 +214,7 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
             </FormControl> */}
 
             <Button variant="contained" type="submit" sx={{ marginTop: 3 }}>
-              Create
+              Update
             </Button>
           </Box>
         </Box>

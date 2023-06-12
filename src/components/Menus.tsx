@@ -15,7 +15,7 @@ import Layout from "./Layout";
 import { useContext, useEffect, useState } from "react";
 import { menus as Menu } from "@prisma/client";
 import { BackofficeContext } from "../contexts/BackofficeContext";
-import EditModel from "./editMenuModel/CreateMenuModel";
+import CreateMenu from "./editMenuModel/CreateMenuModel";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useRouter } from "next/router";
 import UpdateMenu from "./editMenuModel/UpdateMenu";
@@ -86,7 +86,7 @@ const Menus = () => {
             margin: "1rem 2rem",
           }}
         >
-          <EditModel open={open} close={close} openModel={openModel} />
+          <CreateMenu open={open} close={close} openModel={openModel} />
           <UpdateMenu
             open={UpdateOpen}
             setOpen={setUpdateOpen}
