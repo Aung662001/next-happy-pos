@@ -210,16 +210,14 @@ export default async function handler(
         },
       },
     });
-    const menuAddonCategoriesIds = await prisma.menus_addon_categories.findMany(
-      {
-        where: {
-          menus_id: {
-            in: menuIds,
-          },
+    const menuAddonCategories = await prisma.menus_addon_categories.findMany({
+      where: {
+        menus_id: {
+          in: menuIds,
         },
-      }
-    );
-    const addonCategoriesIds = menuAddonCategoriesIds.map(
+      },
+    });
+    const addonCategoriesIds = menuAddonCategories.map(
       (ma) => ma.addon_categories_id
     ) as number[];
     const addonCategories = await prisma.addon_categories.findMany({
@@ -236,8 +234,13 @@ export default async function handler(
         },
       },
     });
-
-    const menuCategories = await prisma.menu_categories.findMany();
+    const menuCategories = await prisma.menu_categories.findMany({
+      where: {
+        id: {
+          in: menuCategoriesIds,
+        },
+      },
+    });
     const companies = await prisma.companies.findMany({
       where: {
         id: company_id,
@@ -250,6 +253,7 @@ export default async function handler(
       addons,
       addonCategories,
       menuCategories,
+      menuAddonCategories,
       menusMenuCategoriesLocations,
       companies,
     });

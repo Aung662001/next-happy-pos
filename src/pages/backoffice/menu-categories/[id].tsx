@@ -25,11 +25,11 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import Locations from "../../../components/Locations";
 import { config } from "@/config/config";
 import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { useRouter } from "next/router";
 import { menus as Menu } from "@prisma/client";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 interface menuCategories {
   name: string;
@@ -37,6 +37,7 @@ interface menuCategories {
   selectedLocationIds: number[];
 }
 export default function EditMenuCategories() {
+  const [locationId] = useLocalStorage("locationId");
   const [updateMenuCategorie, setUpdateMenuCategorie] =
     useState<menuCategories>({
       name: "",
@@ -44,6 +45,9 @@ export default function EditMenuCategories() {
       selectedLocationIds: [],
     });
   const [selectedLocations, setSelectedLocations] = useState<number[]>([]);
+  const [chooseToConnectMenuIds, setChooseToConnectMenuIds] = useState<
+    number[]
+  >([]);
   const router = useRouter();
   const updatingId = parseInt(router.query.id as string);
   const {
@@ -53,11 +57,14 @@ export default function EditMenuCategories() {
     menusMenuCategoriesLocations,
     Locations,
   } = useContext(BackofficeContext);
+  const allMenusIds = menus.map((menu) => menu.id);
   const menuMenuCategoriesLocationsIds = menusMenuCategoriesLocations.filter(
     (mcl) => mcl.menu_categories_id === updatingId
   );
 
-  const menuIds = menuMenuCategoriesLocationsIds.map((mcl) => mcl.menus_id);
+  const menuIds = menuMenuCategoriesLocationsIds
+    .filter((mcl) => mcl.locations_id === locationId)
+    .map((allids) => allids.menus_id);
   const menuLocationIds = menuMenuCategoriesLocationsIds.map(
     (mcl) => mcl.locations_id
   );
@@ -69,6 +76,9 @@ export default function EditMenuCategories() {
   );
   const connectedMenus = menus.filter((menu) => menuIds.includes(menu.id));
   const connectedMenusIds = connectedMenus.map((menu) => menu.id);
+  const notConnectedMenus = menus.filter(
+    (menu) => !connectedMenusIds.includes(menu.id)
+  );
   useEffect(() => {
     if (updatingMenuCategorie.length > 0) {
       setUpdateMenuCategorie({
@@ -170,23 +180,54 @@ export default function EditMenuCategories() {
         <Box sx={{ display: "flex", gap: 2 }}>
           <Button
             variant="contained"
-            onClick={() => console.log("first")}
+            onClick={() => updateMenuCategories(updatingId)}
             sx={{ height: "3rem", width: "150px" }}
           >
             UPDATE
           </Button>
-
-          <Button
-            variant="outlined"
-            color="error"
-            sx={{ height: "3rem", width: "150px" }}
-            onClick={() =>
-              updatingId ? deleteHandler(updatingId) : alert("cannot delete")
-            }
-          >
-            Delete
+        </Box>
+        {/*   connect to menus section ///////////////////////////////////*/}
+        <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
+          <FormControl sx={{ mb: 1, width: "400px" }} required>
+            <InputLabel
+              id="demo-multiple-checkbox-label"
+              sx={{ backgroundColor: "white", px: 2 }}
+            >
+              Connect with menus
+            </InputLabel>
+            <Select
+              labelId="demo-multiple-checkbox-label"
+              id="demo-multiple-checkbox"
+              multiple
+              value={chooseToConnectMenuIds}
+              onChange={handleSelectMenu}
+              input={<OutlinedInput label="Tag" />}
+              renderValue={(value) => {
+                const allMenus = chooseToConnectMenuIds.map((ids) => {
+                  return menus.find((menu) => menu.id === ids);
+                });
+                return allMenus.map((menu) => menu?.name).join(",");
+              }}
+            >
+              {notConnectedMenus.map((menu) => (
+                <MenuItem key={menu.id} value={menu.id}>
+                  <Checkbox
+                    checked={
+                      menu.id && chooseToConnectMenuIds.includes(menu.id)
+                        ? true
+                        : false
+                    }
+                  />
+                  <ListItemText primary={menu.name} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button variant="contained" onClick={connectMenus}>
+            Connect
           </Button>
         </Box>
+        {/* {end connect with menus/////////////////} */}
       </Box>
       <Box
         sx={{
@@ -234,6 +275,7 @@ export default function EditMenuCategories() {
                   bottom: 4,
                   right: 4,
                 }}
+                onClick={() => removeFromCategories(data.id)}
               >
                 Remove
               </Button>
@@ -243,11 +285,15 @@ export default function EditMenuCategories() {
       </Box>
     </Box>
   );
-  async function deleteHandler(id: number) {
+  async function removeFromCategories(id: number) {
     const response = await fetch(
-      `${config.backofficeUrl}/menuCategories?id=${id}`,
+      `${config.backofficeUrl}/menuCategories/removeMenu?id=${id}`,
       {
-        method: "DELETE",
+        method: "PUT",
+        body: JSON.stringify({
+          menuCategoriesId: updatingId,
+          locationId: locationId,
+        }),
       }
     );
     if (response.ok) {
@@ -257,6 +303,16 @@ export default function EditMenuCategories() {
       alert("Error");
     }
   }
+  async function updateMenuCategories(id: number) {
+    if (!id) return;
+    const response = await fetch(
+      `${config.backofficeUrl}/menuCategories?id=${id}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(updateMenuCategorie),
+      }
+    );
+  }
   function handleChange(e: SelectChangeEvent<number[]>) {
     console.log(e.target.value);
     setUpdateMenuCategorie({
@@ -265,8 +321,20 @@ export default function EditMenuCategories() {
     });
     setSelectedLocations(e.target.value as number[]);
   }
+  function handleSelectMenu(e: SelectChangeEvent<number[]>) {
+    setChooseToConnectMenuIds(e.target.value as number[]);
+  }
+  async function connectMenus() {
+    await fetch(
+      `${config.backofficeUrl}/menuCategories/connectMenu?id=${locationId}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          menuIds: chooseToConnectMenuIds,
+          menuCategorieId: updatingId,
+        }),
+      }
+    );
+    setChooseToConnectMenuIds([]);
+  }
 }
-// setUpdateMenuCategorie({
-//   name: updatingMenuCategorie.length ? updatingMenuCategorie[0].name : "",
-//   selectedMenuIds: selectedLocationIds ? selectedLocationIds : [],
-// });

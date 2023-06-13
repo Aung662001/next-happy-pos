@@ -8,6 +8,7 @@ import {
   menus_menu_categories_locations as MenusMenuCategoriesLocation,
   locations as Location,
   companies as Company,
+  menus_addon_categories as menuAddonCategories,
 } from "@prisma/client";
 import { useState } from "react";
 import { config } from "../config/config";
@@ -18,6 +19,7 @@ export interface BackofficeContextType {
   menus: Menu[];
   menuCategories: MenuCategory[];
   addons: Addon[];
+  menuAddonCategories: menuAddonCategories[];
   addonCategories: AddonCategory[];
   menusMenuCategoriesLocations: MenusMenuCategoriesLocation[];
   Locations: Location[];
@@ -34,6 +36,7 @@ const defaultContext: BackofficeContextType = {
   addons: [],
   addonCategories: [],
   menusMenuCategoriesLocations: [],
+  menuAddonCategories: [],
   Locations: [],
   companies: [],
   updateData: () => {},
@@ -68,6 +71,7 @@ const BackofficeProvider = (props: any) => {
       menusMenuCategoriesLocations,
       Locations,
       companies,
+      menuAddonCategories,
     } = responseJson;
     updateData({
       ...data,
@@ -78,6 +82,7 @@ const BackofficeProvider = (props: any) => {
       menusMenuCategoriesLocations,
       Locations,
       companies,
+      menuAddonCategories,
     });
     setLocation(Locations[0].id);
   };

@@ -17,6 +17,7 @@ import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { config } from "@/config/config";
 import { addon_categories as AddonCategory } from "@prisma/client";
 import EditAddon from "./editAddon/EditAddon";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 interface row {
   id: number;
   name: string;
@@ -29,11 +30,14 @@ const Addons = () => {
     addonCategories: ACdatas,
     addons,
     fetchData,
+    menusMenuCategoriesLocations,
+    menuAddonCategories,
   } = useContext(BackofficeContext);
   const [update, setUpdate] = useState(false);
   const [open, setOpen] = useState(false);
   const [updateId, setUpdateId] = useState<number>();
   const [check, setCheck] = useState<boolean | string>(false);
+  const [locationId] = useLocalStorage("locationId");
   const defaultAddon = {
     name: "",
     price: 0,
@@ -71,6 +75,19 @@ const Addons = () => {
   ) {
     return { name, price, IsAvaiable, AddonCategorie, id };
   }
+  // const menusIdRelatedToLocation = menusMenuCategoriesLocations
+  //   .filter((mcl) => mcl.locations_id === locationId)
+  //   .filter((allId) => {
+  //     return allId.menus_id !== null;
+  //   })
+  //   .map((filterIds) => filterIds.menus_id);
+  // const addonCategoriesIdsWithLocation = menuAddonCategories
+  //   .filter((mac) => menusIdRelatedToLocation.includes(mac.menus_id))
+  //   .map((macIds) => macIds.addon_categories_id);
+  // const addonCategoriesIds = ACdatas.filter((addonCategorie) =>
+  //   addonCategoriesIdsWithLocation.includes(addonCategorie.id)
+  // );
+  // console.log(addonCategoriesIds);
   const rows: row[] = [];
   addons.map((addon) => {
     const AddonCategorie = ACdatas.filter(
@@ -181,6 +198,7 @@ const Addons = () => {
       alert("Updated Addon success!");
       setAddonData(defaultAddon);
       setUpdate(false);
+      setOpen(false);
     }
   }
   function editHandler(row: row) {

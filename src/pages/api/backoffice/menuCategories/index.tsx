@@ -1,11 +1,9 @@
 import { prisma } from "@/utils/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import { unique } from "next/dist/build/utils";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log(req.method, "METHODDDD");
   if (req.method === "POST") {
     const { selectedLocationIds, name } = JSON.parse(req.body);
     if (!name || !selectedLocationIds) return res.send(400);
@@ -38,13 +36,12 @@ export default async function handler(
     } finally {
       prisma.$disconnect();
     }
-  } else if (req.method === "PATCH") {
+  } else if (req.method === "PUT") {
     const {
       name,
       selectedLocationIds,
     }: { name: string; selectedLocationIds: number[] } = JSON.parse(req.body);
     const catId = parseInt(req.query.id as string);
-    console.log("##############", catId, name);
     const allIds = await prisma.menus_menu_categories_locations.findMany({
       where: {
         menu_categories_id: catId,
@@ -66,8 +63,6 @@ export default async function handler(
     const toAddId = selectedLocationIds.filter(
       (sele) => !uniqueIds.includes(sele)
     );
-    console.log(toDeleteId, "this is to delete");
-    console.log(toAddId, "this is to add");
     if (toDeleteId.length) {
       toDeleteId.map(async (todeleteId) => {
         const checkMenu =
@@ -98,18 +93,6 @@ export default async function handler(
           }
         }
       });
-      // const data = await prisma.$transaction(
-      //   toDeleteId.map((data: any) =>
-      //     prisma.menus_menu_categories_locations.updateMany({
-      //       where: {
-      //         locations_id: data,
-      //       },
-      //       data: {
-      //         locations_id: null,
-      //       },
-      //     })
-      //   )
-      // );
     }
     if (toAddId.length) {
       const newLocation = toAddId.map((toAdd: number) => {

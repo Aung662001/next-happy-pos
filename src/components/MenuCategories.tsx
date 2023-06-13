@@ -22,7 +22,7 @@ const MenuCategories = () => {
   const [open, setOpen] = useState(false);
   const [updatingId, setupdatingId] = useState<number | null>();
   const [selectedLocationIds, setSelectedLocationIds] = useState<number[]>([]);
-  const [locationId, setLocationId] = useLocalStorage("locationId");
+  const [locationId] = useLocalStorage("locationId");
   const { menuCategories, fetchData, menusMenuCategoriesLocations, Locations } =
     useContext(BackofficeContext);
   const validMenuCategoriesIds = menusMenuCategoriesLocations
@@ -32,9 +32,13 @@ const MenuCategories = () => {
   const getConnectedMenus = (catId: number) => {
     let count = 0;
     menusMenuCategoriesLocations.map((m) => {
-      if (m.menu_categories_id === catId) {
-        if (m.menus_id !== null) {
-          return count++;
+      if (m.locations_id === locationId) {
+        if (m.menu_categories_id === catId) {
+          if (m.menus_id !== null) {
+            return count++;
+          } else {
+            return count;
+          }
         } else {
           return count;
         }
@@ -47,23 +51,13 @@ const MenuCategories = () => {
   };
   const selectedHandler = async (cat: menu_categories) => {
     router.push(`menu-categories/${cat.id}`);
-    // setOpen(true);
-    // let menusMenucategoriesLocation = menusMenuCategoriesLocations.filter(
-    //   (mcl) => mcl.menu_categories_id === cat.id
-    // );
-    // let locationIds = menusMenucategoriesLocation.map((l) => l.locations_id);
-    // locationIds = locationIds.filter(
-    //   (value, index, array) => array.indexOf(value) === index
-    // );
-    // locationIds = locationIds.filter((locationId) => locationId !== null);
-    // setIsUpdate(true);
-    // setupdatingId(cat.id);
-    // setNewMenuCategories({
-    //   name: cat.name,
-    //   selectedLocationIds: locationIds as number[],
-    // });
-    // setSelectedLocationIds(locationIds as number[]);
   };
+  const menuCategoriesIdsWithLocation = menusMenuCategoriesLocations
+    .filter((mcl) => mcl.locations_id === locationId)
+    .map((mclIds) => mclIds.menu_categories_id);
+  const filteredMenuCategories = menuCategories.filter((menuCategorie) =>
+    menuCategoriesIdsWithLocation.includes(menuCategorie.id)
+  );
   return (
     <Layout title="MenuCategories">
       <Box>
@@ -94,7 +88,7 @@ const MenuCategories = () => {
             gap: 2,
           }}
         >
-          {menuCategories.map((cat, index) => {
+          {filteredMenuCategories.map((cat, index) => {
             return (
               <Box
                 key={index}
