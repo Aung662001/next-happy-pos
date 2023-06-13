@@ -5,7 +5,7 @@ interface BaseType {
 
 export interface Menu extends BaseType {
   price: number | undefined;
-  menuCategoriesIds?: number[];
+  addonCategoriesIds?: number[];
   asseturl?: string;
   description?: string;
 }

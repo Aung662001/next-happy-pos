@@ -25,11 +25,21 @@ interface Props {
   close: () => void;
   openModel: boolean;
 }
+export const style = {
+  position: "absolute" as "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+};
 export default function EditModel({ open, close, openModel }: Props) {
   const [menus, setMenus] = useState<Menu>({
     name: "",
     price: undefined,
-    menuCategoriesIds: [],
+    addonCategoriesIds: [],
     asseturl: "",
     description: "",
   });
@@ -45,14 +55,19 @@ export default function EditModel({ open, close, openModel }: Props) {
     setMenuImage(files[0]);
   };
 
-  const { fetchData, menuCategories, menusMenuCategoriesLocations } =
-    useContext(BackofficeContext);
+  const {
+    fetchData,
+    menuCategories,
+    menusMenuCategoriesLocations,
+    addonCategories,
+    menus: Menus,
+    menuAddonCategories,
+  } = useContext(BackofficeContext);
   const [locationId, setLocationId] = useLocalStorage("locationId")!;
   const createMenu = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (menus.price === undefined) return;
     if (!menus?.name || menus?.price < 0) return;
-    console.log(menus);
     if (menuImage) {
       const formData = new FormData();
       formData.append("files", menuImage as Blob);
@@ -77,27 +92,18 @@ export default function EditModel({ open, close, openModel }: Props) {
       setMenus({
         name: "",
         price: undefined,
-        menuCategoriesIds: [],
+        addonCategoriesIds: [],
         asseturl: "",
         description: "",
       });
       fetchData();
     }
   };
-  const style = {
-    position: "absolute" as "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    boxShadow: 24,
-    p: 4,
-  };
+
   const handleChange = (e: SelectChangeEvent<number[] | []>) => {
     const currentCategory = e.target.value as number[];
     setSelectedCategoriesIds(currentCategory);
-    setMenus({ ...menus, menuCategoriesIds: currentCategory });
+    setMenus({ ...menus, addonCategoriesIds: currentCategory });
     if (menus.name && menus.price) setVisible(true);
   };
   const buttonVisible = () => {
@@ -105,13 +111,22 @@ export default function EditModel({ open, close, openModel }: Props) {
       setVisible(true);
     }
   };
+  ///this section is to filter out relate addonsCategories
   const CategoriesIds = menusMenuCategoriesLocations.filter(
     (mcl) => mcl.locations_id === locationId
   );
+  const filteredMenuIds = Menus.filter((item1) => {
+    return CategoriesIds.some((item2) => item1.id === item2.menus_id);
+  }).map((item) => item.id);
+  const filteredAddonCategoriesIds = menuAddonCategories
+    .filter((menuAddonCate) =>
+      filteredMenuIds.includes(menuAddonCate.menus_id as number)
+    )
+    .map((item) => item.addon_categories_id);
+  const filteredAddonCategories = addonCategories.filter((addonCat) =>
+    filteredAddonCategoriesIds.includes(addonCat.id)
+  );
 
-  const menuCategoriesAtCurrentLocation = menuCategories.filter((item1) => {
-    return CategoriesIds.some((item2) => item1.id === item2.menu_categories_id);
-  });
   return (
     <Modal
       open={openModel}
@@ -140,7 +155,7 @@ export default function EditModel({ open, close, openModel }: Props) {
                 setMenus({
                   name: event.target.value,
                   price: menus?.price ? menus.price : 0,
-                  menuCategoriesIds: selectedCategoriesIds,
+                  addonCategoriesIds: selectedCategoriesIds,
                 });
                 buttonVisible();
               }}
@@ -156,7 +171,7 @@ export default function EditModel({ open, close, openModel }: Props) {
                 setMenus({
                   price: parseInt(event.target.value),
                   name: menus?.name ? menus.name : "",
-                  menuCategoriesIds: selectedCategoriesIds,
+                  addonCategoriesIds: selectedCategoriesIds,
                 });
                 buttonVisible();
               }}
@@ -171,7 +186,7 @@ export default function EditModel({ open, close, openModel }: Props) {
                 setMenus({
                   price: menus.price ? menus.price : 0,
                   name: menus?.name ? menus.name : "",
-                  menuCategoriesIds: menus.menuCategoriesIds,
+                  addonCategoriesIds: menus.addonCategoriesIds,
                   description: event.target.value,
                 });
               }}
@@ -181,7 +196,7 @@ export default function EditModel({ open, close, openModel }: Props) {
                 id="demo-multiple-checkbox-label"
                 sx={{ backgroundColor: "white", px: 2 }}
               >
-                Menu Categoriey
+                Addons Categoriey
               </InputLabel>
               <Select
                 labelId="demo-multiple-checkbox-label"
@@ -193,8 +208,9 @@ export default function EditModel({ open, close, openModel }: Props) {
                 renderValue={(value) => {
                   const selectedCategory = selectedCategoriesIds.map(
                     (selectedCategoryId) => {
-                      return menuCategories.find(
-                        (menuCategory) => menuCategory.id === selectedCategoryId
+                      return addonCategories.find(
+                        (addonCategory) =>
+                          addonCategory.id === selectedCategoryId
                       );
                     }
                   );
@@ -203,7 +219,7 @@ export default function EditModel({ open, close, openModel }: Props) {
                     .join(",");
                 }}
               >
-                {menuCategoriesAtCurrentLocation.map((menuCategory) => (
+                {filteredAddonCategories.map((menuCategory) => (
                   <MenuItem key={menuCategory.id} value={menuCategory.id}>
                     <Checkbox
                       checked={
