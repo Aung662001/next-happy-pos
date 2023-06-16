@@ -3,9 +3,7 @@ import { useRouter } from "next/router";
 
 function App() {
   const router = useRouter();
-  useEffect(() => {
-    router.push("./auth/signin");
-  });
+  useEffect(() => {});
   return <div>Landing Page</div>;
 }
 

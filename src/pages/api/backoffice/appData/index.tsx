@@ -194,6 +194,7 @@ export default async function handler(
     const Locations = await prisma.locations.findMany({
       where: {
         companies_id: company_id,
+        is_archived: false,
       },
     });
     const locationIds = Locations.map((location) => location.id as number);
@@ -220,6 +221,7 @@ export default async function handler(
         id: {
           in: menuIds,
         },
+        is_archived: false,
       },
     });
     const menuAddonCategories = await prisma.menus_addon_categories.findMany({
@@ -234,9 +236,10 @@ export default async function handler(
     ) as number[];
     const addonCategories = await prisma.addon_categories.findMany({
       where: {
-        id: {
-          in: addonCategoriesIds,
-        },
+        // id: {
+        //   in: addonCategoriesIds,
+        // },
+        is_archived: false,
       },
     });
     const addons = await prisma.addons.findMany({
@@ -244,6 +247,7 @@ export default async function handler(
         addon_categories_id: {
           in: addonCategoriesIds,
         },
+        is_archived: false,
       },
     });
     const menuCategories = await prisma.menu_categories.findMany({
@@ -251,11 +255,13 @@ export default async function handler(
         id: {
           in: menuCategoriesIds,
         },
+        is_archived: false,
       },
     });
     const companies = await prisma.companies.findMany({
       where: {
         id: company_id,
+        is_archived: false,
       },
     });
     const tables = await prisma.tables.findMany({
@@ -263,6 +269,7 @@ export default async function handler(
         location_id: {
           in: locationIds,
         },
+        is_archived: false,
       },
     });
     await prisma.$disconnect();

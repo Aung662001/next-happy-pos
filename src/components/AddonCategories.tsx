@@ -14,13 +14,19 @@ import {
   Typography,
 } from "@mui/material";
 import Layout from "./Layout";
-import { FormEvent, useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { style } from "./editMenuModel/CreateMenuModel";
-import { prisma } from "@/utils/db";
 import { config } from "@/config/config";
 import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import EditAddonCategories from "@/pages/backoffice/addon-categories/Edit";
+import { addon_categories } from "@prisma/client";
 
+interface AddonCategories {
+  id: null | number;
+  name: string;
+  isRequired: string;
+}
 const AddonCategories = () => {
   const {
     fetchData,
@@ -31,7 +37,9 @@ const AddonCategories = () => {
   } = useContext(BackofficeContext);
   const [locationId] = useLocalStorage("locationId");
   const [open, setOpen] = useState(false);
-  const [addonCategories, setAddonCategories] = useState({
+  const [update, setUpdate] = useState(false);
+  const [addonCategories, setAddonCategories] = useState<AddonCategories>({
+    id: null,
     name: "",
     isRequired: "false",
   });
@@ -53,50 +61,17 @@ const AddonCategories = () => {
         onClick={() => setOpen(true)}
         sx={{ position: "absolute", right: 0 }}
       >
-        Add New MenuCategories +
+        Add New AddonCategories +
       </Button>
-      <Modal
+
+      <EditAddonCategories
         open={open}
-        onClose={() => {
-          setOpen(false);
-          setAddonCategories({ ...addonCategories, name: "" });
-        }}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <h1 style={{ textAlign: "center" }}>Create a new menu</h1>
-          <TextField
-            label="Name"
-            variant="outlined"
-            sx={{ mb: 2, width: "100%" }}
-            onChange={(e) =>
-              setAddonCategories({ ...addonCategories, name: e.target.value })
-            }
-          />
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">IsRequired</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={addonCategories.isRequired}
-              onChange={(e) => {
-                setAddonCategories({
-                  ...addonCategories,
-                  isRequired: e.target.value,
-                });
-              }}
-              label="Is_Required"
-            >
-              <MenuItem value={"false"}>False</MenuItem>
-              <MenuItem value={"true"}>True</MenuItem>
-            </Select>
-          </FormControl>
-          <Button variant="contained" onClick={submitHandler}>
-            Create
-          </Button>
-        </Box>
-      </Modal>
+        setOpen={setOpen}
+        setAddonCategories={setAddonCategories}
+        addonCategories={addonCategories}
+        update={update}
+        setUpdate={setUpdate}
+      />
       <Grid
         container
         spacing={{ xs: 2, md: 3 }}
@@ -106,7 +81,7 @@ const AddonCategories = () => {
         {filteredAddonCategories?.map((data, index) => {
           return (
             <section key={index}>
-              <Box>
+              <Box onClick={() => clickHandle(data)}>
                 <Card
                   sx={{
                     width: 200,
@@ -148,19 +123,15 @@ const AddonCategories = () => {
       </Grid>
     </Layout>
   );
-  async function submitHandler() {
-    if (!addonCategories.name || !addonCategories.isRequired) {
-      return;
-    }
-    const response = await fetch(`${config.backofficeUrl}/addonCategories`, {
-      method: "POST",
-      body: JSON.stringify(addonCategories),
+
+  function clickHandle(data: addon_categories) {
+    setAddonCategories({
+      id: data.id,
+      name: data.name,
+      isRequired: data.is_required === true ? "true" : "false",
     });
-    if (response.ok) {
-      setOpen(false);
-      setAddonCategories({ ...addonCategories, name: "" });
-      fetchData();
-    }
+    setUpdate(true);
+    setOpen(true);
   }
 };
 

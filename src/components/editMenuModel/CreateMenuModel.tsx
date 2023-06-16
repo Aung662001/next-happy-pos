@@ -219,7 +219,7 @@ export default function EditModel({ open, close, openModel }: Props) {
                     .join(",");
                 }}
               >
-                {filteredAddonCategories.map((menuCategory) => (
+                {addonCategories.map((menuCategory) => (
                   <MenuItem key={menuCategory.id} value={menuCategory.id}>
                     <Checkbox
                       checked={

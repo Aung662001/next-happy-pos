@@ -13,6 +13,7 @@ model addon_categories {
   is_required            Boolean?
   addons                 addons[]
   menus_addon_categories menus_addon_categories[]
+  is_archived            Boolean                  @default(false)
 }
 
 model addons {
@@ -22,14 +23,16 @@ model addons {
   is_avaiable         Boolean?          @default(true)
   addon_categories_id Int?
   addon_categories    addon_categories? @relation(fields: [addon_categories_id], references: [id], onUpdate: NoAction)
+  is_archived         Boolean           @default(false)
 }
 
 model companies {
-  id        Int         @id @default(autoincrement())
-  name      String
-  address   String?
-  locations locations[]
-  users     users[]
+  id          Int         @id @default(autoincrement())
+  name        String
+  address     String?
+  locations   locations[]
+  users       users[]
+  is_archived Boolean     @default(false)
 }
 
 model locations {
@@ -40,12 +43,14 @@ model locations {
   companies                       companies?                        @relation(fields: [companies_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   menus_menu_categories_locations menus_menu_categories_locations[]
   tables                          tables[]
+  is_archived                     Boolean                           @default(false)
 }
 
 model menu_categories {
   id                              Int                               @id @default(autoincrement())
   name                            String
   menus_menu_categories_locations menus_menu_categories_locations[]
+  is_archived                     Boolean                           @default(false)
 }
 
 model menus {
@@ -56,6 +61,7 @@ model menus {
   description                     String?
   menus_addon_categories          menus_addon_categories[]
   menus_menu_categories_locations menus_menu_categories_locations[]
+  is_archived                     Boolean                           @default(false)
 }
 
 model menus_addon_categories {
@@ -93,6 +99,7 @@ model tables {
   assetUrl    String?
   location_id Int
   locations   locations @relation(fields: [location_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  is_archived Boolean   @default(false)
 }
 
 enum Role {
