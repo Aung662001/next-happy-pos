@@ -30,7 +30,7 @@ const Menus = () => {
   const [menus, setMenus] = useState<menuUpdateType>({
     name: "",
     price: undefined,
-    menuCategoriesIds: [],
+    // menuCategoriesIds: [],
     asseturl: "",
     description: "",
   });

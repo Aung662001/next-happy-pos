@@ -90,6 +90,7 @@ model users {
 model tables {
   id          Int       @id @default(autoincrement())
   name        String
+  assetUrl    String?
   location_id Int
   locations   locations @relation(fields: [location_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

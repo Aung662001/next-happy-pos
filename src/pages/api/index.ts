@@ -31,6 +31,7 @@
 //   }
 // }
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { qrCodeImageUpload } from "@/utils/qrUpload";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
@@ -41,5 +42,6 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
+  qrCodeImageUpload(1, 1);
   res.status(200).json({ name: "John Doe" });
 }

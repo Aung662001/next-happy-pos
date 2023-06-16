@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import DinnerDiningIcon from "@mui/icons-material/DinnerDining";
 import SetMealIcon from "@mui/icons-material/SetMeal";
@@ -14,19 +15,10 @@ import EditLocationAltIcon from "@mui/icons-material/EditLocationAlt";
 import { useState, useEffect, useContext } from "react";
 import { signOut, signIn } from "next-auth/react";
 import { useSession } from "next-auth/react";
-import {
-  Divider,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
 import { BackofficeContext } from "../contexts/BackofficeContext";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useRouter } from "next/router";
-import Link from "next/link";
+import Image from "next/image";
 interface NavProps {
   label?: string;
 }
@@ -70,6 +62,12 @@ export const sidebarMenuItems = [
   },
   {
     id: 7,
+    label: "Tables",
+    icon: <TableRestaurantIcon />,
+    route: "/backoffice/tables",
+  },
+  {
+    id: 8,
     label: "Setting",
     icon: <SettingsIcon />,
     route: "/backoffice/setting",
@@ -107,13 +105,19 @@ const NavBar = (props: NavProps) => {
       <AppBar position="static">
         <Toolbar
           sx={{
-            backgroundColor: "#1B9C85",
+            backgroundColor: "#208469",
             display: "flex",
             justifyContent: "space-between",
             flexDirection: "row",
           }}
         >
-          <h1>Logo</h1>
+          <Image
+            src="https://msquarefdc.sgp1.digitaloceanspaces.com/happy-pos/wma/Fri%20Jun%2016%202023%2009%3A58%3A57%20GMT%2B0630%20%28Myanmar%20Time%29Screenshot%202023-06-16%20094700.png"
+            alt="logo"
+            width="150"
+            height={80}
+            style={{ marginLeft: "-25px" }}
+          />
           <h2>{props.label}</h2>
           <Button
             color="inherit"

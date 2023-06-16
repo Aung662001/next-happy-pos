@@ -325,7 +325,7 @@ export default function EditMenuCategories() {
     setChooseToConnectMenuIds(e.target.value as number[]);
   }
   async function connectMenus() {
-    await fetch(
+    const response = await fetch(
       `${config.backofficeUrl}/menuCategories/connectMenu?id=${locationId}`,
       {
         method: "PUT",
@@ -335,6 +335,9 @@ export default function EditMenuCategories() {
         }),
       }
     );
-    setChooseToConnectMenuIds([]);
+    if (response.ok) {
+      fetchData();
+      setChooseToConnectMenuIds([]);
+    }
   }
 }

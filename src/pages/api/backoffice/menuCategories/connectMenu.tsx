@@ -10,34 +10,34 @@ export default async function handler(
     if (!menuIds || !menuCategorieId) return res.send(400);
     try {
       menuIds.map(async (menuId: number) => {
-        const canUpdate =
-          await prisma.menus_menu_categories_locations.findFirst({
-            where: {
-              menus_id: null,
-              locations_id: locationId,
-              menu_categories_id: menuCategorieId,
-            },
-          });
-        if (canUpdate !== null) {
-          await prisma.menus_menu_categories_locations.updateMany({
-            where: {
-              locations_id: locationId,
-              menu_categories_id: menuCategorieId as number,
-            },
-            data: {
-              menus_id: menuId,
-            },
-          });
-          menuIds.shift();
-        } else {
-          await prisma.menus_menu_categories_locations.create({
-            data: {
-              menus_id: menuId,
-              locations_id: locationId,
-              menu_categories_id: menuCategorieId,
-            },
-          });
-        }
+        // const canUpdate =
+        //   await prisma.menus_menu_categories_locations.findFirst({
+        //     where: {
+        //       menus_id: null,
+        //       locations_id: locationId,
+        //       menu_categories_id: menuCategorieId,
+        //     },
+        //   });
+        // if (canUpdate !== null) {
+        //   await prisma.menus_menu_categories_locations.updateMany({
+        //     where: {
+        //       locations_id: locationId,
+        //       menu_categories_id: menuCategorieId as number,
+        //     },
+        //     data: {
+        //       menus_id: menuId,
+        //     },
+        //   });
+        //   menuIds.shift();
+        // } else {
+        await prisma.menus_menu_categories_locations.create({
+          data: {
+            menus_id: menuId,
+            locations_id: locationId,
+            menu_categories_id: menuCategorieId,
+          },
+        });
+        // }
         /////
       });
       res.send(202);

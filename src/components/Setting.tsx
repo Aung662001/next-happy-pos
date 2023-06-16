@@ -38,7 +38,7 @@ export default function Setting() {
       }
     }
   }, [Locations, companies]);
-  function handleChange(e: SelectChangeEvent<number>) {
+  function handleChange(e: SelectChangeEvent<{}>) {
     setLocationId(e.target.value as number);
     const selectedLocation = Locations.find(
       (location) => location.id === e.target.value
@@ -75,9 +75,9 @@ export default function Setting() {
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={selectedLocation ? selectedLocation.id : ""}
+            value={locationId ? locationId : ""}
             label="Age"
-            onChange={(e) => handleChange(e)}
+            onChange={handleChange}
           >
             {Locations &&
               Locations.map((location) => {

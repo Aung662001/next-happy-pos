@@ -161,6 +161,17 @@ export default async function handler(
         })
       )
     );
+    const tableDatas = [
+      { name: "Table 01", location_id: newLocation.id },
+      { name: "Table 02", location_id: newLocation.id },
+    ];
+    const tables = await prisma.$transaction(
+      tableDatas.map((data) =>
+        prisma.tables.create({
+          data: data,
+        })
+      )
+    );
     await prisma.$disconnect();
 
     return res.send({
@@ -171,6 +182,7 @@ export default async function handler(
       locations: newLocation,
       menusMenuCategoriesLocation: newMenusMenusCategoriesLocations,
       company: newCompany,
+      tables: tables,
     });
   } else {
     //user
@@ -246,6 +258,13 @@ export default async function handler(
         id: company_id,
       },
     });
+    const tables = await prisma.tables.findMany({
+      where: {
+        location_id: {
+          in: locationIds,
+        },
+      },
+    });
     await prisma.$disconnect();
     res.send({
       menus,
@@ -256,6 +275,7 @@ export default async function handler(
       menuAddonCategories,
       menusMenuCategoriesLocations,
       companies,
+      tables,
     });
   }
 }

@@ -16,14 +16,14 @@ export default function SideBar() {
     <Box
       sx={{
         minWidth: 250,
-        backgroundColor: "#1B9C85",
+        backgroundColor: "#208469",
         height: "100vh",
         display: "flex",
         flexDirection: "column",
       }}
     >
       <List sx={{ p: 0 }}>
-        {sidebarMenuItems.slice(0, 6).map((item) => (
+        {sidebarMenuItems.slice(0, 7).map((item) => (
           <Link
             key={item.id}
             href={item.route}

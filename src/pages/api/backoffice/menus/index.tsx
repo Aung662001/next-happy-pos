@@ -42,6 +42,13 @@ export default async function handler(
         },
       });
     }
+    // await prisma.menus_menu_categories_locations.create({
+    //   data: {
+    //     menus_id: menuId,
+    //     locations_id: locationId,
+    //     menu_categories_id:null
+    //   },
+    // });
     await prisma.$disconnect();
     res.send(200);
   } else if (req.method === "PUT") {
