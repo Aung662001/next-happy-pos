@@ -70,7 +70,8 @@ const App = () => {
         columns={{ xs: 4, sm: 8, md: 12 }}
         gap={3}
       >
-        {filteredAddonCategories?.map((data, index) => {
+        {/* {can use to filter =>filteredAddonCategories} */}
+        {addonCategoriesFromContext?.map((data, index) => {
           return (
             <section key={index}>
               <Box onClick={() => clickHandle(data)}>

@@ -32,9 +32,12 @@ export default async function handler(
   } else if (req.method === "DELETE") {
     const id = parseInt(req.query.id as string);
     try {
-      const dbRes = await prisma.addons.delete({
+      const dbRes = await prisma.addons.update({
         where: {
           id: id,
+        },
+        data: {
+          is_archived: true,
         },
       });
       res.send(dbRes);

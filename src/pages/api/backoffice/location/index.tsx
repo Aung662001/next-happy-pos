@@ -49,9 +49,12 @@ export default async function handler(
     console.log(LocationId);
     if (!LocationId) return res.send(400);
     try {
-      await prisma.locations.delete({
+      await prisma.locations.update({
         where: {
           id: parseInt(LocationId),
+        },
+        data: {
+          is_archived: true,
         },
       });
       res.send(202);

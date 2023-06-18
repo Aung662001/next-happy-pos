@@ -45,5 +45,36 @@ export default async function handler(
     } catch (err) {
       res.status(500).json({ message: "Internal server Error" });
     }
+  } else if (req.method === "DELETE") {
+    const id = parseInt(req.query.id as string);
+    if (!id) return res.send(400);
+    try {
+      await prisma.menus_addon_categories.delete({
+        where: {
+          id: id,
+        },
+      });
+      await prisma.addons.updateMany({
+        where: {
+          addon_categories_id: id,
+        },
+        data: {
+          addon_categories_id: null,
+        },
+      });
+      await prisma.addon_categories.update({
+        where: {
+          id: id,
+        },
+        data: {
+          is_archived: true,
+        },
+      });
+      res.send(203);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  } else {
+    res.send(405);
   }
 }

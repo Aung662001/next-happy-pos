@@ -83,7 +83,7 @@ export default async function handler(
   //     menusLocations,
   //     companies,
   //   });
-  res.send(200);
+  return res.send(200);
   res.send({
     location,
     menuCategories,

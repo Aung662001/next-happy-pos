@@ -1,6 +1,8 @@
+import DeleteDialog from "@/components/DeleteDialog";
 import { style } from "@/components/editMenuModel/CreateMenuModel";
 import { config } from "@/config/config";
 import { BackofficeContext } from "@/contexts/BackofficeContext";
+import { useRouter } from "next/router";
 
 import {
   Modal,
@@ -12,7 +14,7 @@ import {
   MenuItem,
   Button,
 } from "@mui/material";
-import { SetStateAction, useContext } from "react";
+import { SetStateAction, useContext, useState } from "react";
 interface EditAddonCategories {
   open: boolean;
   setOpen: (value: SetStateAction<boolean>) => void;
@@ -40,7 +42,23 @@ const EditAddonCategories = (props: EditAddonCategories) => {
     update,
     setUpdate,
   } = props;
+  const router = useRouter();
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const { fetchData } = useContext(BackofficeContext);
+  const deleteHandler = async () => {
+    const response = await fetch(
+      `${config.backofficeUrl}/addonCategories?id=${addonCategories.id}`,
+      {
+        method: "DELETE",
+      }
+    );
+    if (response.ok) {
+      setOpenDeleteDialog(false);
+      setOpen(false);
+      fetchData();
+      router.push("/backoffice/addon-categories");
+    }
+  };
   return (
     <Modal
       open={open}
@@ -84,13 +102,29 @@ const EditAddonCategories = (props: EditAddonCategories) => {
             <MenuItem value={"true"}>True</MenuItem>
           </Select>
         </FormControl>
-        <Button
-          variant="contained"
-          sx={{ marginTop: 2 }}
-          onClick={update ? updateHandler : submitHandler}
-        >
-          {update ? "Update" : "Create"}
-        </Button>
+        <Box sx={{ display: "flex", gap: 3 }}>
+          <Button
+            variant="contained"
+            sx={{ marginTop: 2 }}
+            onClick={update ? updateHandler : submitHandler}
+          >
+            {update ? "Update" : "Create"}
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            sx={{ marginTop: 2, display: `${update ? "" : "none"}` }}
+            onClick={() => setOpenDeleteDialog(true)}
+          >
+            Delete
+          </Button>
+        </Box>
+        <DeleteDialog
+          open={openDeleteDialog}
+          setOpen={setOpenDeleteDialog}
+          title={`Dou You Want To Delete This ${addonCategories.name}`}
+          callback={deleteHandler}
+        />
       </Box>
     </Modal>
   );
