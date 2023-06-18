@@ -19,7 +19,6 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import Locations from "../Locations";
 import { config } from "@/config/config";
 import { BackofficeContext } from "@/contexts/BackofficeContext";
 interface Props {

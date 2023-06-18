@@ -113,14 +113,12 @@ export default async function handler(
     //this is delete route
     const id = parseInt(req.query.id as string);
     try {
-      await prisma.menus_menu_categories_locations.deleteMany({
-        where: {
-          menu_categories_id: id,
-        },
-      });
-      await prisma.menu_categories.delete({
+      await prisma.menu_categories.update({
         where: {
           id: id,
+        },
+        data: {
+          is_archived: true,
         },
       });
       res.send(204);

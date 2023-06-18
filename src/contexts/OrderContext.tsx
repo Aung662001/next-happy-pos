@@ -58,10 +58,11 @@ const OrderProvider = (props: any) => {
   }, [session]);
   const fetchData = async () => {
     const response = await fetch(
-      `${config.orderUrl}?locationId=${location}`,
+      `${config.orderBaseUrl}?locationId=${location}`,
       {}
     );
     if (!response.ok) return null;
+    console.log(response);
     const responseJson = await response.json();
     const {
       menus,

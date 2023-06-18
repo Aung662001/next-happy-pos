@@ -16,14 +16,16 @@ import { Menu } from "../../typings/types";
 import { BackofficeContext } from "../../contexts/BackofficeContext";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { config } from "@/config/config";
-import { json } from "stream/consumers";
+import { useRouter } from "next/router";
+import DeleteDialog from "../DeleteDialog";
 interface Props {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  menus: Menu;
-  setMenus: Dispatch<SetStateAction<Menu>>;
+  menus: Partial<Menu>;
+  setMenus: React.Dispatch<React.SetStateAction<Partial<Menu>>>;
 }
 export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
+  const router = useRouter();
   const [selectedCategoriesIds, setSelectedCategoriesIds] = useState<number[]>(
     []
   );
@@ -31,6 +33,7 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
   const { fetchData, menuCategories, menusMenuCategoriesLocations } =
     useContext(BackofficeContext);
   const [locationId, setLocationId] = useLocalStorage("locationId")!;
+  const [openArchived, setOpenArchived] = useState(false);
   //   const createMenu = async (e: React.FormEvent<HTMLFormElement>) => {
   //     e.preventDefault();
   //     if (menus.price === undefined) return;
@@ -68,7 +71,7 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
   const handleChange = (e: SelectChangeEvent<number[] | []>) => {
     const currentCategory = e.target.value as number[];
     setSelectedCategoriesIds(currentCategory);
-    setMenus({ ...menus, menuCategoriesIds: currentCategory });
+    // setMenus({ ...menus, menuCategoriesIds: currentCategory });
   };
 
   const CategoriesIds = menusMenuCategoriesLocations.filter(
@@ -83,7 +86,7 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
       ...menus,
       name: "",
       price: undefined,
-      menuCategoriesIds: [],
+      // menuCategoriesIds: [],
       asseturl: "",
       description: "",
     });
@@ -107,6 +110,20 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
       fetchData();
     }
   }
+  const deleteHandler = async () => {
+    const response = await fetch(
+      `${config.backofficeUrl}/menus?id=${menus.id}&locationId=${locationId}`,
+      {
+        method: "DELETE",
+      }
+    );
+    if (response.ok) {
+      setOpenArchived(false);
+      setOpen(false);
+      fetchData();
+      router.push("/backoffice/menus");
+    }
+  };
   return (
     <Modal
       open={open}
@@ -165,7 +182,7 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
                   ...menus,
                   price: menus.price ? menus.price : 0,
                   name: menus?.name ? menus.name : "",
-                  menuCategoriesIds: menus.menuCategoriesIds,
+                  // menuCategoriesIds: menus.menuCategoriesIds,
                   description: event.target.value,
                 });
               }}
@@ -216,7 +233,22 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
             <Button variant="contained" type="submit" sx={{ marginTop: 3 }}>
               Update
             </Button>
+            <Button
+              variant="contained"
+              color="error"
+              type="button"
+              sx={{ marginTop: 3 }}
+              onClick={() => setOpenArchived(true)}
+            >
+              Delete
+            </Button>
           </Box>
+          <DeleteDialog
+            open={openArchived}
+            setOpen={setOpenArchived}
+            callback={deleteHandler}
+            title={`Do You Want to Delete this Menu ${menus.name}`}
+          />
         </Box>
       </form>
     </Modal>

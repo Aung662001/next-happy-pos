@@ -8,23 +8,29 @@ import {
   MenuItem,
   SelectChangeEvent,
   TextField,
+  Button,
 } from "@mui/material";
 import { BackofficeContext } from "../contexts/BackofficeContext";
 import { locations as Location } from "@prisma/client";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useRouter } from "next/router";
+import { companies } from "@prisma/client";
 import NavBar from "./TopBar";
+import { config } from "@/config/config";
 
 export default function Setting() {
   const [locationId, setLocationId] = useLocalStorage("locationId");
+  const [updateCompany, setUpdateCompany] = useState<Partial<companies>>({
+    name: "",
+    address: "",
+  });
   const router = useRouter();
-  const { Locations, fetchData, companies, token } =
+  const { Locations, fetchData, companies, loading } =
     useContext(BackofficeContext);
 
   const [selectedLocation, setSelectedLocation] = useState<
     Location | undefined
   >();
-  console.log(companies);
   useEffect(() => {
     if (Locations.length) {
       if (!locationId) {
@@ -35,6 +41,15 @@ export default function Setting() {
           (location) => String(location.id) === locationId
         );
         setSelectedLocation(selectedLocation);
+        // const companyId = Locations.filter(
+        //   (location) => location.id === locationId
+        // ).map((all) => all.companies_id);
+        // console.log(companyId);
+        setUpdateCompany({
+          id: companies[0].id,
+          name: companies[0].name,
+          address: companies[0].address,
+        });
       }
     }
   }, [Locations, companies]);
@@ -46,24 +61,34 @@ export default function Setting() {
     setSelectedLocation(selectedLocation);
     // router.push(`/menus`);
   }
+  const updateHandler = async () => {
+    const response = await fetch(`${config.backofficeUrl}/settings`, {
+      method: "PUT",
+      body: JSON.stringify(updateCompany),
+    });
+  };
   return (
     <Layout title="Setting">
       <Box sx={{ maxWidth: 500, margin: "0 auto", marginTop: "25%" }}>
         <TextField
           id="outline-basic"
-          label="Company"
+          label="Company Name"
           fullWidth
           sx={{ my: 2 }}
-          value={companies.length && companies[0].name}
-          disabled
+          value={updateCompany.name}
+          onChange={(e) =>
+            setUpdateCompany({ ...updateCompany, name: e.target.value })
+          }
         />
         <TextField
           id="outline-basic"
-          label="Company"
+          label="Company Address"
           fullWidth
           sx={{ my: 2 }}
-          value={companies.length && companies[0].address}
-          disabled
+          value={updateCompany.address}
+          onChange={(e) =>
+            setUpdateCompany({ ...updateCompany, address: e.target.value })
+          }
         />
         <FormControl fullWidth>
           <InputLabel
@@ -89,6 +114,13 @@ export default function Setting() {
               })}
           </Select>
         </FormControl>
+        <Button
+          variant="contained"
+          sx={{ marginTop: 4 }}
+          onClick={updateHandler}
+        >
+          Update
+        </Button>
       </Box>
     </Layout>
   );

@@ -1,15 +1,17 @@
 import { OrderContext } from "@/contexts/OrderContext";
 import { MenuCategory } from "@/typings/types";
 import { Box, Button } from "@mui/material";
+import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 
 function Order() {
+  const router = useRouter();
   const { menuCategories, menus } = useContext(OrderContext);
   const [selectedMenuCategory, setSelectedMenuCategories] =
     useState<MenuCategory>();
-  useEffect(() => {
-    setSelectedMenuCategories(menuCategories[0]);
-  }, []);
+  // useEffect(() => {
+  //   setSelectedMenuCategories(menuCategories[0]);
+  // }, []);
   return (
     <Box>
       {menuCategories.map((menuCategorie, index) => {

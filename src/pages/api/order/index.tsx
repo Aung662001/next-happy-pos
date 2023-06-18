@@ -9,7 +9,7 @@ export default async function handler(
   const query = req.query;
   const locationid = query.locationId as string;
   const locationId = parseInt(locationid);
-  if (!locationId) return res.send(400);
+  if (!locationId) return res.status(400).json({ message: "bad request" });
   // const locationIds = Locations.map((location) => location.id as number);
   //menuLocations
   const menusMenuCategoriesLocations =
@@ -83,6 +83,7 @@ export default async function handler(
   //     menusLocations,
   //     companies,
   //   });
+  res.send(200);
   res.send({
     location,
     menuCategories,

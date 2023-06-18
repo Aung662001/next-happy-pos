@@ -11,11 +11,17 @@ export default async function handler(
       name,
       price,
       addonCategoriesIds,
+      menuCategoriesIds,
       asseturl = "",
       description = "",
     } = req.body;
 
-    const invalid = !name && !price && price < 0 && !addonCategoriesIds.length;
+    const invalid =
+      !name &&
+      !price &&
+      price < 0 &&
+      !addonCategoriesIds.length &&
+      menuCategoriesIds.length;
     if (invalid) return res.status(400).json({ error: "invalid input values" });
     const menu = await prisma.menus.create({
       data: {
@@ -39,6 +45,25 @@ export default async function handler(
         data: {
           menus_id: menuId,
           addon_categories_id: addonCategoriesIds[0],
+        },
+      });
+    }
+    //create menusCategories
+    if (menuCategoriesIds.length > 1) {
+      const data = menuCategoriesIds.map((menuCategoriesId: number) => ({
+        menus_id: menuId,
+        addon_categories_id: menuCategoriesId,
+        location_id: locationId,
+      }));
+      await prisma.menus_menu_categories_locations.createMany({
+        data,
+      });
+    } else {
+      await prisma.menus_menu_categories_locations.create({
+        data: {
+          menus_id: menuId,
+          menu_categories_id: addonCategoriesIds[0],
+          locations_id: locationId,
         },
       });
     }
@@ -72,5 +97,34 @@ export default async function handler(
     } catch (err) {
       res.send(500);
     }
+  } else if (req.method === "DELETE") {
+    const id = parseInt(req.query.id as string);
+    const locationId = parseInt(req.query.locationId as string);
+    if (!id || !locationId)
+      return res.status(400).json({ message: "something went wrong" });
+    try {
+      await prisma.menus_menu_categories_locations.updateMany({
+        where: {
+          menus_id: id,
+          locations_id: locationId,
+        },
+        data: {
+          menus_id: null,
+        },
+      });
+      await prisma.menus.update({
+        where: {
+          id: id,
+        },
+        data: {
+          is_archived: true,
+        },
+      });
+      res.send(203);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  } else {
+    res.send(405);
   }
 }

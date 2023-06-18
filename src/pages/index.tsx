@@ -3,7 +3,9 @@ import { useRouter } from "next/router";
 
 function App() {
   const router = useRouter();
-  useEffect(() => {});
+  useEffect(() => {
+    // router.push("./orders");
+  });
   return <div>Landing Page</div>;
 }
 

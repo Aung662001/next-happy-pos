@@ -5,7 +5,6 @@ import {
   CardContent,
   CardMedia,
   Checkbox,
-  Dialog,
   FormControl,
   InputLabel,
   ListItemText,
@@ -16,20 +15,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { config } from "@/config/config";
 import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { useRouter } from "next/router";
-import { menus as Menu } from "@prisma/client";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import DeleteDialog from "@/components/DeleteDialog";
 
 interface menuCategories {
   name: string;
@@ -37,6 +28,9 @@ interface menuCategories {
   selectedLocationIds: number[];
 }
 export default function EditMenuCategories() {
+  const router = useRouter();
+  const updatingId = parseInt(router.query.id as string);
+  const [open, setOpen] = useState(false);
   const [locationId] = useLocalStorage("locationId");
   const [updateMenuCategorie, setUpdateMenuCategorie] =
     useState<menuCategories>({
@@ -48,8 +42,6 @@ export default function EditMenuCategories() {
   const [chooseToConnectMenuIds, setChooseToConnectMenuIds] = useState<
     number[]
   >([]);
-  const router = useRouter();
-  const updatingId = parseInt(router.query.id as string);
   const {
     menuCategories,
     menus,
@@ -96,15 +88,52 @@ export default function EditMenuCategories() {
   ) {
     return null;
   }
+  const deleteHandler = async () => {
+    const response = await fetch(
+      `${config.backofficeUrl}/menuCategories?id=${updatingId}`,
+      {
+        method: "DELETE",
+      }
+    );
+    if (response.ok) {
+      setOpen(false);
+      router.push("./");
+      fetchData();
+    } else {
+      alert("Cann't delete this MenuCategories");
+    }
+  };
   return (
     <Box>
-      <Button
-        onClick={() => router.push("./")}
-        sx={{ marginLeft: 2, marginTop: 4, position: "fixed" }}
-        variant="contained"
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          margin: "20px ",
+        }}
       >
-        Back
-      </Button>
+        <Button
+          onClick={() => router.push("./")}
+          // sx={{ marginLeft: 2, marginTop: 4, position: "fixed" }}
+          variant="contained"
+        >
+          Back
+        </Button>
+        <Button
+          onClick={() => setOpen(true)}
+          sx={{ display: "flex" }}
+          variant="contained"
+          color="error"
+        >
+          Delete
+        </Button>
+      </Box>
+      <DeleteDialog
+        open={open}
+        setOpen={setOpen}
+        callback={deleteHandler}
+        title={`Do You Really Want to Delete   ${updateMenuCategorie.name}`}
+      />
       <Box
         sx={{
           mb: 2,

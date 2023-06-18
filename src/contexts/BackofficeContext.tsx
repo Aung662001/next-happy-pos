@@ -30,6 +30,7 @@ export interface BackofficeContextType {
   fetchData: () => void;
   accessToken: string;
   token: string;
+  loading: boolean;
 }
 
 const defaultContext: BackofficeContextType = {
@@ -46,6 +47,7 @@ const defaultContext: BackofficeContextType = {
   fetchData: () => {},
   accessToken: "",
   token: "",
+  loading: true,
 };
 export const BackofficeContext =
   createContext<BackofficeContextType>(defaultContext);
@@ -88,8 +90,9 @@ const BackofficeProvider = (props: any) => {
       companies,
       menuAddonCategories,
       tables,
+      loading: false,
     });
-    setLocation(Locations[0].id);
+    location ?? setLocation(Locations[0].id);
   };
 
   return (

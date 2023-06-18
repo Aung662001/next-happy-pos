@@ -40,6 +40,7 @@ export default function EditModel({ open, close, openModel }: Props) {
     name: "",
     price: undefined,
     addonCategoriesIds: [],
+    menuCategoriesIds: [],
     asseturl: "",
     description: "",
   });
@@ -49,6 +50,9 @@ export default function EditModel({ open, close, openModel }: Props) {
   const [selectedCategoriesIds, setSelectedCategoriesIds] = useState<number[]>(
     []
   );
+  const [selectedMenuCategoriesIds, setSelectedMenuCategoriesIds] = useState<
+    number[]
+  >([]);
   const [visible, setVisible] = useState(false);
 
   const onFileSelected = (files: File[]) => {
@@ -64,6 +68,7 @@ export default function EditModel({ open, close, openModel }: Props) {
     menuAddonCategories,
   } = useContext(BackofficeContext);
   const [locationId, setLocationId] = useLocalStorage("locationId")!;
+
   const createMenu = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (menus.price === undefined) return;
@@ -93,6 +98,7 @@ export default function EditModel({ open, close, openModel }: Props) {
         name: "",
         price: undefined,
         addonCategoriesIds: [],
+        menuCategoriesIds: [],
         asseturl: "",
         description: "",
       });
@@ -105,6 +111,13 @@ export default function EditModel({ open, close, openModel }: Props) {
     setSelectedCategoriesIds(currentCategory);
     setMenus({ ...menus, addonCategoriesIds: currentCategory });
     if (menus.name && menus.price) setVisible(true);
+  };
+  const handleChangeForMenuCategories = (
+    e: SelectChangeEvent<number[] | []>
+  ) => {
+    const currentMenuCategories = e.target.value as number[];
+    setSelectedMenuCategoriesIds(currentMenuCategories);
+    setMenus({ ...menus, menuCategoriesIds: currentMenuCategories });
   };
   const buttonVisible = () => {
     if (menus.name && menus.price) {
@@ -153,6 +166,7 @@ export default function EditModel({ open, close, openModel }: Props) {
               onChange={(event) => {
                 setName(event.target.value);
                 setMenus({
+                  ...menus,
                   name: event.target.value,
                   price: menus?.price ? menus.price : 0,
                   addonCategoriesIds: selectedCategoriesIds,
@@ -169,6 +183,7 @@ export default function EditModel({ open, close, openModel }: Props) {
               onChange={(event) => {
                 setPrice(event.target.value);
                 setMenus({
+                  ...menus,
                   price: parseInt(event.target.value),
                   name: menus?.name ? menus.name : "",
                   addonCategoriesIds: selectedCategoriesIds,
@@ -184,6 +199,7 @@ export default function EditModel({ open, close, openModel }: Props) {
               value={menus.description}
               onChange={(event) => {
                 setMenus({
+                  ...menus,
                   price: menus.price ? menus.price : 0,
                   name: menus?.name ? menus.name : "",
                   addonCategoriesIds: menus.addonCategoriesIds,
@@ -219,12 +235,55 @@ export default function EditModel({ open, close, openModel }: Props) {
                     .join(",");
                 }}
               >
-                {addonCategories.map((menuCategory) => (
+                {addonCategories.map((addonCategory) => (
+                  <MenuItem key={addonCategory.id} value={addonCategory.id}>
+                    <Checkbox
+                      checked={
+                        addonCategory.id &&
+                        selectedCategoriesIds.includes(addonCategory.id)
+                          ? true
+                          : false
+                      }
+                    />
+                    <ListItemText primary={addonCategory.name} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            {/* { end addon cate} */}
+            <FormControl sx={{ mb: 1, width: 300 }} required>
+              <InputLabel
+                id="menucat-multiple-checkbox"
+                sx={{ backgroundColor: "white", px: 2 }}
+              >
+                Menus Categoriey
+              </InputLabel>
+              <Select
+                labelId="menucat-multiple-checkbox"
+                id="menucat-multiple-checkbox"
+                multiple
+                value={selectedMenuCategoriesIds}
+                onChange={handleChangeForMenuCategories}
+                input={<OutlinedInput label="Tag" />}
+                renderValue={(value) => {
+                  const selectedCategory = selectedMenuCategoriesIds.map(
+                    (selectedCategoryId) => {
+                      return menuCategories.find(
+                        (menuCategory) => menuCategory.id === selectedCategoryId
+                      );
+                    }
+                  );
+                  return selectedCategory
+                    .map((category) => category?.name)
+                    .join(",");
+                }}
+              >
+                {menuCategories.map((menuCategory) => (
                   <MenuItem key={menuCategory.id} value={menuCategory.id}>
                     <Checkbox
                       checked={
                         menuCategory.id &&
-                        selectedCategoriesIds.includes(menuCategory.id)
+                        selectedMenuCategoriesIds.includes(menuCategory.id)
                           ? true
                           : false
                       }

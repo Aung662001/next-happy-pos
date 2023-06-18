@@ -1,12 +1,15 @@
 import { Box } from "@mui/material";
 import NavBar from "./TopBar";
 import SideBar from "./SideBar";
+import { useContext } from "react";
+import { BackofficeContext } from "@/contexts/BackofficeContext";
 
 interface Props {
   title?: string;
   children: string | JSX.Element | JSX.Element[];
 }
 const Layout = (props: Props) => {
+  const { loading } = useContext(BackofficeContext);
   return (
     <Box>
       <Box sx={{ position: "sticky", top: 0 }}>
@@ -22,7 +25,7 @@ const Layout = (props: Props) => {
             marginLeft: "250px",
           }}
         >
-          {props.children}
+          {!loading ? props.children : ""}
         </Box>
       </Box>
     </Box>
