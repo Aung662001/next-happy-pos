@@ -25,7 +25,6 @@ export default async function handler(
       });
       res.send(200);
     } catch (err: any) {
-      console.log(err.message);
       res.send(500);
     }
   } else if (req.method === "PUT") {

@@ -12,7 +12,6 @@ import {
 import { Order } from "@/typings/types";
 import { useState } from "react";
 import { config } from "../config/config";
-import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 export interface OrderContextType {
@@ -43,26 +42,23 @@ const defaultContext: OrderContextType = {
   fetchData: () => {},
 };
 export const OrderContext = createContext<OrderContextType>(defaultContext);
-
 const OrderProvider = (props: any) => {
   const router = useRouter();
-  const { data: session } = useSession();
-  const [location, setLocation] = useLocalStorage("locationId");
-
+  const locationId = router.query.locationId;
+  console.log(router.query);
+  console.log(locationId);
   const [data, updateData] = useState(defaultContext);
   useEffect(() => {
-    if (session) {
-      // setToken(sessionn);
+    if (locationId) {
       fetchData();
     }
-  }, [session]);
+  }, [locationId]);
   const fetchData = async () => {
     const response = await fetch(
-      `${config.orderBaseUrl}?locationId=${location}`,
+      `${config.orderBaseUrl}?locationId=${locationId}`,
       {}
     );
     if (!response.ok) return null;
-    console.log(response);
     const responseJson = await response.json();
     const {
       menus,
@@ -81,7 +77,6 @@ const OrderProvider = (props: any) => {
       addonCategories,
       Locations,
     });
-    Locations && setLocation(Locations[0].id);
   };
   return (
     <OrderContext.Provider value={{ ...data, updateData, fetchData }}>
