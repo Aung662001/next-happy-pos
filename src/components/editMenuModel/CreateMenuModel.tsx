@@ -103,6 +103,7 @@ export default function EditModel({ open, close, openModel }: Props) {
         description: "",
       });
       fetchData();
+      close();
     }
   };
 

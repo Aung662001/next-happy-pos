@@ -46,7 +46,6 @@ const OrderProvider = (props: any) => {
   const router = useRouter();
   const locationId = router.query.locationId;
   console.log(router.query);
-  console.log(locationId);
   const [data, updateData] = useState(defaultContext);
   useEffect(() => {
     if (locationId) {

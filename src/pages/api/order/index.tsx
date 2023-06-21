@@ -76,5 +76,6 @@ export default async function handler(
     menus,
     addonCategories,
     addons,
+    menusMenuCategoriesLocations,
   });
 }

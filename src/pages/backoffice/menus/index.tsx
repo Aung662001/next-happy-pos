@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import { menus as Menu } from "@prisma/client";
 import { Menu as menuUpdateType } from "../../../typings/types";
 import CreateMenu from "../../../components/editMenuModel/CreateMenuModel";
+import MenuCard from "@/components/MenuCard";
 
 const App = () => {
   const [locationId] = useLocalStorage<number>("locationId");
@@ -100,7 +101,7 @@ const App = () => {
             {filteredMenus?.map((data, index) => {
               return (
                 <section key={index}>
-                  <Box>
+                  {/* <Box>
                     <Card
                       sx={{
                         width: 300,
@@ -125,7 +126,8 @@ const App = () => {
                         <Typography>{data.description}</Typography>
                       </CardContent>
                     </Card>
-                  </Box>
+                  </Box> */}
+                  <MenuCard data={data} callback={editHandle} />
                 </section>
               );
             })}
