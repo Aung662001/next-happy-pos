@@ -8,6 +8,7 @@ import {
   locations as Location,
   companies as Company,
   menus_menu_categories_locations as MenusMenuCategoriesLocation,
+  menus_addon_categories as MenusAddonCategories,
 } from "@prisma/client";
 import { Order } from "@/typings/types";
 import { useState } from "react";
@@ -22,6 +23,7 @@ export interface OrderContextType {
   Locations: Location[];
   accessToken: string;
   token: string;
+  menuAddonCategories: MenusAddonCategories[];
   cart: Order[] | null;
   menusMenuCategoriesLocations: MenusMenuCategoriesLocation[];
   updateData: (data: any) => void;
@@ -36,6 +38,7 @@ const defaultContext: OrderContextType = {
   menusMenuCategoriesLocations: [],
   Locations: [],
   accessToken: "",
+  menuAddonCategories: [],
   token: "",
   cart: [],
   updateData: () => {},
@@ -45,7 +48,6 @@ export const OrderContext = createContext<OrderContextType>(defaultContext);
 const OrderProvider = (props: any) => {
   const router = useRouter();
   const locationId = router.query.locationId;
-  console.log(router.query);
   const [data, updateData] = useState(defaultContext);
   useEffect(() => {
     if (locationId) {
@@ -66,6 +68,7 @@ const OrderProvider = (props: any) => {
       addonCategories,
       Locations,
       menusMenuCategoriesLocations,
+      menuAddonCategories,
     } = responseJson;
     updateData({
       ...data,
@@ -75,6 +78,7 @@ const OrderProvider = (props: any) => {
       addons,
       addonCategories,
       Locations,
+      menuAddonCategories,
     });
   };
   return (

@@ -6,6 +6,7 @@ import React, { useContext, useEffect, useState } from "react";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import Tab from "@mui/material/Tab";
+import { menus as Menu } from "@prisma/client";
 import MenuCard from "@/components/MenuCard";
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -18,6 +19,7 @@ function Order() {
   };
   const [value, setValue] = React.useState(0);
   const router = useRouter();
+  const { locationId, tableId } = router.query;
   const { menuCategories, menus, menusMenuCategoriesLocations } =
     useContext(OrderContext);
   const [selectedMenuCategory, setSelectedMenuCategories] =
@@ -36,6 +38,13 @@ function Order() {
   const filteredMenus = menus.filter((menu) =>
     MenuIdsRelatedToMenuCategories.includes(menu.id)
   );
+  const clickHandler = (menu: Menu) => {
+    console.log(menu);
+    router.push({
+      pathname: `./orders/menu/${menu.id}`,
+      query: `locationId=${locationId}&tableId=${tableId}`,
+    });
+  };
   return (
     <Box>
       <Box sx={{ width: "100%" }}>
@@ -90,21 +99,13 @@ function Order() {
           {value === 0 &&
             menus.map((menu) => {
               return (
-                <MenuCard
-                  callback={() => console.log("first")}
-                  data={menu}
-                  key={menu.id}
-                />
+                <MenuCard key={menu.id} callback={clickHandler} data={menu} />
               );
             })}
           {value !== 0 &&
             filteredMenus.map((menu) => {
               return (
-                <MenuCard
-                  callback={() => console.log("first")}
-                  data={menu}
-                  key={menu.id}
-                />
+                <MenuCard callback={clickHandler} data={menu} key={menu.id} />
               );
             })}
         </Box>

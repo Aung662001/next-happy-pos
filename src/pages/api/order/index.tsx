@@ -68,7 +68,13 @@ export default async function handler(
       },
     },
   });
-
+  const menuAddonCategories = await prisma.menus_addon_categories.findMany({
+    where: {
+      addon_categories_id: {
+        in: addonCategoriesIds,
+      },
+    },
+  });
   await prisma.$disconnect();
   res.send({
     location,
@@ -77,5 +83,6 @@ export default async function handler(
     addonCategories,
     addons,
     menusMenuCategoriesLocations,
+    menuAddonCategories,
   });
 }
