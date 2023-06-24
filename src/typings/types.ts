@@ -44,11 +44,10 @@ export interface Order {
   tableId: number;
   orderLine: OrderLine[];
 }
-interface OrderLine {
+export interface OrderLine {
   menu: Menu;
-  addon?: Addon[];
+  addons?: Addon[];
   quantity: number;
-  status: OrderLineStatus;
 }
 
 enum OrderLineStatus {

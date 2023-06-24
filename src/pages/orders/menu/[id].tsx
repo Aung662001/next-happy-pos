@@ -12,8 +12,9 @@ import {
 } from "@mui/material";
 import { OrderContext } from "@/contexts/OrderContext";
 import { increaseQuantity, decreaseQuantity } from "@/utils/addorder";
+import { menus as Menu } from "@prisma/client";
 interface cart {
-  menuId: number | undefined;
+  menu: Menu;
   addonIds: number[] | [];
   quantity: number;
 }
@@ -21,8 +22,14 @@ const OrderMenu = () => {
   const router = useRouter();
   const { locationId, tableId } = router.query;
   const menuId = parseInt(router.query.id as string);
-  const { menuAddonCategories, addons, addonCategories } =
-    useContext(OrderContext);
+  const {
+    menuAddonCategories,
+    addons,
+    addonCategories,
+    menus,
+    updateData,
+    ...data
+  } = useContext(OrderContext);
   const addonCategoriesId = menuAddonCategories
     .filter((mac) => mac.menus_id === menuId)
     .map((all) => all.addon_categories_id);
@@ -32,13 +39,15 @@ const OrderMenu = () => {
   const requireAddonCount = connectedAddonCategories.filter(
     (addonCate) => addonCate.is_required === true
   ).length;
+  const menu = menus.find((menu) => menu.id === menuId)!;
+
   const [quantity, setQuantity] = useState(1);
   const [disabled, setdisabled] = useState(false);
   const [count, setCount] = useState<number>();
   const [requireAddon, setRequireAddon] = useState<number[]>([]);
   const [optional, setOptional] = useState<number[]>([]);
   const [cartData, setCartData] = useState<cart>({
-    menuId: menuId || undefined,
+    menu: menu,
     addonIds: [],
     quantity: 1,
   });
@@ -102,14 +111,28 @@ const OrderMenu = () => {
       );
     });
   };
-  function addToCart() {
+  function setData() {
     setCartData({
       ...cartData,
-      menuId: menuId,
+      menu: menu,
       addonIds: [...requireAddon, ...optional],
       quantity: quantity,
     });
   }
+  //to add to cart
+  const addToCart = () => {
+    const selectedAddons = addons.filter(
+      (addon) => requireAddon.includes(addon.id) || optional.includes(addon.id)
+    );
+    updateData({
+      ...data,
+      menuAddonCategories,
+      addonCategories,
+      menus,
+      addons,
+      orderLines: [...data.orderLines, { menu, selectedAddons, quantity }],
+    });
+  };
   return (
     <Box
       sx={{
@@ -120,7 +143,7 @@ const OrderMenu = () => {
         gap: 5,
       }}
     >
-      <h1>Select Addon For {menuId}</h1>
+      <h1>Select Addon For {menu ? menu.name : menuId}</h1>
       {connectedAddonCategories.map((addonCategorie) => {
         return (
           <FormControl key={addonCategorie.id}>
@@ -179,14 +202,12 @@ const OrderMenu = () => {
           -
         </Button>
       </Box>
-      <span className="tooltiptext">Double Click To Add</span>
       <Button
         variant="contained"
-        onClick={() => addToCart()}
-        onDoubleClick={() => console.log(cartData)}
+        onClick={() => setData()}
+        onDoubleClick={() => addToCart()}
         disabled={!disabled}
-        aria-label="double click"
-        className="tooltip"
+        sx={{ marginBottom: "5rem" }}
       >
         Add to Cart
       </Button>

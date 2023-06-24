@@ -10,7 +10,7 @@ import {
   menus_menu_categories_locations as MenusMenuCategoriesLocation,
   menus_addon_categories as MenusAddonCategories,
 } from "@prisma/client";
-import { Order } from "@/typings/types";
+import { Order, OrderLine } from "@/typings/types";
 import { useState } from "react";
 import { config } from "../config/config";
 import { useSession } from "next-auth/react";
@@ -21,13 +21,12 @@ export interface OrderContextType {
   addons: Addon[];
   addonCategories: AddonCategory[];
   Locations: Location[];
-  accessToken: string;
-  token: string;
   menuAddonCategories: MenusAddonCategories[];
   cart: Order[] | null;
   menusMenuCategoriesLocations: MenusMenuCategoriesLocation[];
   updateData: (data: any) => void;
   fetchData: () => void;
+  orderLines: OrderLine[];
 }
 
 const defaultContext: OrderContextType = {
@@ -37,12 +36,11 @@ const defaultContext: OrderContextType = {
   addonCategories: [],
   menusMenuCategoriesLocations: [],
   Locations: [],
-  accessToken: "",
   menuAddonCategories: [],
-  token: "",
   cart: [],
   updateData: () => {},
   fetchData: () => {},
+  orderLines: [],
 };
 export const OrderContext = createContext<OrderContextType>(defaultContext);
 const OrderProvider = (props: any) => {
