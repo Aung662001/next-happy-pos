@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import Tab from "@mui/material/Tab";
 import { menus as Menu } from "@prisma/client";
 import MenuCard from "@/components/MenuCard";
+import CartIcon from "@/components/CartIcon";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -20,7 +21,7 @@ function Order() {
   const [value, setValue] = React.useState(0);
   const router = useRouter();
   const { locationId, tableId } = router.query;
-  const { menuCategories, menus, menusMenuCategoriesLocations } =
+  const { menuCategories, menus, menusMenuCategoriesLocations, orderLines } =
     useContext(OrderContext);
   const [selectedMenuCategory, setSelectedMenuCategories] =
     useState<MenuCategory[]>();
@@ -109,8 +110,7 @@ function Order() {
               );
             })}
         </Box>
-        {/* ); */}
-        {/* })} */}
+        {orderLines.length && <CartIcon />}
       </Box>
     </Box>
   );

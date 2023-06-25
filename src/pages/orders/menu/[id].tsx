@@ -28,6 +28,7 @@ const OrderMenu = () => {
     addonCategories,
     menus,
     updateData,
+    orderLines,
     ...data
   } = useContext(OrderContext);
   const addonCategoriesId = menuAddonCategories
@@ -43,7 +44,8 @@ const OrderMenu = () => {
 
   const [quantity, setQuantity] = useState(1);
   const [disabled, setdisabled] = useState(false);
-  const [count, setCount] = useState<number>();
+  const [count, setCount] = useState<number>(0);
+  const [firseClick, setFirstClick] = useState(true);
   const [requireAddon, setRequireAddon] = useState<number[]>([]);
   const [optional, setOptional] = useState<number[]>([]);
   const [cartData, setCartData] = useState<cart>({
@@ -112,6 +114,7 @@ const OrderMenu = () => {
     });
   };
   function setData() {
+    setFirstClick(false);
     setCartData({
       ...cartData,
       menu: menu,
@@ -130,8 +133,9 @@ const OrderMenu = () => {
       addonCategories,
       menus,
       addons,
-      orderLines: [...data.orderLines, { menu, selectedAddons, quantity }],
+      orderLines: [...orderLines, { menu, addons: selectedAddons, quantity }],
     });
+    router.push(`../?locationId=${locationId}&tableId=${tableId}`);
   };
   return (
     <Box
@@ -202,15 +206,26 @@ const OrderMenu = () => {
           -
         </Button>
       </Box>
-      <Button
-        variant="contained"
-        onClick={() => setData()}
-        onDoubleClick={() => addToCart()}
-        disabled={!disabled}
-        sx={{ marginBottom: "5rem" }}
-      >
-        Add to Cart
-      </Button>
+      {firseClick && (
+        <Button
+          variant="contained"
+          onClick={() => setData()}
+          disabled={!disabled}
+          sx={{ marginBottom: "5rem" }}
+        >
+          Confirm
+        </Button>
+      )}
+      {!firseClick && (
+        <Button
+          variant="contained"
+          onClick={() => addToCart()}
+          disabled={!disabled}
+          sx={{ marginBottom: "5rem" }}
+        >
+          Add to Cart
+        </Button>
+      )}
     </Box>
   );
 };

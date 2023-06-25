@@ -15,7 +15,7 @@ export default async function handler(
       asseturl = "",
       description = "",
     } = req.body;
-
+    console.log(menuCategoriesIds);
     const invalid =
       !name &&
       !price &&
@@ -50,10 +50,11 @@ export default async function handler(
     }
     //create menusCategories
     if (menuCategoriesIds.length > 1) {
+      console.log("inside menuCategories");
       const data = menuCategoriesIds.map((menuCategoriesId: number) => ({
         menus_id: menuId,
-        addon_categories_id: menuCategoriesId,
-        location_id: locationId,
+        menu_categories_id: menuCategoriesId,
+        locations_id: locationId,
       }));
       await prisma.menus_menu_categories_locations.createMany({
         data,
