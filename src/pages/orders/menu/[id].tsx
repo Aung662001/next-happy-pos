@@ -31,6 +31,41 @@ const OrderMenu = () => {
     orderLines,
     ...data
   } = useContext(OrderContext);
+  const [quantity, setQuantity] = useState(1);
+  const [disabled, setdisabled] = useState(false);
+  const [count, setCount] = useState<number>(0);
+  const [firseClick, setFirstClick] = useState(true);
+  const [requireAddon, setRequireAddon] = useState<number[]>([]);
+  const [optional, setOptional] = useState<number[]>([]);
+
+  const [updating, setUpdating] = useState(false);
+  const menu = menus.find((menu) => menu.id === menuId)!;
+  const [cartData, setCartData] = useState<cart>({
+    menu: menu,
+    addonIds: [],
+    quantity: 1,
+  });
+  //for update an cart item
+  useEffect(() => {
+    const found = orderLines.find((orderLine) => orderLine.menu.id === menuId);
+    if (found) {
+      setUpdating(true);
+      const allAddonIds = addons
+        .filter((addon) =>
+          addonCategoriesId.includes(addon.addon_categories_id)
+        )
+        .map((a) => a.id);
+      //addonCategoriesId [13,14,15]
+      const selectedAddons = orderLines.map((orderLine) => {
+        return orderLine.addons?.filter((addon) =>
+          allAddonIds.includes(addon.id as number)
+        );
+      })[0];
+      const selectedAddonIds =
+        selectedAddons &&
+        selectedAddons.map((selected) => selected && selected.id);
+    }
+  }, []);
   const addonCategoriesId = menuAddonCategories
     .filter((mac) => mac.menus_id === menuId)
     .map((all) => all.addon_categories_id);
@@ -40,19 +75,6 @@ const OrderMenu = () => {
   const requireAddonCount = connectedAddonCategories.filter(
     (addonCate) => addonCate.is_required === true
   ).length;
-  const menu = menus.find((menu) => menu.id === menuId)!;
-
-  const [quantity, setQuantity] = useState(1);
-  const [disabled, setdisabled] = useState(false);
-  const [count, setCount] = useState<number>(0);
-  const [firseClick, setFirstClick] = useState(true);
-  const [requireAddon, setRequireAddon] = useState<number[]>([]);
-  const [optional, setOptional] = useState<number[]>([]);
-  const [cartData, setCartData] = useState<cart>({
-    menu: menu,
-    addonIds: [],
-    quantity: 1,
-  });
   useEffect(() => {
     if (count === requireAddonCount) {
       setdisabled(true);
@@ -75,7 +97,6 @@ const OrderMenu = () => {
         });
       });
       if (isExist) {
-        console.log("exist");
         setRequireAddon([
           ...requireAddon.filter((addon) => addon !== isExist),
           addonId,
