@@ -13,6 +13,7 @@ import {
 import { OrderContext } from "@/contexts/OrderContext";
 import { increaseQuantity, decreaseQuantity } from "@/utils/addorder";
 import { menus as Menu } from "@prisma/client";
+import { takeRelatedOtherAddonsIds } from "@/utils/otherFunctions";
 interface cart {
   menu: Menu;
   addonIds: number[] | [];
@@ -48,26 +49,27 @@ const OrderMenu = () => {
     quantity: 1,
   });
   //for update an cart item
-  // useEffect(() => {
-  //   const found = orderLines.find((orderLine) => orderLine.menu.id === menuId);
-  //   if (found) {
-  //     setUpdating(true);
-  //     const allAddonIds = addons
-  //       .filter((addon) =>
-  //         addonCategoriesId.includes(addon.addon_categories_id)
-  //       )
-  //       .map((a) => a.id);
-  //     const selectedAddons = orderLines.map((orderLine) => {
-  //       return orderLine.addons?.filter((addon) =>
-  //         allAddonIds.includes(addon.id as number)
-  //       );
-  //     })[0];
-  //     setSelectedAddonIds(
-  //       selectedAddons &&
-  //         selectedAddons.map((selected) => selected && selected.id)
-  //     );
-  //   }
-  // }, []);
+  useEffect(() => {
+    const found = orderLines.find((orderLine) => orderLine.menu.id === menuId);
+    if (found) {
+      setUpdating(true);
+      setQuantity(found.quantity);
+      const allAddonIds = addons
+        .filter((addon) =>
+          addonCategoriesId.includes(addon.addon_categories_id)
+        )
+        .map((a) => a.id);
+      const selectedAddons = orderLines.map((orderLine) => {
+        return orderLine.addons?.filter((addon) =>
+          allAddonIds.includes(addon.id as number)
+        );
+      })[0];
+      setSelectedAddonIds(
+        selectedAddons &&
+          selectedAddons.map((selected) => selected && selected.id)
+      );
+    }
+  }, []);
   const addonCategoriesId = menuAddonCategories
     .filter((mac) => mac.menus_id === menuId)
     .map((all) => all.addon_categories_id);
@@ -83,31 +85,47 @@ const OrderMenu = () => {
     }
   }, [count]);
   const radioOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // const checked = e.target.checked;
-    // if (checked) {
-    //   //code need here
-    // }
+    const connectedAddonIds = takeRelatedOtherAddonsIds(
+      Number(e.target.value),
+      orderLines,
+      addonCategories,
+      addons
+    );
+
     const addonId = parseInt(e.target.value);
+    //find addonCategoriesId that related to target
     const addonCatId = addons.find(
       (addon) => addon.id === addonId
     )?.addon_categories_id;
     if (addonCatId) {
-      const allRequireAddonInOneCate = addons
-        .filter((addon) => {
-          return addon.addon_categories_id === addonCatId;
-        })
-        .map((all) => all.id);
+      //addonIds that connected with selected addon
+      // const allRequireAddonInOneCate = addons
+      //   .filter((addon) => {
+      //     return addon.addon_categories_id === addonCatId;
+      //   })
+      //   .map((all) => all.id);
+      ///
       const isExist = requireAddon.find((addonId) => {
-        return allRequireAddonInOneCate.find((allAddons) => {
+        return connectedAddonIds.find((allAddons) => {
           return addonId === allAddons;
         });
       });
       if (isExist) {
+        //if updating
+        if (updating) {
+          setSelectedAddonIds([
+            ...requireAddon.filter((addon) => addon !== isExist),
+            addonId,
+          ]);
+        }
         setRequireAddon([
           ...requireAddon.filter((addon) => addon !== isExist),
           addonId,
         ]);
       } else {
+        if (updating) {
+          setSelectedAddonIds([...requireAddon, addonId]);
+        }
         setRequireAddon([...requireAddon, addonId]);
       }
     }
@@ -157,6 +175,23 @@ const OrderMenu = () => {
     const selectedAddons = addons.filter(
       (addon) => requireAddon.includes(addon.id) || optional.includes(addon.id)
     );
+    if (updating) {
+      updateData({
+        ...data,
+        menuAddonCategories,
+        addonCategories,
+        menus,
+        addons,
+        orderLines: [
+          {
+            menu,
+            addons: selectedAddons ? selectedAddons : addons,
+            quantity,
+          },
+        ],
+      });
+      return;
+    }
     updateData({
       ...data,
       menuAddonCategories,

@@ -99,6 +99,12 @@ const Cart = () => {
         body: JSON.stringify({ orderLines }),
       }
     );
+    if (res.ok) {
+      updateData({
+        ...data,
+        orderLines: [],
+      });
+    }
   };
   return (
     <Box sx={{ margin: "3rem" }}>

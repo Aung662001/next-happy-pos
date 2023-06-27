@@ -20,7 +20,7 @@ export const qrCodeImageUpload = async (
 ) => {
   try {
     const qrImageData = await QRCode.toDataURL(
-      `${config.orderUrl}/locationId=${locationId}/tableId=${tableId}`
+      `${config.orderBaseUrl}/locationId=${locationId}/tableId=${tableId}`
     );
 
     const input = {
