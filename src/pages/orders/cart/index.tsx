@@ -1,11 +1,13 @@
 import { OrderContext } from "@/contexts/OrderContext";
 import { Box, Button, Typography } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import { useRouter } from "next/router";
 
 const Cart = () => {
   const { orderLines, updateData, ...data } = useContext(OrderContext);
+  const router = useRouter();
   //   const [orders, setOrders] = useState(orderLines);
   const removeFromCart = (menuId: number) => {
     // setOrders(orders.filter((ol) => ol.menu.id !== menuId));
@@ -14,7 +16,12 @@ const Cart = () => {
       orderLines: orderLines.filter((ol) => ol.menu.id !== menuId),
     });
   };
-  console.log(orderLines);
+  ///if no item in cart return to prev page
+  useEffect(() => {
+    if (!orderLines.length) {
+      router.push("./");
+    }
+  }, [orderLines]);
   const renderOrders = () => {
     return orderLines.map((ol, index) => {
       return (

@@ -37,7 +37,9 @@ const OrderMenu = () => {
   const [firseClick, setFirstClick] = useState(true);
   const [requireAddon, setRequireAddon] = useState<number[]>([]);
   const [optional, setOptional] = useState<number[]>([]);
-
+  const [selectedAddonIds, setSelectedAddonIds] = useState<
+    (number | undefined)[] | undefined
+  >();
   const [updating, setUpdating] = useState(false);
   const menu = menus.find((menu) => menu.id === menuId)!;
   const [cartData, setCartData] = useState<cart>({
@@ -46,26 +48,26 @@ const OrderMenu = () => {
     quantity: 1,
   });
   //for update an cart item
-  useEffect(() => {
-    const found = orderLines.find((orderLine) => orderLine.menu.id === menuId);
-    if (found) {
-      setUpdating(true);
-      const allAddonIds = addons
-        .filter((addon) =>
-          addonCategoriesId.includes(addon.addon_categories_id)
-        )
-        .map((a) => a.id);
-      //addonCategoriesId [13,14,15]
-      const selectedAddons = orderLines.map((orderLine) => {
-        return orderLine.addons?.filter((addon) =>
-          allAddonIds.includes(addon.id as number)
-        );
-      })[0];
-      const selectedAddonIds =
-        selectedAddons &&
-        selectedAddons.map((selected) => selected && selected.id);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const found = orderLines.find((orderLine) => orderLine.menu.id === menuId);
+  //   if (found) {
+  //     setUpdating(true);
+  //     const allAddonIds = addons
+  //       .filter((addon) =>
+  //         addonCategoriesId.includes(addon.addon_categories_id)
+  //       )
+  //       .map((a) => a.id);
+  //     const selectedAddons = orderLines.map((orderLine) => {
+  //       return orderLine.addons?.filter((addon) =>
+  //         allAddonIds.includes(addon.id as number)
+  //       );
+  //     })[0];
+  //     setSelectedAddonIds(
+  //       selectedAddons &&
+  //         selectedAddons.map((selected) => selected && selected.id)
+  //     );
+  //   }
+  // }, []);
   const addonCategoriesId = menuAddonCategories
     .filter((mac) => mac.menus_id === menuId)
     .map((all) => all.addon_categories_id);
@@ -81,6 +83,10 @@ const OrderMenu = () => {
     }
   }, [count]);
   const radioOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // const checked = e.target.checked;
+    // if (checked) {
+    //   //code need here
+    // }
     const addonId = parseInt(e.target.value);
     const addonCatId = addons.find(
       (addon) => addon.id === addonId
@@ -123,7 +129,10 @@ const OrderMenu = () => {
           value={addon.id}
           control={
             isRequire ? (
-              <Radio onChange={(e) => radioOnChange(e)} />
+              <Radio
+                onChange={(e) => radioOnChange(e)}
+                checked={selectedAddonIds?.includes(addon.id)}
+              />
             ) : (
               <Checkbox onChange={(e) => checkBoxCheck(e)} />
             )
@@ -244,7 +253,7 @@ const OrderMenu = () => {
           disabled={!disabled}
           sx={{ marginBottom: "5rem" }}
         >
-          Add to Cart
+          {updating ? "Update" : "Add To Cart"}
         </Button>
       )}
     </Box>
