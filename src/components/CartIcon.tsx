@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 
 const CartIcon = () => {
   const router = useRouter();
+  const query = router.query;
   const { orderLines } = useContext(OrderContext);
   const [total, setTotal] = useState(0);
   const totalItem = () => {
@@ -19,7 +20,9 @@ const CartIcon = () => {
     setTotal(totalItem());
   }, []);
   const cartOpen = () => {
-    router.push(`./orders/cart`);
+    router.push(
+      `./orders/cart?locationId=${query.locationId}&tableId=${query.tableId}`
+    );
   };
   return (
     <div

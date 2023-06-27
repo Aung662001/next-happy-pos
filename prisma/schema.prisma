@@ -24,6 +24,7 @@ model addons {
   addon_categories_id Int?
   addon_categories    addon_categories? @relation(fields: [addon_categories_id], references: [id], onUpdate: NoAction)
   is_archived         Boolean           @default(false)
+  orderlines          orderLine[]
 }
 
 model companies {
@@ -44,6 +45,7 @@ model locations {
   menus_menu_categories_locations menus_menu_categories_locations[]
   tables                          tables[]
   is_archived                     Boolean                           @default(false)
+  orders                          orders[]
 }
 
 model menu_categories {
@@ -62,6 +64,7 @@ model menus {
   menus_addon_categories          menus_addon_categories[]
   menus_menu_categories_locations menus_menu_categories_locations[]
   is_archived                     Boolean                           @default(false)
+  orderlines                      orderLine[]
 }
 
 model menus_addon_categories {
@@ -100,6 +103,7 @@ model tables {
   location_id Int
   locations   locations @relation(fields: [location_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   is_archived Boolean   @default(false)
+  orders      orders[]
 }
 
 enum Role {
@@ -109,10 +113,29 @@ enum Role {
   EDITOR
 }
 
-model discount {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String
-  startDate   DateTime
-  endDate     DateTime
+model orders {
+  id           Int         @id @default(autoincrement())
+  location_id  Int
+  table_id     Int
+  order_status OrderStatus @default(PENDING)
+  is_paid      Boolean     @default(false)
+  locations    locations   @relation(fields: [location_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tables       tables      @relation(fields: [table_id], references: [id])
+  orderLines   orderLine[]
+}
+
+model orderLine {
+  id        Int     @id @default(autoincrement())
+  orders_id Int
+  menus_id  Int
+  addons_id Int?
+  orders    orders  @relation(fields: [orders_id], references: [id])
+  menus     menus   @relation(fields: [menus_id], references: [id])
+  addons    addons? @relation(fields: [addons_id], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  PREPARING
+  COMPLETE
 }

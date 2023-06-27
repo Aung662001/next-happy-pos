@@ -4,10 +4,12 @@ import React, { useContext, useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { useRouter } from "next/router";
+import { config } from "@/config/config";
 
 const Cart = () => {
   const { orderLines, updateData, ...data } = useContext(OrderContext);
   const router = useRouter();
+  const query = router.query;
   //   const [orders, setOrders] = useState(orderLines);
   const removeFromCart = (menuId: number) => {
     // setOrders(orders.filter((ol) => ol.menu.id !== menuId));
@@ -86,7 +88,18 @@ const Cart = () => {
       );
     });
   };
-
+  const orderClick = async () => {
+    const res = await fetch(
+      `${config.orderBaseUrl}/orderLine?locationId=${query.locationId}&tableId=${query.tableId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ orderLines }),
+      }
+    );
+  };
   return (
     <Box sx={{ margin: "3rem" }}>
       {renderOrders()}
@@ -94,6 +107,7 @@ const Cart = () => {
         <Button
           variant="contained"
           sx={{ position: "absolute", right: "2rem" }}
+          onClick={() => orderClick()}
         >
           Confirm Order
         </Button>
