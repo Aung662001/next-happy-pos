@@ -68,6 +68,10 @@ const OrderMenu = () => {
         selectedAddons &&
           selectedAddons.map((selected) => selected && selected.id)
       );
+      const { requireAddonIdsInCart, optionalAddonIdsInCart } = filterAddon();
+      console.log(requireAddonIdsInCart, optionalAddonIdsInCart, "log");
+      setRequireAddon(requireAddonIdsInCart as number[]);
+      setOptional(optionalAddonIdsInCart as number[]);
     }
   }, []);
   const addonCategoriesId = menuAddonCategories
@@ -76,6 +80,40 @@ const OrderMenu = () => {
   const connectedAddonCategories = addonCategories.filter((addonCategories) =>
     addonCategoriesId.includes(addonCategories.id)
   );
+  //this is for update in first Enter
+  const filterAddon = () => {
+    let requireAddonIdsInCart, optionalAddonIdsInCart;
+    const requireAddonCateForFirstEnter = connectedAddonCategories
+      .filter((addonCate) => addonCate.is_required === true)
+      .map((addonCate) => addonCate.id);
+    const requireAddonsForFirstEnter = addons.filter((addon) => {
+      return requireAddonCateForFirstEnter.includes(
+        addon.addon_categories_id as number
+      );
+    });
+    const requireAddonIdsForFirstEnter = requireAddonsForFirstEnter.map(
+      (addon) => addon.id
+    );
+    const filetrOrderLines = orderLines.filter(
+      (orderLine) => orderLine.menu.id === menuId
+    );
+    const allAddonIdsInCart = filetrOrderLines.map((ol) =>
+      ol.addons?.map((addon) => addon.id)
+    )[0];
+    if (allAddonIdsInCart) {
+      //filter all require addon that selected in cart
+      requireAddonIdsInCart = allAddonIdsInCart.filter((all) =>
+        requireAddonIdsForFirstEnter.includes(all as number)
+      );
+      //all optional addon id in cart for update
+      optionalAddonIdsInCart = allAddonIdsInCart.filter(
+        (all) => !requireAddonIdsForFirstEnter.includes(all as number)
+      );
+    }
+    console.log(requireAddonIdsInCart);
+    return { requireAddonIdsInCart, optionalAddonIdsInCart };
+  };
+  //
   const requireAddonCount = connectedAddonCategories.filter(
     (addonCate) => addonCate.is_required === true
   ).length;
@@ -83,7 +121,8 @@ const OrderMenu = () => {
     if (count === requireAddonCount) {
       setdisabled(true);
     }
-  }, [count]);
+    updating && setdisabled(true);
+  }, [count, updating]);
   const radioOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const connectedAddonIds = takeRelatedOtherAddonsIds(
       Number(e.target.value),
@@ -152,7 +191,10 @@ const OrderMenu = () => {
                 checked={selectedAddonIds?.includes(addon.id)}
               />
             ) : (
-              <Checkbox onChange={(e) => checkBoxCheck(e)} />
+              <Checkbox
+                onChange={(e) => checkBoxCheck(e)}
+                checked={optional.includes(addon.id)}
+              />
             )
           }
           label={addon.name}
@@ -183,13 +225,15 @@ const OrderMenu = () => {
         menus,
         addons,
         orderLines: [
+          ...orderLines.filter((ol) => ol.menu.id !== menuId),
           {
             menu,
-            addons: selectedAddons ? selectedAddons : addons,
+            addons: [...selectedAddons],
             quantity,
           },
         ],
       });
+      router.push(`../cart?locationId=${locationId}&tableId=${tableId}`);
       return;
     }
     updateData({

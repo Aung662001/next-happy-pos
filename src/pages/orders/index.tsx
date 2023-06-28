@@ -40,7 +40,6 @@ function Order() {
     MenuIdsRelatedToMenuCategories.includes(menu.id)
   );
   const clickHandler = (menu: Menu) => {
-    console.log(menu);
     router.push({
       pathname: `./orders/menu/${menu.id}`,
       query: `locationId=${locationId}&tableId=${tableId}`,

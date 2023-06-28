@@ -24,6 +24,12 @@ const Cart = () => {
       router.push("./");
     }
   }, [orderLines]);
+  const editClick = (id: number) => {
+    router.push(
+      `../orders/menu/${id}?locationId=${query.locationId}&tableId=${query.tableId}`
+    );
+  };
+  console.log(orderLines);
   const renderOrders = () => {
     return orderLines.map((ol, index) => {
       return (
@@ -82,7 +88,10 @@ const Cart = () => {
               sx={{ cursor: "pointer", color: "red" }}
               onClick={() => removeFromCart(ol.menu.id as number)}
             />
-            <ModeEditIcon sx={{ cursor: "pointer" }} />
+            <ModeEditIcon
+              sx={{ cursor: "pointer" }}
+              onClick={() => editClick(ol.menu.id as number)}
+            />
           </Box>
         </Box>
       );
