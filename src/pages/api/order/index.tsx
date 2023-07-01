@@ -74,6 +74,21 @@ export default async function handler(
       },
     },
   });
+  const orders = await prisma.orders.findMany({
+    where: {
+      location_id: {
+        in: locationId,
+      },
+    },
+  });
+  const orderIds = orders.map((order) => order.id);
+  const orderLines = await prisma.orderLine.findMany({
+    where: {
+      id: {
+        in: orderIds,
+      },
+    },
+  });
   await prisma.$disconnect();
   res.send({
     location,
@@ -83,5 +98,7 @@ export default async function handler(
     addons,
     menusMenuCategoriesLocations,
     menuAddonCategories,
+    orders,
+    orderLines,
   });
 }

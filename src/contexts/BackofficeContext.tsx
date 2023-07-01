@@ -10,6 +10,8 @@ import {
   companies as Company,
   menus_addon_categories as menuAddonCategories,
   tables as Tables,
+  orders as Orders,
+  orderLine as OrderLine,
 } from "@prisma/client";
 import { useState } from "react";
 import { config } from "../config/config";
@@ -28,8 +30,8 @@ export interface BackofficeContextType {
   tables: Tables[];
   updateData: (data: any) => void;
   fetchData: () => void;
-  accessToken: string;
-  token: string;
+  orders: Orders[];
+  orderLines: OrderLine[];
   loading: boolean;
 }
 
@@ -45,8 +47,8 @@ const defaultContext: BackofficeContextType = {
   tables: [],
   updateData: () => {},
   fetchData: () => {},
-  accessToken: "",
-  token: "",
+  orders: [],
+  orderLines: [],
   loading: true,
 };
 export const BackofficeContext =
@@ -78,6 +80,8 @@ const BackofficeProvider = (props: any) => {
       companies,
       menuAddonCategories,
       tables,
+      orders,
+      orderLines,
     } = responseJson;
     updateData({
       ...data,
@@ -91,6 +95,8 @@ const BackofficeProvider = (props: any) => {
       menuAddonCategories,
       tables,
       loading: false,
+      orders,
+      orderLines,
     });
     location ?? setLocation(Locations[0].id);
   };

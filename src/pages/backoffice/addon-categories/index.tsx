@@ -1,6 +1,8 @@
 import Layout from "@/components/Layout";
 import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import FastfoodIcon from "@mui/icons-material/Fastfood";
+
 import {
   Button,
   Grid,
@@ -12,6 +14,7 @@ import {
 import { addon_categories } from "@prisma/client";
 import React, { useContext, useState } from "react";
 import EditAddonCategories from "./Edit";
+import ItemCard from "@/components/ItemCard";
 // import AddonCategories from "@/components/AddonCategories";
 
 interface AddonCategories {
@@ -46,6 +49,9 @@ const App = () => {
   const filteredAddonCategories = addonCategoriesFromContext.filter(
     (addonCate) => addonCategorieIds.includes(addonCate.id)
   );
+  let itemCount = (id: number) => {
+    return addons.filter((addon) => addon.addon_categories_id === id).length;
+  };
   return (
     <Layout title="AddonCategories">
       <Button
@@ -75,40 +81,14 @@ const App = () => {
           return (
             <section key={index}>
               <Box onClick={() => clickHandle(data)}>
-                <Card
-                  sx={{
-                    width: 200,
-                    backgroundColor: "#E7EBF0",
-                    height: 200,
-                    marginTop: 9,
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    flexDirection: "column",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => null}
-                >
-                  <CardContent>
-                    <Typography gutterBottom variant="h5">
-                      {data.name}
-                    </Typography>
-                  </CardContent>
-                  <CardContent>
-                    <Typography gutterBottom variant="h5">
-                      <Box sx={{ fontWeight: "bold", display: "inline" }}>
-                        {
-                          addons.filter(
-                            (addon) => addon.addon_categories_id === data.id
-                          ).length
-                        }
-                      </Box>
-                      {" -"}
-                      Addons
-                    </Typography>
-                  </CardContent>
-                  <Typography>Click To Edit</Typography>
-                </Card>
+                <ItemCard
+                  name={data.name}
+                  icon={
+                    <FastfoodIcon sx={{ color: "#208469", fontSize: "2rem" }} />
+                  }
+                  childName="Addons"
+                  itemCount={itemCount(data.id)}
+                />
               </Box>
             </section>
           );

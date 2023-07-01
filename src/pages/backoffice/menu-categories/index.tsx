@@ -3,9 +3,11 @@ import Layout from "@/components/Layout";
 import CreateMenuCategories from "@/components/editMenuCategories/CreateMenuCategories";
 import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Grid } from "@mui/material";
 import { menu_categories } from "@prisma/client";
 import { useRouter } from "next/router";
+import ItemCard from "@/components/ItemCard";
+import DinnerDiningIcon from "@mui/icons-material/DinnerDining";
 
 export interface newMenuCategories {
   name: string;
@@ -81,46 +83,30 @@ const App = () => {
           selectedLocationIds={selectedLocationIds}
           setSelectedLocationIds={setSelectedLocationIds}
         />
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            flexWrap: "wrap",
-            gap: 2,
-          }}
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          columns={{ xs: 4, sm: 8, md: 12 }}
+          gap={3}
         >
           {filteredMenuCategories.map((cat, index) => {
             return (
-              <Box
-                key={index}
-                onClick={() => selectedHandler(cat)}
-                sx={{
-                  cursor: "pointer",
-                  width: "200px",
-                  height: "200px",
-                  boxShadow: "1px 0px 5px black",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "4rem",
-                }}
-              >
-                <p
-                  style={{
-                    fontSize: "1.5rem",
-                    flexWrap: "wrap",
-                    lineBreak: "anywhere",
-                  }}
-                >
-                  {cat.name}
-                </p>
-                {getConnectedMenus(cat.id)} Menus
+              <Box key={index} onClick={() => selectedHandler(cat)}>
+                <ItemCard
+                  icon={
+                    <DinnerDiningIcon
+                      sx={{ color: "#208469", fontSize: "2rem" }}
+                    />
+                  }
+                  childName="Menus"
+                  name={cat.name}
+                  itemCount={getConnectedMenus(cat.id)}
+                />
               </Box>
               // </Box>
             );
           })}
-        </Box>
+        </Grid>
       </Box>
     </Layout>
   );

@@ -20,6 +20,8 @@ import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { style } from "@/components/editMenuModel/CreateMenuModel";
 import Layout from "@/components/Layout";
+import ItemCard from "@/components/ItemCard";
+import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 
 const AddonCategories = () => {
   const {
@@ -82,32 +84,14 @@ const AddonCategories = () => {
           return (
             <section key={index}>
               <Box>
-                <Card
-                  sx={{
-                    width: 200,
-                    backgroundColor: "#E7EBF0",
-                    height: 200,
-                    marginTop: 9,
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    flexDirection: "column",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => null}
-                >
-                  <CardContent>
-                    <Typography gutterBottom variant="h5">
-                      {data.name}
-                    </Typography>
-                  </CardContent>
-                  <CardContent>
-                    <Typography gutterBottom variant="h5">
-                      <Box sx={{ fontWeight: "bold", display: "inline" }}></Box>
-                    </Typography>
-                  </CardContent>
-                  <Typography>Click To Edit</Typography>
-                </Card>
+                <ItemCard
+                  icon={
+                    <TableRestaurantIcon
+                      sx={{ color: "#208469", fontSize: "2rem" }}
+                    />
+                  }
+                  name={data.name}
+                />
               </Box>
             </section>
           );
