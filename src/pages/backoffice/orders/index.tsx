@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import Layout from "@/components/Layout";
 import {
   TableContainer,
@@ -9,28 +9,28 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
+import { BackofficeContext } from "@/contexts/BackofficeContext";
+import Row from "./Row";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 function App() {
-  function createData(
-    firstCol: string,
-    orderId: number,
-    nOfMenu: number,
-    tableId: number,
-    paid: string,
-    totalPrice: number
-  ) {
-    return { firstCol, orderId, nOfMenu, tableId, paid, totalPrice };
-  }
-  //order id
-  //Number of menu
-  //tableId
-  //paid
-  //total price
-  const rows = [createData("", 1, 159, 6.0, "true", 4.0)];
+  const { orders, orderLines } = useContext(BackofficeContext);
+  const [locationId] = useLocalStorage("locationId");
+  const connectedOrders = orders.filter(
+    (order) => order.location_id === locationId
+  );
   return (
     <Layout title="Orders">
-      <TableContainer component={Paper} sx={{ marginTop: "20px" }}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <TableContainer
+        component={Paper}
+        sx={{
+          marginTop: "20px",
+          position: "fixed",
+          overflowY: "scroll",
+          height: 550,
+        }}
+      >
+        <Table sx={{ maxWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell />
@@ -42,22 +42,12 @@ function App() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, index) => (
-              <TableRow
-                key={index}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell align="right">{row.firstCol}</TableCell>
-
-                <TableCell component="th" scope="row">
-                  {row.orderId}
-                </TableCell>
-                <TableCell align="right">{row.nOfMenu}</TableCell>
-                <TableCell align="right">{row.tableId}</TableCell>
-                <TableCell align="right">{row.paid}</TableCell>
-                <TableCell align="right">{row.totalPrice}</TableCell>
-              </TableRow>
-            ))}
+            {/* to map order and insert tablecell */}
+            {connectedOrders.map((order) => {
+              return (
+                <Row key={order.id} order={order} orderLines={orderLines} />
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>

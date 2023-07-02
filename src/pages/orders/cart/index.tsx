@@ -21,7 +21,9 @@ const Cart = () => {
   ///if no item in cart return to prev page
   useEffect(() => {
     if (!orderLines.length) {
-      router.push("./");
+      router.push(
+        `../orders?locationId=${query.locationId}&tableId=${query.tableId}`
+      );
     }
   }, [orderLines]);
   const editClick = (id: number) => {
@@ -114,6 +116,9 @@ const Cart = () => {
         orderLines: [],
       });
     }
+    router.push(
+      `../orders?locationId=${query.locationId}&tableId=${query.tableId}`
+    );
   };
   return (
     <Box sx={{ margin: "3rem" }}>

@@ -207,7 +207,7 @@ const Row = ({ order, orderLines, menus, addons, addonCategories }: Props) => {
         <TableCell align="right">
           {getNumberOfMenusByOrderId(orderLines, order.id)}
         </TableCell>
-        <TableCell align="right">{order.tables_id}</TableCell>
+        <TableCell align="right">{order.table_id}</TableCell>
         <TableCell align="right">{order.is_paid ? "Yes" : "No"}</TableCell>
         <TableCell align="right">{order.price}</TableCell>
       </TableRow>
