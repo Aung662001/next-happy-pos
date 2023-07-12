@@ -204,6 +204,7 @@ const App = () => {
     }
   }
   function editHandler(row: row) {
+    console.log(row);
     setOpen(true);
     setUpdate(true);
     setUpdateId(row.id);
@@ -212,7 +213,9 @@ const App = () => {
       ...addonData,
       name: row.name,
       price: row.price,
-      addonCategories: row.AddonCategorie[0].id?.toString() as string,
+      addonCategories: row.AddonCategorie.length
+        ? (row.AddonCategorie[0].id?.toString() as string)
+        : "",
     });
   }
   async function createNewAddon() {

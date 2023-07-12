@@ -37,9 +37,7 @@ const App = () => {
     menus: menusData,
     fetchData,
     menusMenuCategoriesLocations,
-    token,
   } = useContext(BackofficeContext);
-  useEffect(() => {}, [token]);
 
   const router = useRouter();
   const editHandle = (data: Menu) => {
