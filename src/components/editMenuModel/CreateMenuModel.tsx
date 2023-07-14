@@ -127,7 +127,7 @@ export default function EditModel({ open, close, openModel }: Props) {
   };
   ///this section is to filter out relate addonsCategories
   const CategoriesIds = menusMenuCategoriesLocations.filter(
-    (mcl) => mcl.locations_id === locationId
+    (mcl) => mcl.locations_id === parseInt(locationId)
   );
   const filteredMenuIds = Menus.filter((item1) => {
     return CategoriesIds.some((item2) => item1.id === item2.menus_id);

@@ -18,5 +18,5 @@ export function useLocalStorage<T>(key: string, initialvalve?: T | (() => T)) {
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify(value));
   }, [key, value]);
-  return [value, setValue] as [T, typeof setValue];
+  return [value, setValue] as [string, typeof setValue];
 }
