@@ -1,23 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import UpdateMenu from "@/components/editMenuModel/UpdateMenu";
-import { BackofficeContext } from "@/contexts/BackofficeContext";
+// import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import {
-  Button,
-  Stack,
-  Grid,
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-} from "@mui/material";
+import { Button, Stack, Grid } from "@mui/material";
 import { useRouter } from "next/router";
 import { menus as Menu } from "@prisma/client";
 import { Menu as menuUpdateType } from "../../../typings/types";
 import CreateMenu from "../../../components/editMenuModel/CreateMenuModel";
 import MenuCard from "@/components/MenuCard";
+import { useAppSelector } from "@/store/hook";
+import { AppData } from "@/store/slices/appSlice";
 
 const App = () => {
   const [locationId] = useLocalStorage<number>("locationId");
@@ -33,12 +26,8 @@ const App = () => {
     asseturl: "",
     description: "",
   });
-  const {
-    menus: menusData,
-    fetchData,
-    menusMenuCategoriesLocations,
-  } = useContext(BackofficeContext);
-
+  const { menus: menusData, menusMenuCategoriesLocations } =
+    useAppSelector(AppData);
   const router = useRouter();
   const editHandle = (data: Menu) => {
     const { id, name, price, description } = data;
@@ -56,12 +45,13 @@ const App = () => {
   };
 
   const menuIds = menusMenuCategoriesLocations
-    .filter((mcl) => mcl.locations_id === locationId)
+    .filter((mcl) => mcl.locations_id === parseInt(locationId))
     .map((mcl) => mcl.menus_id);
 
   const filteredMenus = menusData.filter((menu) =>
     menuIds.includes(menu.id as number)
   );
+
   return (
     <Layout title="Menus">
       <Button

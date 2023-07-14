@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { menus as Menus } from "@prisma/client";
 import { create } from "domain";
 interface menuSliceType {
@@ -18,7 +18,13 @@ export const menuSlice = createSlice({
     setMenu: (state, action) => {
       state.items = action.payload;
     },
+    addMenu: (state, action: PayloadAction<Menus>) => {
+      state.items = [...state.items, action.payload];
+    },
+    removeMenu: (state, action: PayloadAction<Menus>) => {
+      state.items = state.items.filter((item) => item.id !== action.payload.id);
+    },
   },
 });
-export const { setMenu } = menuSlice.actions;
+export const { setMenu, addMenu, removeMenu } = menuSlice.actions;
 export default menuSlice.reducer;
