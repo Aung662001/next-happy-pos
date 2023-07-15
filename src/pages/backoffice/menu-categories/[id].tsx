@@ -31,7 +31,7 @@ export default function EditMenuCategories() {
   const router = useRouter();
   const updatingId = parseInt(router.query.id as string);
   const [open, setOpen] = useState(false);
-  const [locationId] = useLocalStorage("locationId");
+  let [locationId] = useLocalStorage("locationId");
   const [updateMenuCategorie, setUpdateMenuCategorie] =
     useState<menuCategories>({
       name: "",
@@ -55,7 +55,7 @@ export default function EditMenuCategories() {
   );
 
   const menuIds = menuMenuCategoriesLocationsIds
-    .filter((mcl) => mcl.locations_id === locationId)
+    .filter((mcl) => mcl.locations_id === parseInt(locationId))
     .map((allids) => allids.menus_id);
   const menuLocationIds = menuMenuCategoriesLocationsIds.map(
     (mcl) => mcl.locations_id

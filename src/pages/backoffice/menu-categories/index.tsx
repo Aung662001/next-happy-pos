@@ -1,13 +1,15 @@
 import React, { useContext, useState } from "react";
 import Layout from "@/components/Layout";
 import CreateMenuCategories from "@/components/editMenuCategories/CreateMenuCategories";
-import { BackofficeContext } from "@/contexts/BackofficeContext";
+// import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { Box, Button, Grid } from "@mui/material";
 import { menu_categories } from "@prisma/client";
 import { useRouter } from "next/router";
 import ItemCard from "@/components/ItemCard";
 import DinnerDiningIcon from "@mui/icons-material/DinnerDining";
+import { useAppSelector } from "@/store/hook";
+import { AppData } from "@/store/slices/appSlice";
 
 export interface newMenuCategories {
   name: string;
@@ -26,16 +28,16 @@ const App = () => {
   const [updatingId, setupdatingId] = useState<number | null>();
   const [selectedLocationIds, setSelectedLocationIds] = useState<number[]>([]);
   const [locationId] = useLocalStorage("locationId");
-  const { menuCategories, fetchData, menusMenuCategoriesLocations, Locations } =
-    useContext(BackofficeContext);
+  const { menuCategories, menusMenuCategoriesLocations, Locations } =
+    useAppSelector(AppData);
   const validMenuCategoriesIds = menusMenuCategoriesLocations
-    .filter((mcl) => mcl.locations_id === locationId)
+    .filter((mcl) => mcl.locations_id === parseInt(locationId))
     .map((mcl) => mcl.menu_categories_id);
 
   const getConnectedMenus = (catId: number) => {
     let count = 0;
     menusMenuCategoriesLocations.map((m) => {
-      if (m.locations_id === locationId) {
+      if (m.locations_id === parseInt(locationId)) {
         if (m.menu_categories_id === catId) {
           if (m.menus_id !== null) {
             return count++;
@@ -56,7 +58,7 @@ const App = () => {
     router.push(`menu-categories/${cat.id}`);
   };
   const menuCategoriesIdsWithLocation = menusMenuCategoriesLocations
-    .filter((mcl) => mcl.locations_id === locationId)
+    .filter((mcl) => mcl.locations_id === parseInt(locationId))
     .map((mclIds) => mclIds.menu_categories_id);
   const filteredMenuCategories = menuCategories.filter((menuCategorie) =>
     menuCategoriesIdsWithLocation.includes(menuCategorie.id)

@@ -1,8 +1,8 @@
 import "@/styles/globals.css";
-import BackofficeProvider from "@/contexts/BackofficeContext";
+// import BackofficeProvider from "@/contexts/BackofficeContext";
 import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
-import OrderProvider from "@/contexts/OrderContext";
+// import OrderProvider from "@/contexts/OrderContext";
 import { store } from "@/store";
 import { Provider } from "react-redux";
 import { fetchAppData } from "@/store/slices/appSlice";

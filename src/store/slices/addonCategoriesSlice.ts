@@ -3,7 +3,7 @@ import { addon_categories as AddonCategories } from "@prisma/client";
 
 interface AddonCategoriesType {
   isLoading: boolean;
-  items: [];
+  items: AddonCategories[];
   error: null | Error;
 }
 const initialState: AddonCategoriesType = {

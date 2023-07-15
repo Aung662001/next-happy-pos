@@ -3,13 +3,17 @@ import NavBar from "./TopBar";
 import SideBar from "./SideBar";
 import { useContext } from "react";
 import { BackofficeContext } from "@/contexts/BackofficeContext";
+import { useAppSelector } from "@/store/hook";
+import { selectIsLoading } from "@/store/slices/appSlice";
+import { useSelector } from "react-redux";
 
 interface Props {
   title?: string;
   children: string | JSX.Element | JSX.Element[];
 }
 const Layout = (props: Props) => {
-  const { loading } = useContext(BackofficeContext);
+  // const { loading } = useContext(BackofficeContext);
+  const loading = useAppSelector(selectIsLoading);
   return (
     <Box>
       <Box sx={{ position: "sticky", top: 0 }}>

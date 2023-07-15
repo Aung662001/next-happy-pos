@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import Layout from "@/components/Layout";
 import EditAddon from "@/components/editAddon/EditAddon";
-import { BackofficeContext } from "@/contexts/BackofficeContext";
+// import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { AddonCategory } from "@/typings/types";
 import {
@@ -19,6 +19,8 @@ import {
 } from "@mui/material";
 import { config } from "@/config/config";
 import { addon_categories } from "@prisma/client";
+import { useAppSelector } from "@/store/hook";
+import { AppData } from "@/store/slices/appSlice";
 
 interface row {
   id: number;
@@ -31,10 +33,9 @@ const App = () => {
   const {
     addonCategories: ACdatas,
     addons,
-    fetchData,
     menusMenuCategoriesLocations,
     menuAddonCategories,
-  } = useContext(BackofficeContext);
+  } = useAppSelector(AppData);
   const [update, setUpdate] = useState(false);
   const [open, setOpen] = useState(false);
   const [updateId, setUpdateId] = useState<number>();
@@ -185,7 +186,7 @@ const App = () => {
       method: "DELETE",
     });
     if (response.ok) {
-      fetchData();
+      // fetchData();
       alert("Deleted");
     }
   }
@@ -196,7 +197,7 @@ const App = () => {
       body: JSON.stringify(addonData),
     });
     if (response.ok) {
-      fetchData();
+      // fetchData();
       alert("Updated Addon success!");
       setAddonData(defaultAddon);
       setUpdate(false);
@@ -224,7 +225,7 @@ const App = () => {
       body: JSON.stringify(addonData),
     });
     if (response.ok) {
-      fetchData();
+      // fetchData();
       alert("created Addon success!");
       setAddonData(defaultAddon);
     }

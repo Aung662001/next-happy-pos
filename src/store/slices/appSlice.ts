@@ -131,4 +131,5 @@ export const AppData = createSelector(
   }
 );
 export const { setAppLoading } = appSlice.actions;
+export const selectIsLoading = (state: RootState) => state.app.isLoading;
 export default appSlice.reducer;

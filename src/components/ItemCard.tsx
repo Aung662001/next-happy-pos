@@ -36,7 +36,9 @@ const ItemCard = ({ icon, name, itemCount, childName }: Prop) => {
       </CardContent>
       <CardContent>
         <Typography gutterBottom>
-          <Box sx={{ fontWeight: "bold", display: "inline" }}>{itemCount}</Box>
+          <span style={{ fontWeight: "bold", display: "inline" }}>
+            {itemCount}
+          </span>
           {"  "}
           {childName}
         </Typography>

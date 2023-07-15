@@ -1,5 +1,5 @@
 import Layout from "@/components/Layout";
-import { BackofficeContext } from "@/contexts/BackofficeContext";
+// import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 
@@ -15,6 +15,8 @@ import { addon_categories } from "@prisma/client";
 import React, { useContext, useState } from "react";
 import EditAddonCategories from "./Edit";
 import ItemCard from "@/components/ItemCard";
+import { useAppSelector } from "@/store/hook";
+import { AppData } from "@/store/slices/appSlice";
 // import AddonCategories from "@/components/AddonCategories";
 
 interface AddonCategories {
@@ -24,12 +26,11 @@ interface AddonCategories {
 }
 const App = () => {
   const {
-    fetchData,
     addonCategories: addonCategoriesFromContext,
     menusMenuCategoriesLocations,
     menuAddonCategories,
     addons,
-  } = useContext(BackofficeContext);
+  } = useAppSelector(AppData);
   const [locationId] = useLocalStorage("locationId");
   const [open, setOpen] = useState(false);
   const [update, setUpdate] = useState(false);
@@ -39,7 +40,7 @@ const App = () => {
     isRequired: "false",
   });
   const menuIds = menusMenuCategoriesLocations
-    .filter((mcl) => mcl.locations_id === locationId)
+    .filter((mcl) => mcl.locations_id === parseInt(locationId))
     .map((mclIds) => mclIds.menus_id);
   const addonCategorieIds = menuAddonCategories
     .filter((menuAddonCategorie) =>
