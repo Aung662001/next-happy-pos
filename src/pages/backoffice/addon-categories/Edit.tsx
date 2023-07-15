@@ -15,6 +15,9 @@ import {
   Button,
 } from "@mui/material";
 import { SetStateAction, useContext, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
+import { removeAddonCAtegories } from "@/store/slices/addonCategoriesSlice";
+import { AppData } from "@/store/slices/appSlice";
 interface EditAddonCategories {
   open: boolean;
   setOpen: (value: SetStateAction<boolean>) => void;
@@ -43,8 +46,12 @@ const EditAddonCategories = (props: EditAddonCategories) => {
     setUpdate,
   } = props;
   const router = useRouter();
+  const { addonCategories: addonCategoriesFromState } = useAppSelector(AppData);
+  const toRemoveAddonCategories = addonCategoriesFromState.find(
+    (item) => item.id === addonCategories.id
+  );
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const { fetchData } = useContext(BackofficeContext);
+  const dispatch = useAppDispatch();
   const deleteHandler = async () => {
     const response = await fetch(
       `${config.backofficeUrl}/addonCategories?id=${addonCategories.id}`,
@@ -55,7 +62,8 @@ const EditAddonCategories = (props: EditAddonCategories) => {
     if (response.ok) {
       setOpenDeleteDialog(false);
       setOpen(false);
-      fetchData();
+      // fetchData();
+      dispatch(removeAddonCAtegories(toRemoveAddonCategories!));
       router.push("/backoffice/addon-categories");
     }
   };
@@ -145,7 +153,7 @@ const EditAddonCategories = (props: EditAddonCategories) => {
         name: "",
         id: null,
       });
-      fetchData();
+      // fetchData();
     }
   }
   async function submitHandler() {
@@ -159,7 +167,7 @@ const EditAddonCategories = (props: EditAddonCategories) => {
     if (response.ok) {
       setOpen(false);
       setAddonCategories({ ...addonCategories, name: "" });
-      fetchData();
+      // fetchData();
     }
   }
 };

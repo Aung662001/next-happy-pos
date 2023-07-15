@@ -5,9 +5,7 @@ import {
   Box,
   SvgIconTypeMap,
 } from "@mui/material";
-import { OverridableComponent } from "@mui/material/OverridableComponent";
 import React, { ReactNode } from "react";
-import { JsxElement } from "typescript";
 interface Prop {
   icon: ReactNode;
   name: string;
