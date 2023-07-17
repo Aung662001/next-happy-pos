@@ -21,8 +21,9 @@ export const menuSlice = createSlice({
     addMenu: (state, action: PayloadAction<Menus>) => {
       state.items = [...state.items, action.payload];
     },
-    removeMenu: (state, action: PayloadAction<Menus>) => {
-      state.items = state.items.filter((item) => item.id !== action.payload.id);
+    //action.payload is menuId that want to remove
+    removeMenu: (state, action: PayloadAction<number>) => {
+      state.items = state.items.filter((item) => item.id !== action.payload);
     },
   },
 });

@@ -20,7 +20,9 @@ import React, {
   useState,
 } from "react";
 import { config } from "@/config/config";
-import { BackofficeContext } from "@/contexts/BackofficeContext";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
+import { AppData } from "@/store/slices/appSlice";
+import { addMenuCategorie } from "@/store/slices/menuCategoriesSlict";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
@@ -48,13 +50,9 @@ export default function CreateMenuCategories({
   selectedLocationIds,
   setSelectedLocationIds,
 }: Props) {
-  const {
-    menuCategories,
-    menus,
-    fetchData,
-    menusMenuCategoriesLocations,
-    Locations,
-  } = useContext(BackofficeContext);
+  const dispatch = useAppDispatch();
+  const { menuCategories, menus, menusMenuCategoriesLocations, Locations } =
+    useAppSelector(AppData);
   const [connectedMenuIds, setConnectedMenuIds] = useState<number[]>([]);
   const menuIds = menusMenuCategoriesLocations
     .filter(
@@ -62,6 +60,7 @@ export default function CreateMenuCategories({
     )
     .map((m) => m.menus_id);
   async function createNewMenuCategories() {
+    setOpen(false);
     if (newMenuCategories.selectedLocationIds === null) return;
     if (
       !newMenuCategories.name ||
@@ -72,7 +71,11 @@ export default function CreateMenuCategories({
       method: "POST",
       body: JSON.stringify(newMenuCategories),
     });
-    fetchData();
+    // fetchData();
+    const jsonData = await response.json();
+    if (jsonData) {
+      dispatch(addMenuCategorie(jsonData));
+    }
     setNewMenuCategories({ name: "", selectedLocationIds: [] });
     setSelectedLocationIds([]);
   }

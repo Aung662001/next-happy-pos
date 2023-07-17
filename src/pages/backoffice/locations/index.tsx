@@ -8,13 +8,16 @@ import React, { useContext, useEffect, useState } from "react";
 import { locations as Location } from "@prisma/client";
 import Form from "./Form";
 import ItemCard from "@/components/ItemCard";
-import { useAppSelector } from "@/store/hook";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { AppData } from "@/store/slices/appSlice";
+import { addLocation, removeLocation } from "@/store/slices/locationSlice";
+import { removeAddon } from "@/store/slices/addonsSlice";
 
 interface UpdateHandle {
   updateHandler: () => void;
 }
 const App = () => {
+  const dispatch = useAppDispatch();
   const { Locations, companies } = useAppSelector(AppData);
   const [open, setOpen] = useState(false);
   const [update, setUpdate] = useState(false);
@@ -28,20 +31,23 @@ const App = () => {
     console.log(location);
     if (!location.address || !location.name) return;
     try {
-      await fetch(`${config.backofficeUrl}/location`, {
+      const response = await fetch(`${config.backofficeUrl}/location`, {
         method: "PUT",
         body: JSON.stringify(location),
       });
       // fetchData();
       setUpdate(false);
       setOpen(false);
+      const jsonData = await response.json();
+      dispatch(addLocation(jsonData));
       // window.location.reload();
     } catch (error) {
       console.log(error);
     }
   };
   const deleteHandler = async (locationId: number) => {
-    console.log(locationId);
+    setOpen(false);
+    setUpdate(false);
     const response = await fetch(
       `${config.backofficeUrl}/location?locationId=${locationId}`,
       {
@@ -51,12 +57,13 @@ const App = () => {
     if (response.ok) {
       // window.location.reload();
       // fetchData();
-      setUpdate(true);
-      setOpen(true);
+      dispatch(removeLocation(locationId));
     }
   };
   const createLocation = async () => {
     if (!newLocation.name || !newLocation.address) return;
+    setOpen(false);
+    setUpdate(false);
     newLocation.companies_id = companies[0].id!;
     const response = await fetch(`${config.backofficeUrl}/location`, {
       method: "POST",
@@ -68,6 +75,10 @@ const App = () => {
     });
     setNewLocation({ name: "", address: "" });
     //TODO=>to change redux here
+    const jsonData = await response.json();
+    if (jsonData && response.ok) {
+      dispatch(addLocation(jsonData));
+    }
     // if (response.ok) {
     //   return fetchData();
     // }

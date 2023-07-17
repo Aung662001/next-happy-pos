@@ -1,5 +1,7 @@
 import { config } from "@/config/config";
 import { BackofficeContext } from "@/contexts/BackofficeContext";
+import { useAppSelector } from "@/store/hook";
+import { AppData } from "@/store/slices/appSlice";
 import {
   Box,
   TextField,
@@ -50,7 +52,7 @@ function EditAddon(props: Props) {
     open,
     setOpen,
   } = props;
-  const { addonCategories } = useContext(BackofficeContext);
+  const { addonCategories } = useAppSelector(AppData);
 
   function closeHandler() {
     setAddonData({

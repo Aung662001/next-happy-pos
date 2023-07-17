@@ -17,13 +17,13 @@ export default async function handler(
       return res.status(400).json({ message: "bad request" });
     }
     try {
-      await prisma.addon_categories.create({
+      const data = await prisma.addon_categories.create({
         data: {
           name: name,
           is_required: require,
         },
       });
-      res.send(200);
+      res.status(200).json(data);
     } catch (err: any) {
       res.send(500);
     }
@@ -48,9 +48,9 @@ export default async function handler(
     const id = parseInt(req.query.id as string);
     if (!id) return res.send(400);
     try {
-      await prisma.menus_addon_categories.delete({
+      await prisma.menus_addon_categories.deleteMany({
         where: {
-          id: id,
+          addon_categories_id: id,
         },
       });
       await prisma.addons.updateMany({
@@ -58,7 +58,7 @@ export default async function handler(
           addon_categories_id: id,
         },
         data: {
-          addon_categories_id: null,
+          is_archived: true,
         },
       });
       await prisma.addon_categories.update({

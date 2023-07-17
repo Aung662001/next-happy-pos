@@ -20,6 +20,9 @@ import { config } from "../../config/config";
 import { LoadingButton } from "@mui/lab";
 import { create } from "domain";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
+import { AppData } from "@/store/slices/appSlice";
+import { addMenu } from "@/store/slices/menuSlice";
 interface Props {
   open: () => void;
   close: () => void;
@@ -36,6 +39,7 @@ export const style = {
   p: 4,
 };
 export default function EditModel({ open, close, openModel }: Props) {
+  const dispatch = useAppDispatch();
   const [menus, setMenus] = useState<Menu>({
     name: "",
     price: undefined,
@@ -60,13 +64,12 @@ export default function EditModel({ open, close, openModel }: Props) {
   };
 
   const {
-    fetchData,
     menuCategories,
     menusMenuCategoriesLocations,
     addonCategories,
     menus: Menus,
     menuAddonCategories,
-  } = useContext(BackofficeContext);
+  } = useAppSelector(AppData);
   const [locationId, setLocationId] = useLocalStorage("locationId")!;
 
   const createMenu = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -94,6 +97,7 @@ export default function EditModel({ open, close, openModel }: Props) {
       }
     );
     if (response.ok) {
+      const jsonData = await response.json();
       setMenus({
         name: "",
         price: undefined,
@@ -102,7 +106,8 @@ export default function EditModel({ open, close, openModel }: Props) {
         asseturl: "",
         description: "",
       });
-      fetchData();
+      // fetchData();
+      dispatch(addMenu(jsonData));
       close();
     }
   };

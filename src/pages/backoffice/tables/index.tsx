@@ -1,37 +1,24 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardMedia,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Modal,
-  Select,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { FormEvent, useState, useContext } from "react";
-import { prisma } from "@/utils/db";
+import { Box, Button, Grid, Modal, TextField } from "@mui/material";
+import { useState } from "react";
 import { config } from "@/config/config";
-import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { style } from "@/components/editMenuModel/CreateMenuModel";
 import Layout from "@/components/Layout";
 import ItemCard from "@/components/ItemCard";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
+import { AppData } from "@/store/slices/appSlice";
+import { addTable } from "@/store/slices/tableSlice";
 
 const AddonCategories = () => {
   const {
-    fetchData,
     addonCategories: addonCategoriesFromContext,
     menusMenuCategoriesLocations,
     menuAddonCategories,
     addons,
     tables: Tables,
-  } = useContext(BackofficeContext);
+  } = useAppSelector(AppData);
+  const dispatch = useAppDispatch();
   const [locationId] = useLocalStorage("locationId");
   const [open, setOpen] = useState(false);
   const [tables, setTables] = useState({
@@ -40,7 +27,7 @@ const AddonCategories = () => {
   });
 
   const filteredTables = Tables.filter(
-    (table) => table.location_id === locationId
+    (table) => table.location_id === parseInt(locationId)
   );
   return (
     <Layout title="Tables">
@@ -100,6 +87,7 @@ const AddonCategories = () => {
     </Layout>
   );
   async function submitHandler() {
+    setOpen(false);
     if (!tables.name) {
       return;
     }
@@ -111,9 +99,10 @@ const AddonCategories = () => {
       }
     );
     if (response.ok) {
-      setOpen(false);
+      const jsonData = await response.json();
       setTables({ ...tables, name: "" });
-      fetchData();
+      dispatch(addTable(jsonData));
+      // fetchData();
     }
   }
 };

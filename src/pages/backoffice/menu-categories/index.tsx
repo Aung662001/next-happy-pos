@@ -91,7 +91,7 @@ const App = () => {
           columns={{ xs: 4, sm: 8, md: 12 }}
           gap={3}
         >
-          {filteredMenuCategories.map((cat, index) => {
+          {menuCategories.map((cat, index) => {
             return (
               <Box key={index} onClick={() => selectedHandler(cat)}>
                 <ItemCard

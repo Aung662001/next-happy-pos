@@ -12,12 +12,14 @@ import {
 import { BackofficeContext } from "@/contexts/BackofficeContext";
 import Row from "./Row";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useAppSelector } from "@/store/hook";
+import { AppData } from "@/store/slices/appSlice";
 
 function App() {
-  const { orders, orderLines } = useContext(BackofficeContext);
+  const { orders, orderLines } = useAppSelector(AppData);
   const [locationId] = useLocalStorage("locationId");
   const connectedOrders = orders.filter(
-    (order) => order.location_id === locationId
+    (order) => order.location_id === parseInt(locationId)
   );
   return (
     <Layout title="Orders">

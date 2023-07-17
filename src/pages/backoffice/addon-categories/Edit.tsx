@@ -16,7 +16,10 @@ import {
 } from "@mui/material";
 import { SetStateAction, useContext, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
-import { removeAddonCAtegories } from "@/store/slices/addonCategoriesSlice";
+import {
+  addAddonCategories,
+  removeAddonCAtegories,
+} from "@/store/slices/addonCategoriesSlice";
 import { AppData } from "@/store/slices/appSlice";
 interface EditAddonCategories {
   open: boolean;
@@ -164,10 +167,12 @@ const EditAddonCategories = (props: EditAddonCategories) => {
       method: "POST",
       body: JSON.stringify(addonCategories),
     });
+    const data = await response.json();
     if (response.ok) {
       setOpen(false);
       setAddonCategories({ ...addonCategories, name: "" });
       // fetchData();
+      dispatch(addAddonCategories(data));
     }
   }
 };

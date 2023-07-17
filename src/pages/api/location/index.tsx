@@ -36,7 +36,7 @@ export default async function handler(
           companies_id: data.companies_id,
         },
       });
-      res.send(resDb);
+      res.status(200).json(resDb);
     } catch (err: any) {
       res.send(err.message);
     } finally {
@@ -46,10 +46,9 @@ export default async function handler(
     const query = req.query;
     const LocationId = (query["locationId"] ||
       (query["locationId"] && query["locationId"][0])) as string;
-    console.log(LocationId);
     if (!LocationId) return res.send(400);
     try {
-      await prisma.locations.update({
+      const data = await prisma.locations.update({
         where: {
           id: parseInt(LocationId),
         },
@@ -57,6 +56,7 @@ export default async function handler(
           is_archived: true,
         },
       });
+      console.log(data, "jajaaj");
       res.send(202);
     } catch (err: any) {
       res.send(err.message);

@@ -30,7 +30,7 @@ export default async function handler(
       );
 
       if (!data) return res.send(500);
-      res.status(200).json({ data, menuCategories });
+      res.status(200).json(menuCategories);
     } catch (err: any) {
       return res.json({ error: err.message });
     } finally {

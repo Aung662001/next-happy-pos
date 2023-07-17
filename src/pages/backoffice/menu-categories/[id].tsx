@@ -17,10 +17,12 @@ import {
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { config } from "@/config/config";
-import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { useRouter } from "next/router";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import DeleteDialog from "@/components/DeleteDialog";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
+import { AppData } from "@/store/slices/appSlice";
+import { removeMenuCategorie } from "@/store/slices/menuCategoriesSlict";
 
 interface menuCategories {
   name: string;
@@ -28,6 +30,7 @@ interface menuCategories {
   selectedLocationIds: number[];
 }
 export default function EditMenuCategories() {
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const updatingId = parseInt(router.query.id as string);
   const [open, setOpen] = useState(false);
@@ -42,13 +45,8 @@ export default function EditMenuCategories() {
   const [chooseToConnectMenuIds, setChooseToConnectMenuIds] = useState<
     number[]
   >([]);
-  const {
-    menuCategories,
-    menus,
-    fetchData,
-    menusMenuCategoriesLocations,
-    Locations,
-  } = useContext(BackofficeContext);
+  const { menuCategories, menus, menusMenuCategoriesLocations, Locations } =
+    useAppSelector(AppData);
   const allMenusIds = menus.map((menu) => menu.id);
   const menuMenuCategoriesLocationsIds = menusMenuCategoriesLocations.filter(
     (mcl) => mcl.menu_categories_id === updatingId
@@ -98,7 +96,7 @@ export default function EditMenuCategories() {
     if (response.ok) {
       setOpen(false);
       router.push("./");
-      fetchData();
+      dispatch(removeMenuCategorie(updatingId));
     } else {
       alert("Cann't delete this MenuCategories");
     }
@@ -326,7 +324,8 @@ export default function EditMenuCategories() {
       }
     );
     if (response.ok) {
-      fetchData();
+      dispatch(removeMenuCategorie(id));
+      // fetchData();
       alert("Deleted");
     } else {
       alert("Error");
@@ -365,7 +364,7 @@ export default function EditMenuCategories() {
       }
     );
     if (response.ok) {
-      fetchData();
+      // fetchData();
       setChooseToConnectMenuIds([]);
     }
   }

@@ -18,6 +18,9 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { config } from "@/config/config";
 import { useRouter } from "next/router";
 import DeleteDialog from "../DeleteDialog";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
+import { AppData } from "@/store/slices/appSlice";
+import { removeMenu } from "@/store/slices/menuSlice";
 interface Props {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -25,13 +28,14 @@ interface Props {
   setMenus: React.Dispatch<React.SetStateAction<Partial<Menu>>>;
 }
 export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const [selectedCategoriesIds, setSelectedCategoriesIds] = useState<number[]>(
     []
   );
 
-  const { fetchData, menuCategories, menusMenuCategoriesLocations } =
-    useContext(BackofficeContext);
+  const { menuCategories, menusMenuCategoriesLocations } =
+    useAppSelector(AppData);
   const [locationId, setLocationId] = useLocalStorage("locationId")!;
   const [openArchived, setOpenArchived] = useState(false);
   //   const createMenu = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -75,7 +79,7 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
   };
 
   const CategoriesIds = menusMenuCategoriesLocations.filter(
-    (mcl) => mcl.locations_id === locationId
+    (mcl) => mcl.locations_id === parseInt(locationId)
   );
 
   const menuCategoriesAtCurrentLocation = menuCategories.filter((item1) => {
@@ -107,7 +111,7 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
     );
     if (response.ok) {
       closeHandler();
-      fetchData();
+      // fetchData();
     }
   }
   const deleteHandler = async () => {
@@ -120,7 +124,9 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
     if (response.ok) {
       setOpenArchived(false);
       setOpen(false);
-      fetchData();
+      // fetchData();
+      dispatch(removeMenu(menus.id!));
+
       router.push("/backoffice/menus");
     }
   };

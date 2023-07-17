@@ -1,6 +1,5 @@
 import { prisma } from "@/utils/db";
 import { qrCodeImageUpload } from "@/utils/qrUpload";
-import { METHODS } from "http";
 import type { NextApiRequest, NextApiResponse } from "next";
 export default async function handler(
   req: NextApiRequest,
@@ -21,7 +20,7 @@ export default async function handler(
       });
       const tableId = table.id;
       await qrCodeImageUpload(location_id, tableId);
-      await prisma.tables.update({
+      const responseTable = await prisma.tables.update({
         where: {
           id: tableId,
         },
@@ -29,7 +28,7 @@ export default async function handler(
           assetUrl: `https://msquarefdc.sgp1.digitaloceanspaces.com/happy-pos/qrcode/aungaung/locationId-${location_id}-tableId-${tableId}.png`,
         },
       });
-      res.send(201);
+      res.status(201).json(responseTable);
     } catch (err) {
       res.status(500).json({ message: "internal server error" });
     }

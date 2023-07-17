@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { addons as Addons } from "@prisma/client";
 import { create } from "domain";
 interface menuSliceType {
@@ -18,7 +18,13 @@ export const addonSlice = createSlice({
     setAddons: (state, action) => {
       state.items = action.payload;
     },
+    addAddon: (state, action: PayloadAction<Addons>) => {
+      state.items = [...state.items, action.payload];
+    },
+    removeAddon: (state, action: PayloadAction<number>) => {
+      state.items = state.items.filter((item) => item.id !== action.payload);
+    },
   },
 });
-export const { setAddons } = addonSlice.actions;
+export const { setAddons, addAddon, removeAddon } = addonSlice.actions;
 export default addonSlice.reducer;

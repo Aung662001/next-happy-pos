@@ -23,7 +23,7 @@ export default async function handler(
           addon_categories_id: dataFromUi.addonCategories,
         },
       });
-      res.json(dbRes);
+      res.status(200).json(dbRes);
     } catch (err: any) {
       res.status(500).json({ error: err.message });
     } finally {

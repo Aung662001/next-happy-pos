@@ -19,8 +19,9 @@ import {
 } from "@mui/material";
 import { config } from "@/config/config";
 import { addon_categories } from "@prisma/client";
-import { useAppSelector } from "@/store/hook";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { AppData } from "@/store/slices/appSlice";
+import { addAddon, removeAddon } from "@/store/slices/addonsSlice";
 
 interface row {
   id: number;
@@ -36,6 +37,7 @@ const App = () => {
     menusMenuCategoriesLocations,
     menuAddonCategories,
   } = useAppSelector(AppData);
+  const dispatch = useAppDispatch();
   const [update, setUpdate] = useState(false);
   const [open, setOpen] = useState(false);
   const [updateId, setUpdateId] = useState<number>();
@@ -187,6 +189,7 @@ const App = () => {
     });
     if (response.ok) {
       // fetchData();
+      dispatch(removeAddon(id));
       alert("Deleted");
     }
   }
@@ -224,8 +227,10 @@ const App = () => {
       method: "POST",
       body: JSON.stringify(addonData),
     });
+    const jsonData = await response.json();
     if (response.ok) {
       // fetchData();
+      dispatch(addAddon(jsonData));
       alert("created Addon success!");
       setAddonData(defaultAddon);
     }
