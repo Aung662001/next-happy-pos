@@ -10,6 +10,7 @@ const LandingCenterText = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        backgroundColor: "rgba(255,255,255,0.5)",
       }}
     >
       <p style={{ fontSize: "20px", fontWeight: "bold", textAlign: "center" }}>

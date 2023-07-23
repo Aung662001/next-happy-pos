@@ -17,6 +17,7 @@ import { setTables } from "./tableSlice";
 import { setOrders } from "./orderSlice";
 import { setOrderLines } from "./orderLineSlice";
 import { RootState } from "..";
+import { OrderLine } from "@/typings/types";
 
 interface AppState {
   isLoading: boolean;
@@ -26,6 +27,7 @@ const initialState: AppState = {
   isLoading: false,
   error: null,
 };
+const cartOrderLines: OrderLine[] = [];
 export const fetchAppData = createAsyncThunk(
   "app/fetchAppData",
   async (locationId: string, thunkAPI) => {
@@ -127,6 +129,7 @@ export const AppData = createSelector(
       tables,
       orders,
       orderLines,
+      cartOrderLines,
     };
   }
 );

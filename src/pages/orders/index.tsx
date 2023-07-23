@@ -9,6 +9,8 @@ import Tab from "@mui/material/Tab";
 import { menus as Menu } from "@prisma/client";
 import MenuCard from "@/components/MenuCard";
 import CartIcon from "@/components/CartIcon";
+import { useAppSelector } from "@/store/hook";
+import { AppData } from "@/store/slices/appSlice";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -22,7 +24,7 @@ function Order() {
   const router = useRouter();
   const { locationId, tableId } = router.query;
   const { menuCategories, menus, menusMenuCategoriesLocations, orderLines } =
-    useContext(OrderContext);
+    useAppSelector(AppData);
   const [selectedMenuCategory, setSelectedMenuCategories] =
     useState<MenuCategory[]>();
   const [selectedMenuCategoriesId, setSelectedMenuCategoriesId] =

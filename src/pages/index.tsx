@@ -3,6 +3,9 @@ import { useRouter } from "next/router";
 import LandingCenterText from "@/components/LandingCenterText";
 import LandingIcons from "@/components/LandingIcons";
 import LandingHeader from "@/components/LandingHeader";
+import LandingFooter from "@/components/LandingFooter";
+import { motion } from "framer-motion";
+import { duration } from "@mui/material";
 
 function App() {
   const router = useRouter();
@@ -10,7 +13,11 @@ function App() {
     // router.push("./orders");
   });
   return (
-    <div>
+    <motion.div
+      whileInView={{ y: [30, 20, 10, 0], opacity: [0, 1] }}
+      transition={{ duration: 0.2 }}
+      style={{ overflow: "hidden", height: "100vh" }}
+    >
       <div
         style={{
           width: "100vw",
@@ -33,7 +40,8 @@ function App() {
         </div>
       </div>
       <LandingIcons />
-    </div>
+      <LandingFooter />
+    </motion.div>
   );
 }
 

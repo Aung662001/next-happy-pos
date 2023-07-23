@@ -14,6 +14,9 @@ import { OrderContext } from "@/contexts/OrderContext";
 import { increaseQuantity, decreaseQuantity } from "@/utils/addorder";
 import { menus as Menu } from "@prisma/client";
 import { takeRelatedOtherAddonsIds } from "@/utils/otherFunctions";
+import { useAppSelector, useAppDispatch } from "@/store/hook";
+import { AppData } from "@/store/slices/appSlice";
+import { setMenusAddonCategories } from "@/store/slices/menuAddonCategoriesSlice";
 interface cart {
   menu: Menu;
   addonIds: number[] | [];
@@ -28,10 +31,11 @@ const OrderMenu = () => {
     addons,
     addonCategories,
     menus,
-    updateData,
-    orderLines,
+    // updateData,
+    cartOrderLines: orderLines,
     ...data
-  } = useContext(OrderContext);
+  } = useAppSelector(AppData);
+  const dispatch = useAppDispatch();
   const [quantity, setQuantity] = useState(1);
   const [disabled, setdisabled] = useState(false);
   const [count, setCount] = useState<number>(0);
@@ -218,32 +222,33 @@ const OrderMenu = () => {
       (addon) => requireAddon.includes(addon.id) || optional.includes(addon.id)
     );
     if (updating) {
-      updateData({
-        ...data,
-        menuAddonCategories,
-        addonCategories,
-        menus,
-        addons,
-        orderLines: [
-          ...orderLines.filter((ol) => ol.menu.id !== menuId),
-          {
-            menu,
-            addons: [...selectedAddons],
-            quantity,
-          },
-        ],
-      });
+      // updateData({
+      //   ...data,
+      //   menuAddonCategories,
+      //   addonCategories,
+      //   menus,
+      //   addons,
+      //   orderLines: [
+      //     ...orderLines.filter((ol) => ol.menu.id !== menuId),
+      //     {
+      //       menu,
+      //       addons: [...selectedAddons],
+      //       quantity,
+      //     },
+      //   ],
+      // });
+      // dispatch(setMenusAddonCategories(menuAddonCategories));
       router.push(`../cart?locationId=${locationId}&tableId=${tableId}`);
       return;
     }
-    updateData({
-      ...data,
-      menuAddonCategories,
-      addonCategories,
-      menus,
-      addons,
-      orderLines: [...orderLines, { menu, addons: selectedAddons, quantity }],
-    });
+    // updateData({
+    //   ...data,
+    //   menuAddonCategories,
+    //   addonCategories,
+    //   menus,
+    //   addons,
+    //   orderLines: [...orderLines, { menu, addons: selectedAddons, quantity }],
+    // });
     router.push(`../?locationId=${locationId}&tableId=${tableId}`);
   };
   return (
