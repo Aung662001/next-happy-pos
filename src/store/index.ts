@@ -11,6 +11,7 @@ import locationsSlice from "./slices/locationSlice";
 import orderLinesSlice from "./slices/orderLineSlice";
 import orderSlice from "./slices/orderSlice";
 import tableSlice from "./slices/tableSlice";
+import cartOrderlinesSlice from "./slices/cartOrderlinesSlice";
 
 export const store = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ export const store = configureStore({
     orderLines: orderLinesSlice,
     orders: orderSlice,
     tables: tableSlice,
+    cartOrderlines: cartOrderlinesSlice,
   },
 });
 

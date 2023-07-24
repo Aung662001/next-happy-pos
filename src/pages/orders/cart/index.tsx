@@ -5,18 +5,28 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { useRouter } from "next/router";
 import { config } from "@/config/config";
+import { useAppSelector, useAppDispatch } from "@/store/hook";
+import { AppData } from "@/store/slices/appSlice";
+import { setCartOrderlines } from "@/store/slices/cartOrderlinesSlice";
 
 const Cart = () => {
-  const { orderLines, updateData, ...data } = useContext(OrderContext);
+  const dispatch = useAppDispatch();
+  const { cartOrderLines: orderLines, ...data } = useAppSelector(AppData);
   const router = useRouter();
   const query = router.query;
   //   const [orders, setOrders] = useState(orderLines);
   const removeFromCart = (menuId: number) => {
     // setOrders(orders.filter((ol) => ol.menu.id !== menuId));
-    updateData({
-      ...data,
-      orderLines: orderLines.filter((ol) => ol.menu.id !== menuId),
-    });
+    // updateData({
+    //   ...data,
+    //   orderLines: orderLines.filter((ol) => ol.menu.id !== menuId),
+    // });
+    dispatch(
+      setCartOrderlines({
+        ...data,
+        orderLines: orderLines.filter((ol) => ol.menu.id !== menuId),
+      })
+    );
   };
   ///if no item in cart return to prev page
   useEffect(() => {
@@ -111,10 +121,10 @@ const Cart = () => {
       }
     );
     if (res.ok) {
-      updateData({
-        ...data,
-        orderLines: [],
-      });
+      // updateData({
+      //   ...data,
+      //   orderLines: [],
+      // });
     }
     router.push(
       `../orders?locationId=${query.locationId}&tableId=${query.tableId}`

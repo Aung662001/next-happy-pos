@@ -17,6 +17,11 @@ import { takeRelatedOtherAddonsIds } from "@/utils/otherFunctions";
 import { useAppSelector, useAppDispatch } from "@/store/hook";
 import { AppData } from "@/store/slices/appSlice";
 import { setMenusAddonCategories } from "@/store/slices/menuAddonCategoriesSlice";
+import { setAddonCategories } from "@/store/slices/addonCategoriesSlice";
+import { setMenu } from "@/store/slices/menuSlice";
+import { setAddons } from "@/store/slices/addonsSlice";
+import { setOrderLines } from "@/store/slices/orderLineSlice";
+import { setCartOrderlines } from "@/store/slices/cartOrderlinesSlice";
 interface cart {
   menu: Menu;
   addonIds: number[] | [];
@@ -35,6 +40,7 @@ const OrderMenu = () => {
     cartOrderLines: orderLines,
     ...data
   } = useAppSelector(AppData);
+  console.log(orderLines, "************8");
   const dispatch = useAppDispatch();
   const [quantity, setQuantity] = useState(1);
   const [disabled, setdisabled] = useState(false);
@@ -228,16 +234,30 @@ const OrderMenu = () => {
       //   addonCategories,
       //   menus,
       //   addons,
-      //   orderLines: [
-      //     ...orderLines.filter((ol) => ol.menu.id !== menuId),
-      //     {
-      //       menu,
-      //       addons: [...selectedAddons],
-      //       quantity,
-      //     },
-      //   ],
+      // orderLines: [
+      //   ...orderLines.filter((ol) => ol.menu.id !== menuId),
+      //   {
+      //     menu,
+      //     addons: [...selectedAddons],
+      //     quantity,
+      //   },
+      // ],
       // });
-      // dispatch(setMenusAddonCategories(menuAddonCategories));
+      dispatch(setMenusAddonCategories(menuAddonCategories));
+      dispatch(setAddonCategories(addonCategories));
+      dispatch(setMenu(menus));
+      dispatch(setAddons(addons));
+      dispatch(
+        setCartOrderlines([
+          ...orderLines.filter((ol) => ol.menu.id !== menuId),
+          {
+            menu,
+            addons: [...selectedAddons],
+            quantity,
+          },
+        ])
+      );
+
       router.push(`../cart?locationId=${locationId}&tableId=${tableId}`);
       return;
     }
@@ -249,6 +269,17 @@ const OrderMenu = () => {
     //   addons,
     //   orderLines: [...orderLines, { menu, addons: selectedAddons, quantity }],
     // });
+    dispatch(setMenusAddonCategories(menuAddonCategories));
+    dispatch(setAddonCategories(addonCategories));
+    dispatch(setMenu(menus));
+    dispatch(setAddons(addons));
+    dispatch(
+      setCartOrderlines([
+        ...orderLines,
+        { menu, addons: selectedAddons, quantity },
+      ])
+    );
+
     router.push(`../?locationId=${locationId}&tableId=${tableId}`);
   };
   return (

@@ -10,7 +10,7 @@ export default async function handler(
     if (!menuId || !orderId || !status) {
       return res.send(400);
     }
-    await prisma.orderLine.updateMany({
+    const ans = await prisma.orderLine.updateMany({
       where: {
         menus_id: menuId,
         orders_id: orderId,
@@ -19,7 +19,8 @@ export default async function handler(
         order_status: status,
       },
     });
-    res.send(200);
+    const newData = await prisma.orderLine.findMany();
+    res.status(200).json(newData);
   } else {
     res.send(405);
   }

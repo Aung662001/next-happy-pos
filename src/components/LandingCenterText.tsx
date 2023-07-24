@@ -1,7 +1,9 @@
+import { config } from "@/config/config";
 import { Button } from "@mui/material";
+import { useRouter } from "next/router";
 import React from "react";
-
 const LandingCenterText = () => {
+  const router = useRouter();
   return (
     <section
       style={{
@@ -20,10 +22,18 @@ const LandingCenterText = () => {
         the Future of Food Shop Management with Our Software.
       </p>
       <div style={{ display: "flex", gap: 5 }}>
-        <Button variant="contained" sx={{ bgcolor: "gray" }}>
+        <Button
+          variant="contained"
+          sx={{ bgcolor: "gray" }}
+          onClick={() => router.push("")}
+        >
           Order App
         </Button>
-        <Button variant="contained" sx={{ bgcolor: "gray" }}>
+        <Button
+          variant="contained"
+          sx={{ bgcolor: "gray" }}
+          onClick={() => router.push(`${config.authUrl}/backoffice`)}
+        >
           Backoffice Manage
         </Button>
       </div>

@@ -23,8 +23,12 @@ function Order() {
   const [value, setValue] = React.useState(0);
   const router = useRouter();
   const { locationId, tableId } = router.query;
-  const { menuCategories, menus, menusMenuCategoriesLocations, orderLines } =
-    useAppSelector(AppData);
+  const {
+    menuCategories,
+    menus,
+    menusMenuCategoriesLocations,
+    cartOrderLines: orderLines,
+  } = useAppSelector(AppData);
   const [selectedMenuCategory, setSelectedMenuCategories] =
     useState<MenuCategory[]>();
   const [selectedMenuCategoriesId, setSelectedMenuCategoriesId] =

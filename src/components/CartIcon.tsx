@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Box } from "@mui/material";
-import { OrderContext } from "@/contexts/OrderContext";
 import { useRouter } from "next/router";
+import { useAppSelector } from "@/store/hook";
+import { AppData } from "@/store/slices/appSlice";
 
 const CartIcon = () => {
   const router = useRouter();
   const query = router.query;
-  const { orderLines } = useContext(OrderContext);
+  const { cartOrderLines: orderLines } = useAppSelector(AppData);
   const [total, setTotal] = useState(0);
   const totalItem = () => {
     let total = 0;

@@ -27,12 +27,16 @@ import {
 } from "@/utils/otherFunctions";
 import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { config } from "@/config/config";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
+import { AppData } from "@/store/slices/appSlice";
+import { setOrderLines } from "@/store/slices/orderLineSlice";
 interface Props {
   order: Order;
   orderLines: OrderLine[];
 }
 const Row = ({ order, orderLines }: Props) => {
-  const { menus, addons, fetchData } = useContext(BackofficeContext);
+  const dispatch = useAppDispatch();
+  const { menus, addons } = useAppSelector(AppData);
   const [open, setOpen] = useState(false);
   //order id
   //Number of menu
@@ -85,8 +89,10 @@ const Row = ({ order, orderLines }: Props) => {
         },
         body: JSON.stringify({ status: e.target.value, menuId, orderId }),
       });
+      const data = await response.json();
       if (response.ok) {
-        fetchData();
+        // fetchData();
+        dispatch(setOrderLines(data));
       }
     };
     return (

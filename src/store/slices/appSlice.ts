@@ -18,6 +18,7 @@ import { setOrders } from "./orderSlice";
 import { setOrderLines } from "./orderLineSlice";
 import { RootState } from "..";
 import { OrderLine } from "@/typings/types";
+import { setCartOrderlines } from "./cartOrderlinesSlice";
 
 interface AppState {
   isLoading: boolean;
@@ -27,7 +28,7 @@ const initialState: AppState = {
   isLoading: false,
   error: null,
 };
-const cartOrderLines: OrderLine[] = [];
+const cartOrderdLines: OrderLine[] = [];
 export const fetchAppData = createAsyncThunk(
   "app/fetchAppData",
   async (locationId: string, thunkAPI) => {
@@ -90,6 +91,8 @@ const selectAllcompanies = (state: RootState) => state.companies.items;
 const selectAlltables = (state: RootState) => state.tables.items;
 const selectAllorders = (state: RootState) => state.orders.items;
 const selectAllorderLines = (state: RootState) => state.orderLines.items;
+const selectAllCartOrderLines = (state: RootState) =>
+  state.cartOrderlines.items;
 export const AppData = createSelector(
   [
     selectAllmenus,
@@ -103,6 +106,7 @@ export const AppData = createSelector(
     selectAlltables,
     selectAllorders,
     selectAllorderLines,
+    selectAllCartOrderLines,
   ],
   (
     menus,
@@ -115,7 +119,8 @@ export const AppData = createSelector(
     companies,
     tables,
     orders,
-    orderLines
+    orderLines,
+    cartOrderLines
   ) => {
     return {
       menus,
