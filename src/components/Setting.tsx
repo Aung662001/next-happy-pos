@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "./Layout";
 import {
   Box,
@@ -10,13 +10,14 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { BackofficeContext } from "../contexts/BackofficeContext";
 import { locations as Location } from "@prisma/client";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useRouter } from "next/router";
 import { companies } from "@prisma/client";
 import NavBar from "./TopBar";
 import { config } from "@/config/config";
+import { useAppSelector } from "@/store/hook";
+import { AppData, selectIsLoading } from "@/store/slices/appSlice";
 
 export default function Setting() {
   const [locationId, setLocationId] = useLocalStorage("locationId");
@@ -25,8 +26,8 @@ export default function Setting() {
     address: "",
   });
   const router = useRouter();
-  const { Locations, fetchData, companies, loading } =
-    useContext(BackofficeContext);
+  const { Locations, companies } = useAppSelector(AppData);
+  const isLoading = useAppSelector(selectIsLoading);
 
   const [selectedLocation, setSelectedLocation] = useState<
     Location | undefined

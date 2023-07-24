@@ -10,12 +10,12 @@ import {
 } from "@mui/material";
 import React, { FormEvent, useContext, useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { BackofficeContext } from "../contexts/BackofficeContext";
+// import { BackofficeContext } from "../contexts/BackofficeContext";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
 export default function Login() {
-  const { fetchData, updateData, ...data } = useContext(BackofficeContext);
+  // const { updateData, ...data } = useContext(BackofficeContext);
   const router = useRouter();
 
   const [error, setError] = useState(false);
@@ -50,7 +50,8 @@ export default function Login() {
 
       return null;
     } else {
-      updateData({ ...data, accessToken: resData.accessToken });
+      // updateData({ ...data, accessToken: resData.accessToken });
+      console.log("inside login.tsx");
     }
   }
 

@@ -1,5 +1,4 @@
 import Layout from "@/components/Layout";
-// import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 

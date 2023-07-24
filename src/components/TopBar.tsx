@@ -1,10 +1,7 @@
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import DinnerDiningIcon from "@mui/icons-material/DinnerDining";
@@ -15,10 +12,11 @@ import EditLocationAltIcon from "@mui/icons-material/EditLocationAlt";
 import { useState, useEffect, useContext } from "react";
 import { signOut, signIn } from "next-auth/react";
 import { useSession } from "next-auth/react";
-import { BackofficeContext } from "../contexts/BackofficeContext";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { useAppSelector } from "@/store/hook";
+import { AppData } from "@/store/slices/appSlice";
 interface NavProps {
   label?: string;
 }
@@ -74,7 +72,7 @@ export const sidebarMenuItems = [
   },
 ];
 const NavBar = (props: NavProps) => {
-  const { Locations } = useContext(BackofficeContext);
+  const { Locations } = useAppSelector(AppData);
   const { data: session } = useSession();
   const [locationId, setLocationId] = useLocalStorage("locationId");
   const router = useRouter();

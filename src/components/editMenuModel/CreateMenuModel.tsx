@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Menu, Location } from "../../typings/types";
-import { BackofficeContext } from "../../contexts/BackofficeContext";
 import FileDropZone from "./FileDropZone";
 import { config } from "../../config/config";
 import { LoadingButton } from "@mui/lab";
