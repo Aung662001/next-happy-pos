@@ -6,12 +6,18 @@ import LandingHeader from "@/components/LandingHeader";
 import LandingFooter from "@/components/LandingFooter";
 import { motion } from "framer-motion";
 import { duration } from "@mui/material";
+import { useAppSelector } from "@/store/hook";
+import { AppData } from "@/store/slices/appSlice";
 
 function App() {
+  const loading = useAppSelector(AppData);
   const router = useRouter();
   useEffect(() => {
     // router.push("./orders");
   });
+  if (loading) {
+    return <h1>Loading ...</h1>;
+  }
   return (
     <motion.div
       whileInView={{ y: [30, 20, 10, 0], opacity: [0, 1] }}

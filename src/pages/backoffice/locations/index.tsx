@@ -1,7 +1,6 @@
 import Layout from "@/components/Layout";
 import { config } from "@/config/config";
 // import Locations from "@/components/Locations";
-// import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { Button, Box, Grid } from "@mui/material";
 import EditLocationAltIcon from "@mui/icons-material/EditLocationAlt";
 import React, { useContext, useEffect, useState } from "react";

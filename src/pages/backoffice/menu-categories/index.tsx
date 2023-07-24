@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import Layout from "@/components/Layout";
 import CreateMenuCategories from "@/components/editMenuCategories/CreateMenuCategories";
-// import { BackofficeContext } from "@/contexts/BackofficeContext";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { Box, Button, Grid } from "@mui/material";
 import { menu_categories } from "@prisma/client";
