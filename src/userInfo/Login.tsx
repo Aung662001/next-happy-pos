@@ -15,8 +15,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 export default function Login() {
-  const { token, fetchData, updateData, ...data } =
-    useContext(BackofficeContext);
+  const { fetchData, updateData, ...data } = useContext(BackofficeContext);
   const router = useRouter();
 
   const [error, setError] = useState(false);
@@ -24,11 +23,11 @@ export default function Login() {
     email: "",
     password: "",
   });
-  useEffect(() => {
-    if (token) {
-      router.push("/");
-    }
-  }, [token]);
+  // useEffect(() => {
+  //   if (token) {
+  //     router.push("/");
+  //   }
+  // }, [token]);
   async function loginHandler(e: FormEvent) {
     e.preventDefault();
     const { email, password } = userData;
