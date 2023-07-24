@@ -13,7 +13,7 @@ import {
   MenuItem,
   Button,
 } from "@mui/material";
-import { SetStateAction, useContext, useState } from "react";
+import { SetStateAction, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import {
   addAddonCategories,
@@ -89,7 +89,7 @@ const EditAddonCategories = (props: EditAddonCategories) => {
           label="Name"
           variant="outlined"
           sx={{ mb: 2, width: "100%" }}
-          value={addonCategories.name}
+          value={addonCategories.name ? addonCategories.name : ""}
           onChange={(e) =>
             setAddonCategories({ ...addonCategories, name: e.target.value })
           }
