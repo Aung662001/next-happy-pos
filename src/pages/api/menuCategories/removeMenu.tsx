@@ -7,7 +7,6 @@ export default async function handler(
   if (req.method === "PUT") {
     const menuId = parseInt(req.query.id as string);
     const { menuCategoriesId, locationId } = JSON.parse(req.body);
-    console.log(menuId, menuCategoriesId, locationId);
     if (!menuId || !menuCategoriesId) return res.send(400);
     try {
       await prisma.menus_menu_categories_locations.updateMany({

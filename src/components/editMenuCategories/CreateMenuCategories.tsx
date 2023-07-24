@@ -66,11 +66,10 @@ export default function CreateMenuCategories({
       !newMenuCategories.name ||
       !newMenuCategories.selectedLocationIds.length
     )
-      return console.log("Insert Data");
-    const response = await fetch(`${config.backofficeUrl}/menuCategories`, {
-      method: "POST",
-      body: JSON.stringify(newMenuCategories),
-    });
+      const response = await fetch(`${config.backofficeUrl}/menuCategories`, {
+        method: "POST",
+        body: JSON.stringify(newMenuCategories),
+      });
     // fetchData();
     const jsonData = await response.json();
     if (jsonData) {

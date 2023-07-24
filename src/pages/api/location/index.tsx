@@ -56,7 +56,6 @@ export default async function handler(
           is_archived: true,
         },
       });
-      console.log(data, "jajaaj");
       res.send(202);
     } catch (err: any) {
       res.send(err.message);

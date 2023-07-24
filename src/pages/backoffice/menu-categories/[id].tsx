@@ -342,7 +342,6 @@ export default function EditMenuCategories() {
     );
   }
   function handleChange(e: SelectChangeEvent<number[]>) {
-    console.log(e.target.value);
     setUpdateMenuCategorie({
       ...updateMenuCategorie,
       selectedLocationIds: e.target.value as number[],

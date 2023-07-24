@@ -41,7 +41,6 @@ export default function UpdateMenu({ open, setOpen, menus, setMenus }: Props) {
   //     e.preventDefault();
   //     if (menus.price === undefined) return;
   //     if (!menus?.name || menus?.price < 0) return;
-  //     console.log(menus);
   //     if (menuImage) {
   //       const formData = new FormData();
   //       formData.append("files", menuImage as Blob);

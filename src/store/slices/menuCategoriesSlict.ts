@@ -21,7 +21,6 @@ export const menuCategoriesSlice = createSlice({
       state.items = state.items.filter((item) => item.id !== action.payload);
     },
     addMenuCategorie: (state, action: PayloadAction<MenusCategories>) => {
-      console.log(action.payload, "inside redux");
       state.items = [...state.items, action.payload];
     },
   },

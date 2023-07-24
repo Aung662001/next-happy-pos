@@ -27,7 +27,6 @@ const App = () => {
 
   //update Handler function
   const updateHandler = async (location: Partial<Location>) => {
-    console.log(location);
     if (!location.address || !location.name) return;
     try {
       const response = await fetch(`${config.backofficeUrl}/location`, {

@@ -15,7 +15,6 @@ export default async function handler(
       asseturl = "",
       description = "",
     } = req.body;
-    console.log(menuCategoriesIds);
     const invalid =
       !name &&
       !price &&
@@ -50,7 +49,6 @@ export default async function handler(
     }
     //create menusCategories
     if (menuCategoriesIds.length > 1) {
-      console.log("inside menuCategories");
       const data = menuCategoriesIds.map((menuCategoriesId: number) => ({
         menus_id: menuId,
         menu_categories_id: menuCategoriesId,
@@ -78,7 +76,6 @@ export default async function handler(
     await prisma.$disconnect();
     res.send(200);
   } else if (req.method === "PUT") {
-    console.log("updataging....");
     const menuId = req.query.id as string;
     if (!req.body || !menuId)
       return res.status(400).json({ message: "Invalid Input" });

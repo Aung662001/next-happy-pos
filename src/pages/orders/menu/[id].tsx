@@ -40,7 +40,6 @@ const OrderMenu = () => {
     cartOrderLines: orderLines,
     ...data
   } = useAppSelector(AppData);
-  console.log(orderLines, "************8");
   const dispatch = useAppDispatch();
   const [quantity, setQuantity] = useState(1);
   const [disabled, setdisabled] = useState(false);
@@ -79,7 +78,6 @@ const OrderMenu = () => {
           selectedAddons.map((selected) => selected && selected.id)
       );
       const { requireAddonIdsInCart, optionalAddonIdsInCart } = filterAddon();
-      console.log(requireAddonIdsInCart, optionalAddonIdsInCart, "log");
       setRequireAddon(requireAddonIdsInCart as number[]);
       setOptional(optionalAddonIdsInCart as number[]);
     }
@@ -120,7 +118,6 @@ const OrderMenu = () => {
         (all) => !requireAddonIdsForFirstEnter.includes(all as number)
       );
     }
-    console.log(requireAddonIdsInCart);
     return { requireAddonIdsInCart, optionalAddonIdsInCart };
   };
   //

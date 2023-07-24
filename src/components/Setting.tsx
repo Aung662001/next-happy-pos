@@ -45,7 +45,6 @@ export default function Setting() {
         // const companyId = Locations.filter(
         //   (location) => location.id === locationId
         // ).map((all) => all.companies_id);
-        // console.log(companyId);
         setUpdateCompany({
           id: companies[0].id,
           name: companies[0].name,

@@ -92,7 +92,6 @@ const App = () => {
   // const addonCategoriesIds = ACdatas.filter((addonCategorie) =>
   //   addonCategoriesIdsWithLocation.includes(addonCategorie.id)
   // );
-  // console.log(addonCategoriesIds);
   const rows: row[] = [];
   addons.map((addon) => {
     const AddonCategorie = ACdatas.filter(
@@ -208,7 +207,6 @@ const App = () => {
     }
   }
   function editHandler(row: row) {
-    console.log(row);
     setOpen(true);
     setUpdate(true);
     setUpdateId(row.id);

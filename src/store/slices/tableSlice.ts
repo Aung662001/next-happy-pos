@@ -1,6 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { tables as Tables } from "@prisma/client";
-import { table } from "console";
 
 interface TablesType {
   isLoading: boolean;
