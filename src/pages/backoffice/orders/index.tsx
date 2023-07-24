@@ -13,6 +13,7 @@ import Row from "./Row";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useAppSelector } from "@/store/hook";
 import { AppData } from "@/store/slices/appSlice";
+import { orders as Orders } from "@prisma/client";
 
 function App() {
   const { orders, orderLines } = useAppSelector(AppData);

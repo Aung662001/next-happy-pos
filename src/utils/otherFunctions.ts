@@ -27,7 +27,7 @@ interface Prop {
   id: number;
 }
 export const getConnectedOrderLines = ({ orderLines, id }: Prop) => {
-  const connectedOrderLines = orderLines.filter(
+  const connectedOrderLines = orderLines?.filter(
     (orderline) => orderline.orders_id === id
   );
   return connectedOrderLines;

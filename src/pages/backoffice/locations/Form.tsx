@@ -47,11 +47,11 @@ const Form = ({
             label="City"
             variant="outlined"
             type="text"
-            value={newLocation.name}
+            value={newLocation?.name}
             onChange={(event) => {
               setNewLocation({
                 ...newLocation,
-                address: newLocation.address,
+                address: newLocation?.address,
                 name: event?.target.value,
               });
             }}
@@ -60,11 +60,11 @@ const Form = ({
             label="Address"
             variant="outlined"
             type="text"
-            value={newLocation.address}
+            value={newLocation?.address}
             onChange={(eve) => {
               setNewLocation({
                 ...newLocation,
-                name: newLocation.name,
+                name: newLocation?.name,
                 address: eve?.target.value,
               });
             }}

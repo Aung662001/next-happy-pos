@@ -44,7 +44,7 @@ const Row = ({ order, orderLines }: Props) => {
   //total price
   const getNumberOfMenu = (id: number) => {
     const connectedOrderLines = getConnectedOrderLines({ orderLines, id });
-    const menuIds = connectedOrderLines.map((orderline) => orderline.menus_id);
+    const menuIds = connectedOrderLines?.map((orderline) => orderline.menus_id);
     const unique = Array.from(new Set(menuIds));
     return unique.length;
   };
@@ -53,9 +53,9 @@ const Row = ({ order, orderLines }: Props) => {
     const connectedOrderLinesIds = getConnectedOrderLines({
       orderLines,
       id,
-    }).map((ol) => ol.menus_id);
+    })?.map((ol) => ol.menus_id);
     const connectedMenus = menus.filter((menu) =>
-      connectedOrderLinesIds.includes(menu.id)
+      connectedOrderLinesIds.includes(menu?.id)
     );
     const getConnectedAddons = (menuId: number, orderId: number) => {
       const addonIds = orderLines
@@ -63,14 +63,14 @@ const Row = ({ order, orderLines }: Props) => {
           (orderLine) =>
             orderLine.menus_id === menuId && orderLine.orders_id === orderId
         )
-        .map((ol) => ol.addons_id);
+        ?.map((ol) => ol.addons_id);
       //addons that connected to orderLine
       const connectedAddons = addons.filter((addon) =>
-        addonIds.includes(addon.id)
+        addonIds.includes(addon?.id)
       );
-      return connectedAddons.map((addon) => {
+      return connectedAddons?.map((addon) => {
         return (
-          <Typography variant="body2" key={addon.id}>
+          <Typography variant="body2" key={addon?.id}>
             .{addon.name}
           </Typography>
         );
@@ -98,7 +98,7 @@ const Row = ({ order, orderLines }: Props) => {
       <Box
         sx={{ display: "flex", flexDirection: "row", paddingY: "2rem", gap: 2 }}
       >
-        {connectedMenus.map((menu) => {
+        {connectedMenus?.map((menu) => {
           return (
             <Box key={menu.id}>
               <Card sx={{ minWidth: 275 }}>
@@ -108,16 +108,20 @@ const Row = ({ order, orderLines }: Props) => {
                   </Typography>
                   <Box>
                     <h3>Addons</h3>
-                    {getConnectedAddons(menu.id, order.id)}
+                    {getConnectedAddons(menu?.id, order?.id)}
                   </Box>
                 </CardContent>
                 <CardActions>
                   <FormControl sx={{ width: "100%" }}>
                     <InputLabel>Status</InputLabel>
                     <Select
-                      value={getOrderLineStatus(menu.id, order.id, orderLines)}
+                      value={getOrderLineStatus(
+                        menu?.id,
+                        order?.id,
+                        orderLines
+                      )}
                       label="Status"
-                      onChange={(e) => statusOnchange(e, menu.id, order.id)}
+                      onChange={(e) => statusOnchange(e, menu?.id, order?.id)}
                     >
                       <MenuItem value={OrderStatus.PENDING}>Pending</MenuItem>
                       <MenuItem value={OrderStatus.PREPARING}>
@@ -143,20 +147,20 @@ const Row = ({ order, orderLines }: Props) => {
             {open ? <p>&uarr;</p> : <p>&darr;</p>}
           </IconButton>
         </TableCell>
-        <TableCell sx={{ textAlign: "center" }}>{order.id}</TableCell>
+        <TableCell sx={{ textAlign: "center" }}>{order?.id}</TableCell>
         <TableCell sx={{ textAlign: "center" }}>
-          {getNumberOfMenu(order.id)}
+          {getNumberOfMenu(order?.id)}
         </TableCell>
-        <TableCell sx={{ textAlign: "center" }}>{order.table_id}</TableCell>
+        <TableCell sx={{ textAlign: "center" }}>{order?.table_id}</TableCell>
         <TableCell sx={{ textAlign: "center" }}>
-          {order.is_paid === true ? "YES" : "NO"}
+          {order?.is_paid === true ? "YES" : "NO"}
         </TableCell>
-        <TableCell sx={{ textAlign: "center" }}>{order.price}</TableCell>
+        <TableCell sx={{ textAlign: "center" }}>{order?.price}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell colSpan={6} style={{ paddingBottom: 0, paddingTop: 0 }}>
           <Collapse in={open} timeout={"auto"}>
-            {renderMenuInfo(order.id)}
+            {renderMenuInfo(order?.id)}
           </Collapse>
         </TableCell>
       </TableRow>

@@ -69,6 +69,7 @@ const EditAddonCategories = (props: EditAddonCategories) => {
       router.push("/backoffice/addon-categories");
     }
   };
+  if (!addAddonCategories) return <h2>Loading...</h2>;
   return (
     <Modal
       open={open}
@@ -89,7 +90,7 @@ const EditAddonCategories = (props: EditAddonCategories) => {
           label="Name"
           variant="outlined"
           sx={{ mb: 2, width: "100%" }}
-          value={addonCategories.name ? addonCategories.name : ""}
+          value={addonCategories?.name ? addAddonCategories.name : ""}
           onChange={(e) =>
             setAddonCategories({ ...addonCategories, name: e.target.value })
           }
@@ -99,7 +100,7 @@ const EditAddonCategories = (props: EditAddonCategories) => {
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={addonCategories.isRequired}
+            value={addonCategories?.isRequired}
             onChange={(e) => {
               setAddonCategories({
                 ...addonCategories,
@@ -132,7 +133,7 @@ const EditAddonCategories = (props: EditAddonCategories) => {
         <DeleteDialog
           open={openDeleteDialog}
           setOpen={setOpenDeleteDialog}
-          title={`Dou You Want To Delete This ${addonCategories.name}`}
+          title={`Dou You Want To Delete This ${addonCategories?.name}`}
           callback={deleteHandler}
         />
       </Box>
@@ -159,7 +160,7 @@ const EditAddonCategories = (props: EditAddonCategories) => {
     }
   }
   async function submitHandler() {
-    if (!addonCategories.name || !addonCategories.isRequired) {
+    if (!addonCategories?.name || !addonCategories?.isRequired) {
       return;
     }
     const response = await fetch(`${config.backofficeUrl}/addonCategories`, {
