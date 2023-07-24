@@ -65,18 +65,19 @@ export default function CreateMenuCategories({
     if (
       !newMenuCategories.name ||
       !newMenuCategories.selectedLocationIds.length
-    )
+    ) {
       const response = await fetch(`${config.backofficeUrl}/menuCategories`, {
         method: "POST",
         body: JSON.stringify(newMenuCategories),
       });
-    // fetchData();
-    const jsonData = await response.json();
-    if (jsonData) {
-      dispatch(addMenuCategorie(jsonData));
+      // fetchData();
+      const jsonData = await response.json();
+      if (jsonData) {
+        dispatch(addMenuCategorie(jsonData));
+      }
+      setNewMenuCategories({ name: "", selectedLocationIds: [] });
+      setSelectedLocationIds([]);
     }
-    setNewMenuCategories({ name: "", selectedLocationIds: [] });
-    setSelectedLocationIds([]);
   }
   const handleChange = (e: SelectChangeEvent<number[] | []>) => {
     const currentLocation = e.target.value as number[];
