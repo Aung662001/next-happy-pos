@@ -27,7 +27,7 @@ const App = () => {
   const [updatingId, setupdatingId] = useState<number | null>();
   const [selectedLocationIds, setSelectedLocationIds] = useState<number[]>([]);
   const [locationId] = useLocalStorage("locationId");
-  const { menuCategories, menusMenuCategoriesLocations, Locations } =
+  const { menuCategories, menusMenuCategoriesLocations } =
     useAppSelector(AppData);
   const validMenuCategoriesIds = menusMenuCategoriesLocations
     .filter((mcl) => mcl.locations_id === parseInt(locationId))

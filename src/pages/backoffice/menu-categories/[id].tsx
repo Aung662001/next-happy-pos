@@ -23,6 +23,8 @@ import DeleteDialog from "@/components/DeleteDialog";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { AppData } from "@/store/slices/appSlice";
 import { removeMenuCategorie } from "@/store/slices/menuCategoriesSlict";
+import { updateMenuCategorie as updateMenuCategoriesFromSlice } from "@/store/slices/menuCategoriesSlict";
+import { fetchMenuMenuCategoriesLocation } from "@/store/slices/menusMenuCategoriesLocationSlice";
 
 interface menuCategories {
   name: string;
@@ -326,6 +328,7 @@ export default function EditMenuCategories() {
     if (response.ok) {
       dispatch(removeMenuCategorie(id));
       // fetchData();
+      dispatch(fetchMenuMenuCategoriesLocation());
       alert("Deleted");
     } else {
       alert("Error");
@@ -340,6 +343,9 @@ export default function EditMenuCategories() {
         body: JSON.stringify(updateMenuCategorie),
       }
     );
+    if (response.ok) {
+      dispatch(fetchMenuMenuCategoriesLocation());
+    }
   }
   function handleChange(e: SelectChangeEvent<number[]>) {
     setUpdateMenuCategorie({
@@ -364,6 +370,7 @@ export default function EditMenuCategories() {
     );
     if (response.ok) {
       // fetchData();
+      dispatch(fetchMenuMenuCategoriesLocation());
       setChooseToConnectMenuIds([]);
     }
   }

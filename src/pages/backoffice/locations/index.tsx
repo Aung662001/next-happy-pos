@@ -24,6 +24,7 @@ const App = () => {
     name: "",
     address: "",
   });
+  //
 
   //update Handler function
   const updateHandler = async (location: Partial<Location>) => {

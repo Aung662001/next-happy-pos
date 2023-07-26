@@ -13,7 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const [selectedLoccationId] = useLocalStorage("locationId");
   useEffect(() => {
     store.dispatch(fetchAppData(selectedLoccationId));
-  }, []);
+  }, [selectedLoccationId]);
   return (
     <Provider store={store}>
       <SessionProvider session={pageProps.session}>

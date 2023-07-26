@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Layout from "@/components/Layout";
 import {
   TableContainer,
@@ -16,11 +16,18 @@ import { AppData } from "@/store/slices/appSlice";
 import { orders as Orders } from "@prisma/client";
 
 function App() {
-  const { orders, orderLines } = useAppSelector(AppData);
+  const { orders, orderLines, Locations } = useAppSelector(AppData);
+  const [location, setLocation] = useLocalStorage("locationId");
   const [locationId] = useLocalStorage("locationId");
   const connectedOrders = orders.filter(
     (order) => order.location_id === parseInt(locationId)
   );
+  //for init app
+  useEffect(() => {
+    if (Locations?.length) {
+      setLocation(Locations[0]?.id);
+    }
+  }, [Locations]);
   return (
     <Layout title="Orders">
       <TableContainer

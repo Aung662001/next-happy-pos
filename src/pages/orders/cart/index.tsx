@@ -41,7 +41,6 @@ const Cart = () => {
       `../orders/menu/${id}?locationId=${query.locationId}&tableId=${query.tableId}`
     );
   };
-  console.log(orderLines);
   const renderOrders = () => {
     return orderLines.map((ol, index) => {
       return (
@@ -125,6 +124,7 @@ const Cart = () => {
       //   ...data,
       //   orderLines: [],
       // });
+      dispatch(setCartOrderlines([]));
     }
     router.push(
       `../orders?locationId=${query.locationId}&tableId=${query.tableId}`

@@ -1,8 +1,7 @@
-import { OrderContext } from "@/contexts/OrderContext";
 import { MenuCategory } from "@/typings/types";
 import { Box, Button } from "@mui/material";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import Tab from "@mui/material/Tab";
