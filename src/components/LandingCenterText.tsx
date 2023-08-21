@@ -25,7 +25,7 @@ const LandingCenterText = () => {
         <Button
           variant="contained"
           sx={{ bgcolor: "gray" }}
-          onClick={() => router.push("")}
+          onClick={() => router.push("/orders")}
         >
           Order App
         </Button>
